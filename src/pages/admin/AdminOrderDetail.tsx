@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { StatusBadge, StatusStepper } from "@/components/order/StatusBadge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, Download, FileText } from "lucide-react";
+import { ArrowLeft, Download, FileText, Loader2 } from "lucide-react";
 import { formatCents } from "@/lib/pricing";
 import { format } from "date-fns";
 import { toast } from "sonner";
@@ -93,6 +93,24 @@ export default function AdminOrderDetail() {
     onError: () => toast.error("Failed to update status"),
   });
 
+  const generatePdf = useMutation({
+    mutationFn: async () => {
+      const { data, error } = await supabase.functions.invoke("generate-order-pdf", {
+        body: { order_id: id },
+      });
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: (data) => {
+      toast.success("PDF generated!");
+      queryClient.invalidateQueries({ queryKey: ["admin-order", id] });
+      if (data?.pdf_url) {
+        window.open(data.pdf_url, "_blank");
+      }
+    },
+    onError: () => toast.error("Failed to generate PDF"),
+  });
+
   if (isLoading) {
     return (
       <div className="space-y-4">
@@ -119,10 +137,22 @@ export default function AdminOrderDetail() {
           </p>
         </div>
         <div className="ml-auto flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={generatePdf.isPending}
+            onClick={() => generatePdf.mutate()}
+          >
+            {generatePdf.isPending ? (
+              <><Loader2 className="h-4 w-4 mr-1 animate-spin" /> Generating…</>
+            ) : (
+              <><FileText className="h-4 w-4 mr-1" /> Generate PDF</>
+            )}
+          </Button>
           {order.pdf_url && (
             <a href={order.pdf_url} target="_blank" rel="noopener noreferrer">
               <Button variant="outline" size="sm">
-                <Download className="h-4 w-4 mr-1" /> PDF
+                <Download className="h-4 w-4 mr-1" /> Download PDF
               </Button>
             </a>
           )}
