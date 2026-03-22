@@ -93,6 +93,24 @@ export default function AdminOrderDetail() {
     onError: () => toast.error("Failed to update status"),
   });
 
+  const generatePdf = useMutation({
+    mutationFn: async () => {
+      const { data, error } = await supabase.functions.invoke("generate-order-pdf", {
+        body: { order_id: id },
+      });
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: (data) => {
+      toast.success("PDF generated!");
+      queryClient.invalidateQueries({ queryKey: ["admin-order", id] });
+      if (data?.pdf_url) {
+        window.open(data.pdf_url, "_blank");
+      }
+    },
+    onError: () => toast.error("Failed to generate PDF"),
+  });
+
   if (isLoading) {
     return (
       <div className="space-y-4">
