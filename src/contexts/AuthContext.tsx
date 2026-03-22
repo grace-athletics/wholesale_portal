@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -24,6 +24,7 @@ interface AuthContextType {
   isSubscribed: boolean;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
+  checkSubscription: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -53,6 +54,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       .single();
     setRole((data?.role as UserRole) ?? "client");
   };
+
+  const checkSubscription = useCallback(async () => {
+    try {
+      const { data, error } = await supabase.functions.invoke("check-subscription");
+      if (error) {
+        console.error("check-subscription error:", error);
+        return;
+      }
+      // Re-fetch profile to get synced subscription_status
+      if (user?.id) {
+        await fetchProfile(user.id);
+      }
+    } catch (err) {
+      console.error("Failed to check subscription:", err);
+    }
+  }, [user?.id]);
 
   const refreshProfile = async () => {
     if (user?.id) {
@@ -93,6 +110,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
+  // Check subscription on login & periodically every 60s
+  useEffect(() => {
+    if (!user || !profile) return;
+    // Skip for admins
+    if (role === "admin") return;
+
+    checkSubscription();
+    const interval = setInterval(checkSubscription, 60_000);
+    return () => clearInterval(interval);
+  }, [user?.id, role, checkSubscription]);
+
   const signOut = async () => {
     await supabase.auth.signOut();
     setProfile(null);
@@ -111,6 +139,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         isSubscribed: profile?.subscription_status === "active",
         signOut,
         refreshProfile,
+        checkSubscription,
       }}
     >
       {children}

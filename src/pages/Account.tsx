@@ -1,9 +1,32 @@
+import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { ExternalLink, Loader2 } from "lucide-react";
 
 export default function Account() {
-  const { profile } = useAuth();
+  const { profile, isSubscribed } = useAuth();
+  const [portalLoading, setPortalLoading] = useState(false);
+
+  const handleManageBilling = async () => {
+    setPortalLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("customer-portal");
+      if (error) throw error;
+      if (data?.url) {
+        window.open(data.url, "_blank");
+      } else {
+        throw new Error("No portal URL returned");
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Failed to open billing portal");
+    } finally {
+      setPortalLoading(false);
+    }
+  };
 
   return (
     <div className="space-y-6 max-w-2xl">
@@ -21,7 +44,7 @@ export default function Account() {
       <div className="rounded-lg border bg-card p-6 space-y-4">
         <h2 className="font-semibold">Subscription</h2>
         <div className="flex items-center gap-2">
-          <Badge variant={profile?.subscription_status === "active" ? "default" : "secondary"}>
+          <Badge variant={isSubscribed ? "default" : "secondary"}>
             {profile?.subscription_status || "inactive"}
           </Badge>
           {profile?.subscription_started_at && (
@@ -30,6 +53,21 @@ export default function Account() {
             </span>
           )}
         </div>
+        {isSubscribed && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleManageBilling}
+            disabled={portalLoading}
+          >
+            {portalLoading ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <ExternalLink className="mr-2 h-4 w-4" />
+            )}
+            Manage Billing
+          </Button>
+        )}
       </div>
 
       <div className="rounded-lg border bg-card p-6 space-y-3">
