@@ -45,6 +45,7 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/subscribe" element={<Subscribe />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
 
             {/* Client portal (auth + subscription required) */}
             <Route
