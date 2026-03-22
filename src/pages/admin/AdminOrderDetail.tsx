@@ -195,6 +195,9 @@ export default function AdminOrderDetail() {
         </CardContent>
       </Card>
 
+      {/* Glove Screenshots */}
+      <GloveImageUpload orderId={id!} />
+
       {/* Line Items */}
       <Card>
         <CardHeader>
