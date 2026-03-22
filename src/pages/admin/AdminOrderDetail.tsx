@@ -13,6 +13,7 @@ import { formatCents } from "@/lib/pricing";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import { useState } from "react";
+import GloveImageUpload from "@/components/order/GloveImageUpload";
 
 const ORDER_STATUSES = ["Received", "Processing", "In Production", "Shipped", "Delivered"];
 
