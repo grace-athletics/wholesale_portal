@@ -14,16 +14,361 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      client_logos: {
+        Row: {
+          id: string
+          palm_logo_filename: string | null
+          palm_logo_url: string | null
+          thumb_logo_filename: string | null
+          thumb_logo_url: string | null
+          uploaded_at: string
+          user_id: string
+          version: number
+          wrist_logo_filename: string | null
+          wrist_logo_url: string | null
+        }
+        Insert: {
+          id?: string
+          palm_logo_filename?: string | null
+          palm_logo_url?: string | null
+          thumb_logo_filename?: string | null
+          thumb_logo_url?: string | null
+          uploaded_at?: string
+          user_id: string
+          version?: number
+          wrist_logo_filename?: string | null
+          wrist_logo_url?: string | null
+        }
+        Update: {
+          id?: string
+          palm_logo_filename?: string | null
+          palm_logo_url?: string | null
+          thumb_logo_filename?: string | null
+          thumb_logo_url?: string | null
+          uploaded_at?: string
+          user_id?: string
+          version?: number
+          wrist_logo_filename?: string | null
+          wrist_logo_url?: string | null
+        }
+        Relationships: []
+      }
+      order_images: {
+        Row: {
+          angle: number
+          captured_at: string
+          id: string
+          image_url: string
+          order_id: string
+        }
+        Insert: {
+          angle: number
+          captured_at?: string
+          id?: string
+          image_url: string
+          order_id: string
+        }
+        Update: {
+          angle?: number
+          captured_at?: string
+          id?: string
+          image_url?: string
+          order_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_images_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      order_items: {
+        Row: {
+          builder_recipe_url: string | null
+          hand: string | null
+          has_flag: boolean | null
+          id: string
+          leather_type: string | null
+          line_total: number
+          notes: string | null
+          order_id: string
+          position: string | null
+          product_id: string
+          product_name: string
+          quantity: number
+          unit_price: number
+        }
+        Insert: {
+          builder_recipe_url?: string | null
+          hand?: string | null
+          has_flag?: boolean | null
+          id?: string
+          leather_type?: string | null
+          line_total: number
+          notes?: string | null
+          order_id: string
+          position?: string | null
+          product_id: string
+          product_name: string
+          quantity?: number
+          unit_price: number
+        }
+        Update: {
+          builder_recipe_url?: string | null
+          hand?: string | null
+          has_flag?: boolean | null
+          id?: string
+          leather_type?: string | null
+          line_total?: number
+          notes?: string | null
+          order_id?: string
+          position?: string | null
+          product_id?: string
+          product_name?: string
+          quantity?: number
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      order_status_history: {
+        Row: {
+          changed_at: string
+          changed_by: string | null
+          id: string
+          new_status: string
+          note: string | null
+          old_status: string | null
+          order_id: string
+        }
+        Insert: {
+          changed_at?: string
+          changed_by?: string | null
+          id?: string
+          new_status: string
+          note?: string | null
+          old_status?: string | null
+          order_id: string
+        }
+        Update: {
+          changed_at?: string
+          changed_by?: string | null
+          id?: string
+          new_status?: string
+          note?: string | null
+          old_status?: string | null
+          order_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_status_history_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          created_at: string
+          id: string
+          logo_change_notes: string | null
+          logo_change_requested: boolean | null
+          notes: string | null
+          order_number: string
+          pdf_generated_at: string | null
+          pdf_url: string | null
+          status: string
+          status_updated_at: string | null
+          stripe_payment_intent_id: string | null
+          total_amount: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          logo_change_notes?: string | null
+          logo_change_requested?: boolean | null
+          notes?: string | null
+          order_number?: string
+          pdf_generated_at?: string | null
+          pdf_url?: string | null
+          status?: string
+          status_updated_at?: string | null
+          stripe_payment_intent_id?: string | null
+          total_amount?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          logo_change_notes?: string | null
+          logo_change_requested?: boolean | null
+          notes?: string | null
+          order_number?: string
+          pdf_generated_at?: string | null
+          pdf_url?: string | null
+          status?: string
+          status_updated_at?: string | null
+          stripe_payment_intent_id?: string | null
+          total_amount?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      products: {
+        Row: {
+          base_price: number
+          category: string
+          created_at: string
+          description: string | null
+          flag_upcharge: number | null
+          has_hand_option: boolean | null
+          id: string
+          is_active: boolean | null
+          japanese_kip_upcharge: number | null
+          lead_time: string | null
+          leather_options: Json | null
+          leather_price_overrides: Json | null
+          min_order_qty: number
+          name: string
+          position_options: Json | null
+          show_recipe_url: boolean | null
+          stock_min_qty: number | null
+          stock_price: number | null
+          updated_at: string
+        }
+        Insert: {
+          base_price: number
+          category?: string
+          created_at?: string
+          description?: string | null
+          flag_upcharge?: number | null
+          has_hand_option?: boolean | null
+          id?: string
+          is_active?: boolean | null
+          japanese_kip_upcharge?: number | null
+          lead_time?: string | null
+          leather_options?: Json | null
+          leather_price_overrides?: Json | null
+          min_order_qty?: number
+          name: string
+          position_options?: Json | null
+          show_recipe_url?: boolean | null
+          stock_min_qty?: number | null
+          stock_price?: number | null
+          updated_at?: string
+        }
+        Update: {
+          base_price?: number
+          category?: string
+          created_at?: string
+          description?: string | null
+          flag_upcharge?: number | null
+          has_hand_option?: boolean | null
+          id?: string
+          is_active?: boolean | null
+          japanese_kip_upcharge?: number | null
+          lead_time?: string | null
+          leather_options?: Json | null
+          leather_price_overrides?: Json | null
+          min_order_qty?: number
+          name?: string
+          position_options?: Json | null
+          show_recipe_url?: boolean | null
+          stock_min_qty?: number | null
+          stock_price?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          company_name: string | null
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+          stripe_customer_id: string | null
+          subscription_started_at: string | null
+          subscription_status: string
+        }
+        Insert: {
+          company_name?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id: string
+          stripe_customer_id?: string | null
+          subscription_started_at?: string | null
+          subscription_status?: string
+        }
+        Update: {
+          company_name?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          stripe_customer_id?: string | null
+          subscription_started_at?: string | null
+          subscription_status?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "client"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +495,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "client"],
+    },
   },
 } as const
