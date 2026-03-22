@@ -1,11 +1,26 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
+import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from "npm:@supabase/supabase-js@2.57.2";
+import { PDFDocument, rgb, StandardFonts } from "npm:pdf-lib@1.17.1";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
+
+const log = (step: string, details?: any) => {
+  const d = details ? ` - ${JSON.stringify(details)}` : "";
+  console.log(`[GENERATE-ORDER-PDF] ${step}${d}`);
+};
+
+const GOLD = rgb(0.788, 0.659, 0.298);
+const GRAY = rgb(0.4, 0.4, 0.4);
+const DARK = rgb(0.1, 0.1, 0.1);
+const LIGHT_GRAY = rgb(0.6, 0.6, 0.6);
+const BG_GRAY = rgb(0.96, 0.96, 0.96);
+
+const formatCents = (c: number) =>
+  new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(c / 100);
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -23,13 +38,12 @@ serve(async (req) => {
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const anonKey = Deno.env.get("SUPABASE_PUBLISHABLE_KEY") || Deno.env.get("SUPABASE_ANON_KEY")!;
+    const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
 
-    // Verify caller is admin
-    const userClient = createClient(supabaseUrl, anonKey, {
-      global: { headers: { Authorization: authHeader } },
-    });
-    const { data: { user }, error: userErr } = await userClient.auth.getUser();
+    // Verify caller
+    const userClient = createClient(supabaseUrl, anonKey);
+    const token = authHeader.replace("Bearer ", "");
+    const { data: { user }, error: userErr } = await userClient.auth.getUser(token);
     if (userErr || !user) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
@@ -37,8 +51,9 @@ serve(async (req) => {
       });
     }
 
-    // Use service role for admin check and data access
-    const admin = createClient(supabaseUrl, serviceKey);
+    const admin = createClient(supabaseUrl, serviceKey, { auth: { persistSession: false } });
+
+    // Check admin role
     const { data: roleData } = await admin
       .from("user_roles")
       .select("role")
@@ -61,12 +76,15 @@ serve(async (req) => {
       });
     }
 
-    // Fetch order + items + client profile
+    log("Fetching order data", { order_id });
+
+    // Fetch all data in parallel
     const { data: order, error: orderErr } = await admin
       .from("orders")
       .select("*")
       .eq("id", order_id)
       .single();
+
     if (orderErr || !order) {
       return new Response(JSON.stringify({ error: "Order not found" }), {
         status: 404,
@@ -74,118 +92,320 @@ serve(async (req) => {
       });
     }
 
-    const [{ data: items }, { data: profile }, { data: logos }] = await Promise.all([
-      admin.from("order_items").select("*").eq("order_id", order_id),
-      admin.from("profiles").select("*").eq("id", order.user_id).single(),
-      admin.from("client_logos").select("*").eq("user_id", order.user_id).order("version", { ascending: false }).limit(1),
-    ]);
+    const [{ data: items }, { data: profile }, { data: logos }, { data: orderImages }] =
+      await Promise.all([
+        admin.from("order_items").select("*").eq("order_id", order_id),
+        admin.from("profiles").select("*").eq("id", order.user_id).single(),
+        admin
+          .from("client_logos")
+          .select("*")
+          .eq("user_id", order.user_id)
+          .order("version", { ascending: false })
+          .limit(1),
+        admin
+          .from("order_images")
+          .select("*")
+          .eq("order_id", order_id)
+          .order("angle", { ascending: true }),
+      ]);
 
-    // Build PDF as HTML → rendered with a simple PDF approach
-    const formatCents = (c: number) =>
-      new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(c / 100);
+    log("Data fetched", {
+      items: items?.length,
+      hasProfile: !!profile,
+      logos: logos?.length,
+      orderImages: orderImages?.length,
+    });
 
-    const logoSection = logos && logos.length > 0
-      ? `<div style="margin-top:16px;display:flex;gap:16px;">
-          ${logos[0].palm_logo_url ? `<div><img src="${logos[0].palm_logo_url}" style="max-height:60px;"/><div style="font-size:10px;color:#888;">Palm</div></div>` : ""}
-          ${logos[0].wrist_logo_url ? `<div><img src="${logos[0].wrist_logo_url}" style="max-height:60px;"/><div style="font-size:10px;color:#888;">Wrist</div></div>` : ""}
-          ${logos[0].thumb_logo_url ? `<div><img src="${logos[0].thumb_logo_url}" style="max-height:60px;"/><div style="font-size:10px;color:#888;">Thumb</div></div>` : ""}
-        </div>`
-      : "";
+    // ----- Build PDF with pdf-lib -----
+    const pdfDoc = await PDFDocument.create();
+    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
-    const itemRows = (items ?? [])
-      .map(
-        (item) => `
-        <tr>
-          <td style="padding:8px;border-bottom:1px solid #e5e5e5;">${item.product_name}</td>
-          <td style="padding:8px;border-bottom:1px solid #e5e5e5;">${item.leather_type || "—"}</td>
-          <td style="padding:8px;border-bottom:1px solid #e5e5e5;">${item.hand || "—"}</td>
-          <td style="padding:8px;border-bottom:1px solid #e5e5e5;">${item.position || "—"}</td>
-          <td style="padding:8px;border-bottom:1px solid #e5e5e5;text-align:center;">${item.quantity}</td>
-          <td style="padding:8px;border-bottom:1px solid #e5e5e5;text-align:right;">${formatCents(item.unit_price)}</td>
-          <td style="padding:8px;border-bottom:1px solid #e5e5e5;text-align:right;font-weight:600;">${formatCents(item.line_total)}</td>
-        </tr>`
-      )
-      .join("");
+    const PAGE_W = 595;
+    const PAGE_H = 842;
+    const MARGIN = 50;
+    const CONTENT_W = PAGE_W - MARGIN * 2;
 
-    const html = `<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8"/>
-  <style>
-    body { font-family: Helvetica, Arial, sans-serif; color: #1a1a1a; padding: 40px; font-size: 13px; }
-    .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px; border-bottom: 3px solid #c9a84c; padding-bottom: 16px; }
-    .brand { font-size: 18px; font-weight: 700; letter-spacing: 3px; color: #c9a84c; }
-    .meta { text-align: right; font-size: 12px; color: #666; }
-    .meta strong { color: #1a1a1a; font-size: 14px; }
-    .section-title { font-size: 14px; font-weight: 600; margin: 24px 0 8px; color: #333; }
-    table { width: 100%; border-collapse: collapse; }
-    th { padding: 8px; text-align: left; font-size: 11px; text-transform: uppercase; color: #888; border-bottom: 2px solid #e5e5e5; }
-    th:nth-child(5), th:nth-child(6), th:nth-child(7) { text-align: right; }
-    th:nth-child(5) { text-align: center; }
-    .total-row td { border-top: 2px solid #c9a84c; font-weight: 700; font-size: 15px; padding: 12px 8px; }
-    .footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #e5e5e5; font-size: 11px; color: #999; text-align: center; }
-    .client-info { background: #f9f9f9; padding: 12px 16px; border-radius: 6px; margin-bottom: 24px; }
-    .client-info span { display: block; font-size: 12px; color: #666; }
-    .client-info strong { font-size: 14px; }
-  </style>
-</head>
-<body>
-  <div class="header">
-    <div>
-      <div class="brand">MY GLOVE BRAND</div>
-      <div style="font-size:11px;color:#888;margin-top:2px;">Order Confirmation</div>
-    </div>
-    <div class="meta">
-      <strong>${order.order_number}</strong><br/>
-      ${new Date(order.created_at).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}<br/>
-      Status: ${order.status}
-    </div>
-  </div>
+    let page = pdfDoc.addPage([PAGE_W, PAGE_H]);
+    let y = PAGE_H - MARGIN;
 
-  <div class="client-info">
-    <strong>${profile?.company_name || profile?.full_name || "Client"}</strong>
-    <span>${profile?.email || ""}</span>
-  </div>
+    function ensureSpace(needed: number) {
+      if (y - needed < MARGIN + 20) {
+        page = pdfDoc.addPage([PAGE_W, PAGE_H]);
+        y = PAGE_H - MARGIN;
+      }
+    }
 
-  <div class="section-title">Line Items</div>
-  <table>
-    <thead>
-      <tr>
-        <th>Product</th>
-        <th>Leather</th>
-        <th>Hand</th>
-        <th>Position</th>
-        <th>Qty</th>
-        <th>Unit Price</th>
-        <th>Total</th>
-      </tr>
-    </thead>
-    <tbody>
-      ${itemRows}
-      <tr class="total-row">
-        <td colspan="6" style="text-align:right;">Order Total</td>
-        <td style="text-align:right;color:#c9a84c;">${formatCents(order.total_amount)}</td>
-      </tr>
-    </tbody>
-  </table>
+    function drawText(
+      text: string,
+      x: number,
+      yPos: number,
+      options: { font?: any; size?: number; color?: any; maxWidth?: number } = {}
+    ) {
+      const f = options.font || font;
+      const s = options.size || 10;
+      const c = options.color || DARK;
+      page.drawText(text, { x, y: yPos, size: s, font: f, color: c, maxWidth: options.maxWidth });
+    }
 
-  ${order.notes ? `<div class="section-title">Notes</div><p style="font-size:12px;color:#555;">${order.notes}</p>` : ""}
+    // ===== HEADER =====
+    drawText("MY GLOVE BRAND", MARGIN, y, { font: fontBold, size: 18, color: GOLD });
+    drawText("Order Confirmation", MARGIN, y - 18, { size: 9, color: GRAY });
 
-  ${logoSection ? `<div class="section-title">Client Logos</div>${logoSection}` : ""}
+    // Right side - order info
+    drawText(order.order_number, PAGE_W - MARGIN - fontBold.widthOfTextAtSize(order.order_number, 14), y, {
+      font: fontBold,
+      size: 14,
+    });
+    const dateStr = new Date(order.created_at).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+    drawText(dateStr, PAGE_W - MARGIN - font.widthOfTextAtSize(dateStr, 9), y - 16, {
+      size: 9,
+      color: GRAY,
+    });
+    const statusStr = `Status: ${order.status}`;
+    drawText(statusStr, PAGE_W - MARGIN - font.widthOfTextAtSize(statusStr, 9), y - 28, {
+      size: 9,
+      color: GRAY,
+    });
 
-  <div class="footer">
-    MY GLOVE BRAND &bull; Custom Glove Manufacturing &bull; Generated ${new Date().toLocaleDateString("en-US")}
-  </div>
-</body>
-</html>`;
+    y -= 40;
 
-    // Use jspdf with html approach — for edge functions, store HTML as PDF-ready document
-    // We'll store the HTML as a styled document that can be printed to PDF from browser
-    // For true server-side PDF, we use a simple text-based PDF generator
+    // Gold divider
+    page.drawLine({
+      start: { x: MARGIN, y },
+      end: { x: PAGE_W - MARGIN, y },
+      thickness: 2,
+      color: GOLD,
+    });
+    y -= 20;
 
-    const pdfBytes = generateSimplePdf(order, items ?? [], profile, formatCents);
+    // ===== CLIENT INFO =====
+    const clientName = profile?.company_name || profile?.full_name || "Client";
+    drawText(clientName, MARGIN, y, { font: fontBold, size: 13 });
+    y -= 14;
+    if (profile?.email) {
+      drawText(profile.email, MARGIN, y, { size: 9, color: GRAY });
+      y -= 12;
+    }
+    y -= 12;
 
-    // Upload to order-pdfs bucket
+    // ===== LINE ITEMS =====
+    drawText("LINE ITEMS", MARGIN, y, { font: fontBold, size: 11, color: rgb(0.3, 0.3, 0.3) });
+    y -= 18;
+
+    // Table header
+    const cols = [MARGIN, MARGIN + 110, MARGIN + 195, MARGIN + 255, MARGIN + 310, MARGIN + 360, MARGIN + 430];
+    const colHeaders = ["Product", "Leather", "Hand", "Pos", "Qty", "Unit", "Total"];
+    colHeaders.forEach((h, i) => {
+      drawText(h, cols[i], y, { font: fontBold, size: 8, color: LIGHT_GRAY });
+    });
+    y -= 4;
+    page.drawLine({ start: { x: MARGIN, y }, end: { x: PAGE_W - MARGIN, y }, thickness: 1, color: rgb(0.9, 0.9, 0.9) });
+    y -= 14;
+
+    // Table rows
+    for (const item of items ?? []) {
+      ensureSpace(60);
+
+      const row = [
+        item.product_name,
+        item.leather_type || "—",
+        item.hand || "—",
+        item.position || "—",
+        String(item.quantity),
+        formatCents(item.unit_price),
+        formatCents(item.line_total),
+      ];
+      row.forEach((val, i) => {
+        drawText(val, cols[i], y, { size: 9 });
+      });
+      y -= 4;
+      page.drawLine({ start: { x: MARGIN, y }, end: { x: PAGE_W - MARGIN, y }, thickness: 0.5, color: rgb(0.92, 0.92, 0.92) });
+      y -= 10;
+
+      // Item details: flag, notes, builder URL
+      const details: string[] = [];
+      if (item.has_flag) details.push("🏴 Flag added");
+      if (item.notes) details.push(`Note: ${item.notes}`);
+      if (item.builder_recipe_url) details.push(`Builder: ${item.builder_recipe_url}`);
+
+      if (details.length > 0) {
+        for (const detail of details) {
+          ensureSpace(14);
+          const displayText = detail.length > 90 ? detail.substring(0, 90) + "…" : detail;
+          drawText(displayText, MARGIN + 10, y, { size: 7, color: GRAY });
+          y -= 10;
+        }
+        y -= 4;
+      }
+    }
+
+    // Order total
+    y -= 4;
+    page.drawLine({ start: { x: MARGIN + 300, y: y + 8 }, end: { x: PAGE_W - MARGIN, y: y + 8 }, thickness: 2, color: GOLD });
+    ensureSpace(20);
+    drawText("Order Total:", MARGIN + 310, y, { font: fontBold, size: 12 });
+    drawText(formatCents(order.total_amount), MARGIN + 430, y, { font: fontBold, size: 12, color: GOLD });
+    y -= 24;
+
+    // ===== ORDER NOTES =====
+    if (order.notes) {
+      ensureSpace(40);
+      drawText("ORDER NOTES", MARGIN, y, { font: fontBold, size: 11, color: rgb(0.3, 0.3, 0.3) });
+      y -= 14;
+      const noteText = order.notes.substring(0, 500);
+      drawText(noteText, MARGIN, y, { size: 9, color: rgb(0.35, 0.35, 0.35), maxWidth: CONTENT_W });
+      y -= Math.ceil(noteText.length / 80) * 12 + 10;
+    }
+
+    // ===== LOGO CHANGE INFO =====
+    if (order.logo_change_requested) {
+      ensureSpace(40);
+      drawText("⚠ LOGO CHANGE REQUESTED", MARGIN, y, { font: fontBold, size: 10, color: rgb(0.8, 0.2, 0.1) });
+      y -= 14;
+      if (order.logo_change_notes) {
+        drawText(order.logo_change_notes, MARGIN, y, { size: 9, color: rgb(0.35, 0.35, 0.35), maxWidth: CONTENT_W });
+        y -= 20;
+      }
+    }
+
+    // ===== CLIENT LOGOS =====
+    const logo = logos && logos.length > 0 ? logos[0] : null;
+    if (logo) {
+      ensureSpace(100);
+      drawText("CLIENT LOGOS", MARGIN, y, { font: fontBold, size: 11, color: rgb(0.3, 0.3, 0.3) });
+      y -= 16;
+
+      const logoUrls = [
+        { url: logo.palm_logo_url, label: "Palm" },
+        { url: logo.wrist_logo_url, label: "Wrist" },
+        { url: logo.thumb_logo_url, label: "Thumb" },
+      ].filter((l) => l.url);
+
+      let logoX = MARGIN;
+      for (const logoInfo of logoUrls) {
+        try {
+          const response = await fetch(logoInfo.url);
+          if (!response.ok) continue;
+          const imageBytes = new Uint8Array(await response.arrayBuffer());
+          const contentType = response.headers.get("content-type") || "";
+
+          let image;
+          if (contentType.includes("png")) {
+            image = await pdfDoc.embedPng(imageBytes);
+          } else {
+            image = await pdfDoc.embedJpg(imageBytes);
+          }
+
+          const scale = Math.min(80 / image.width, 80 / image.height);
+          const imgW = image.width * scale;
+          const imgH = image.height * scale;
+
+          ensureSpace(imgH + 20);
+          page.drawImage(image, { x: logoX, y: y - imgH, width: imgW, height: imgH });
+          drawText(logoInfo.label, logoX + imgW / 2 - font.widthOfTextAtSize(logoInfo.label, 8) / 2, y - imgH - 12, {
+            size: 8,
+            color: GRAY,
+          });
+          logoX += imgW + 24;
+        } catch (e) {
+          log("Failed to embed logo", { label: logoInfo.label, error: String(e) });
+          drawText(`[${logoInfo.label} — failed to load]`, logoX, y - 10, { size: 8, color: GRAY });
+          logoX += 100;
+        }
+      }
+      y -= 100;
+    }
+
+    // ===== ORDER IMAGES (Glove screenshots) =====
+    if (orderImages && orderImages.length > 0) {
+      ensureSpace(30);
+      drawText("GLOVE IMAGES", MARGIN, y, { font: fontBold, size: 11, color: rgb(0.3, 0.3, 0.3) });
+      y -= 16;
+
+      const angleLabels: Record<number, string> = {
+        0: "Front",
+        1: "Back",
+        2: "Heel / Side",
+        3: "Palm Side",
+      };
+
+      // 2x2 grid of images
+      const imgSize = 200;
+      const gap = 16;
+      let col = 0;
+
+      for (const oi of orderImages) {
+        try {
+          ensureSpace(imgSize + 30);
+          const response = await fetch(oi.image_url);
+          if (!response.ok) continue;
+          const imageBytes = new Uint8Array(await response.arrayBuffer());
+          const contentType = response.headers.get("content-type") || "";
+
+          let image;
+          if (contentType.includes("png")) {
+            image = await pdfDoc.embedPng(imageBytes);
+          } else {
+            image = await pdfDoc.embedJpg(imageBytes);
+          }
+
+          const scale = Math.min(imgSize / image.width, imgSize / image.height);
+          const imgW = image.width * scale;
+          const imgH = image.height * scale;
+
+          const xPos = col === 0 ? MARGIN : MARGIN + imgSize + gap;
+          page.drawImage(image, { x: xPos, y: y - imgH, width: imgW, height: imgH });
+
+          const label = angleLabels[oi.angle] || `Angle ${oi.angle}`;
+          drawText(label, xPos, y - imgH - 12, { size: 8, color: GRAY, font: fontBold });
+
+          col++;
+          if (col >= 2) {
+            col = 0;
+            y -= imgH + 30;
+          }
+        } catch (e) {
+          log("Failed to embed order image", { angle: oi.angle, error: String(e) });
+        }
+      }
+      if (col === 1) y -= imgSize + 30; // close partial row
+    }
+
+    // ===== QC SIGN-OFF =====
+    ensureSpace(80);
+    y -= 10;
+    page.drawLine({ start: { x: MARGIN, y }, end: { x: PAGE_W - MARGIN, y }, thickness: 0.5, color: rgb(0.85, 0.85, 0.85) });
+    y -= 20;
+    drawText("QC SIGN-OFF", MARGIN, y, { font: fontBold, size: 10, color: rgb(0.3, 0.3, 0.3) });
+    y -= 18;
+    drawText("Inspected by: ________________________", MARGIN, y, { size: 9, color: GRAY });
+    drawText("Date: _______________", MARGIN + 280, y, { size: 9, color: GRAY });
+    y -= 16;
+    drawText("Notes: _______________________________________________", MARGIN, y, { size: 9, color: GRAY });
+
+    // ===== FOOTER =====
+    const footerText = `MY GLOVE BRAND · Custom Glove Manufacturing · Generated ${new Date().toLocaleDateString("en-US")}`;
+    // Add footer to all pages
+    for (const p of pdfDoc.getPages()) {
+      p.drawText(footerText, {
+        x: MARGIN,
+        y: 20,
+        size: 7,
+        font,
+        color: LIGHT_GRAY,
+      });
+    }
+
+    // Serialize
+    const pdfBytes = await pdfDoc.save();
+    log("PDF generated", { bytes: pdfBytes.length });
+
+    // Upload to storage
     const filePath = `${order.order_number}.pdf`;
     const { error: uploadErr } = await admin.storage
       .from("order-pdfs")
@@ -195,14 +415,14 @@ serve(async (req) => {
       });
 
     if (uploadErr) {
-      console.error("Upload error:", uploadErr);
+      log("Upload error", { error: uploadErr.message });
       return new Response(JSON.stringify({ error: "Failed to upload PDF" }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // Get signed URL (valid 1 year)
+    // Get signed URL
     const { data: signedUrl } = await admin.storage
       .from("order-pdfs")
       .createSignedUrl(filePath, 60 * 60 * 24 * 365);
@@ -216,6 +436,8 @@ serve(async (req) => {
       })
       .eq("id", order_id);
 
+    log("PDF uploaded and order updated");
+
     return new Response(
       JSON.stringify({ pdf_url: signedUrl?.signedUrl, message: "PDF generated" }),
       {
@@ -224,182 +446,10 @@ serve(async (req) => {
       }
     );
   } catch (err) {
-    console.error("Error:", err);
+    log("ERROR", { message: String(err) });
     return new Response(JSON.stringify({ error: String(err) }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 });
-
-// ---- Minimal PDF generator (no external deps) ----
-function generateSimplePdf(
-  order: any,
-  items: any[],
-  profile: any,
-  formatCents: (c: number) => string
-): Uint8Array {
-  const lines: string[] = [];
-  let yPos = 750;
-  const objects: string[] = [];
-  const offsets: number[] = [];
-  let objectCount = 0;
-
-  function addObject(content: string): number {
-    objectCount++;
-    offsets.push(-1); // placeholder
-    objects.push(content);
-    return objectCount;
-  }
-
-  // Build text content
-  const textLines: { text: string; x: number; y: number; size: number; bold?: boolean; color?: string }[] = [];
-
-  function addText(text: string, x: number, size: number, options?: { bold?: boolean; color?: string }) {
-    textLines.push({ text, x, y: yPos, size, bold: options?.bold, color: options?.color });
-    yPos -= size * 1.4;
-  }
-
-  function addGap(gap: number) {
-    yPos -= gap;
-  }
-
-  // Header
-  addText("MY GLOVE BRAND", 50, 16, { bold: true, color: "0.788 0.659 0.298" });
-  addText("Order Confirmation", 50, 9, { color: "0.5 0.5 0.5" });
-  addGap(8);
-
-  // Order info (right side)
-  textLines.push({ text: order.order_number, x: 400, y: 750, size: 14, bold: true });
-  textLines.push({
-    text: new Date(order.created_at).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }),
-    x: 400, y: 734, size: 9, color: "0.4 0.4 0.4",
-  });
-  textLines.push({ text: `Status: ${order.status}`, x: 400, y: 720, size: 9, color: "0.4 0.4 0.4" });
-
-  // Divider line
-  addGap(4);
-  const dividerY = yPos + 6;
-
-  // Client info
-  addGap(8);
-  addText(profile?.company_name || profile?.full_name || "Client", 50, 12, { bold: true });
-  if (profile?.email) addText(profile.email, 50, 9, { color: "0.4 0.4 0.4" });
-  addGap(16);
-
-  // Line items header
-  addText("LINE ITEMS", 50, 10, { bold: true, color: "0.3 0.3 0.3" });
-  addGap(6);
-
-  // Table header
-  const colX = [50, 160, 240, 300, 360, 420, 490];
-  const headers = ["Product", "Leather", "Hand", "Pos", "Qty", "Unit", "Total"];
-  headers.forEach((h, i) => {
-    textLines.push({ text: h, x: colX[i], y: yPos, size: 8, bold: true, color: "0.5 0.5 0.5" });
-  });
-  yPos -= 14;
-
-  // Table rows
-  items.forEach((item) => {
-    if (yPos < 80) {
-      yPos = 750; // simple page overflow (won't handle multi-page well but sufficient for most orders)
-    }
-    const row = [
-      item.product_name,
-      item.leather_type || "—",
-      item.hand || "—",
-      item.position || "—",
-      String(item.quantity),
-      formatCents(item.unit_price),
-      formatCents(item.line_total),
-    ];
-    row.forEach((val, i) => {
-      textLines.push({ text: val, x: colX[i], y: yPos, size: 9 });
-    });
-    yPos -= 16;
-  });
-
-  // Total
-  addGap(4);
-  textLines.push({ text: "Order Total:", x: 360, y: yPos, size: 11, bold: true });
-  textLines.push({ text: formatCents(order.total_amount), x: 490, y: yPos, size: 11, bold: true, color: "0.788 0.659 0.298" });
-  addGap(20);
-
-  // Notes
-  if (order.notes) {
-    addText("NOTES", 50, 10, { bold: true, color: "0.3 0.3 0.3" });
-    addGap(4);
-    addText(order.notes.substring(0, 200), 50, 9, { color: "0.35 0.35 0.35" });
-    addGap(12);
-  }
-
-  // Footer
-  textLines.push({
-    text: `MY GLOVE BRAND • Custom Glove Manufacturing • Generated ${new Date().toLocaleDateString("en-US")}`,
-    x: 120, y: 30, size: 8, color: "0.6 0.6 0.6",
-  });
-
-  // ---- Build PDF binary ----
-  const stream: string[] = [];
-
-  // Build content stream
-  let contentStream = "";
-
-  // Gold divider line
-  contentStream += `0.788 0.659 0.298 RG\n2 w\n50 ${dividerY} m 545 ${dividerY} l S\n`;
-
-  // Text
-  for (const t of textLines) {
-    const escaped = t.text.replace(/\\/g, "\\\\").replace(/\(/g, "\\(").replace(/\)/g, "\\)");
-    if (t.color) {
-      contentStream += `${t.color} rg\n`;
-    } else {
-      contentStream += "0 0 0 rg\n";
-    }
-    const fontRef = t.bold ? "/F2" : "/F1";
-    contentStream += `BT ${fontRef} ${t.size} Tf ${t.x} ${t.y} Td (${escaped}) Tj ET\n`;
-  }
-
-  // Assemble PDF objects
-  const pdfObjects: { id: number; content: string }[] = [];
-  let nextId = 1;
-
-  const catalogId = nextId++;
-  const pagesId = nextId++;
-  const pageId = nextId++;
-  const fontId = nextId++;
-  const fontBoldId = nextId++;
-  const contentId = nextId++;
-
-  const contentStreamBytes = new TextEncoder().encode(contentStream);
-
-  const objStrings: string[] = [];
-  objStrings.push(`${catalogId} 0 obj\n<< /Type /Catalog /Pages ${pagesId} 0 R >>\nendobj`);
-  objStrings.push(`${pagesId} 0 obj\n<< /Type /Pages /Kids [${pageId} 0 R] /Count 1 >>\nendobj`);
-  objStrings.push(
-    `${pageId} 0 obj\n<< /Type /Page /Parent ${pagesId} 0 R /MediaBox [0 0 595 842] /Contents ${contentId} 0 R /Resources << /Font << /F1 ${fontId} 0 R /F2 ${fontBoldId} 0 R >> >> >>\nendobj`
-  );
-  objStrings.push(`${fontId} 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>\nendobj`);
-  objStrings.push(`${fontBoldId} 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>\nendobj`);
-  objStrings.push(
-    `${contentId} 0 obj\n<< /Length ${contentStreamBytes.length} >>\nstream\n${contentStream}endstream\nendobj`
-  );
-
-  // Build final PDF
-  let pdf = "%PDF-1.4\n";
-  const objOffsets: number[] = [];
-  for (const obj of objStrings) {
-    objOffsets.push(pdf.length);
-    pdf += obj + "\n";
-  }
-
-  const xrefOffset = pdf.length;
-  pdf += `xref\n0 ${nextId}\n`;
-  pdf += "0000000000 65535 f \n";
-  for (const offset of objOffsets) {
-    pdf += String(offset).padStart(10, "0") + " 00000 n \n";
-  }
-  pdf += `trailer\n<< /Size ${nextId} /Root ${catalogId} 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`;
-
-  return new TextEncoder().encode(pdf);
-}
