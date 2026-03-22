@@ -72,8 +72,19 @@ serve(async (req) => {
 
     if (hasActiveSub) {
       const sub = subscriptions.data[0];
-      subscriptionEnd = new Date(sub.current_period_end * 1000).toISOString();
-      logStep("Active subscription found", { subscriptionId: sub.id, endDate: subscriptionEnd });
+
+      // Stripe API may return dates as unix seconds (number) or Date/string
+      const safeDate = (val: any): string | null => {
+        if (!val) return null;
+        if (typeof val === "number") return new Date(val * 1000).toISOString();
+        if (val instanceof Date) return val.toISOString();
+        if (typeof val === "string") return val;
+        return null;
+      };
+
+      subscriptionEnd = safeDate(sub.current_period_end);
+      const startedAt = safeDate(sub.start_date ?? sub.created);
+      logStep("Active subscription found", { subscriptionId: sub.id, endDate: subscriptionEnd, startedAt });
 
       // Sync profile
       await supabaseClient
@@ -81,8 +92,7 @@ serve(async (req) => {
         .update({
           subscription_status: "active",
           stripe_customer_id: customerId,
-          subscription_started_at:
-            new Date(sub.created * 1000).toISOString(),
+          subscription_started_at: startedAt,
         })
         .eq("id", user.id);
     } else {
