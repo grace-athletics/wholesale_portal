@@ -119,10 +119,22 @@ export default function AdminOrderDetail() {
           </p>
         </div>
         <div className="ml-auto flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={generatePdf.isPending}
+            onClick={() => generatePdf.mutate()}
+          >
+            {generatePdf.isPending ? (
+              <><Loader2 className="h-4 w-4 mr-1 animate-spin" /> Generating…</>
+            ) : (
+              <><FileText className="h-4 w-4 mr-1" /> Generate PDF</>
+            )}
+          </Button>
           {order.pdf_url && (
             <a href={order.pdf_url} target="_blank" rel="noopener noreferrer">
               <Button variant="outline" size="sm">
-                <Download className="h-4 w-4 mr-1" /> PDF
+                <Download className="h-4 w-4 mr-1" /> Download PDF
               </Button>
             </a>
           )}
