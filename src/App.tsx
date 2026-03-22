@@ -60,7 +60,9 @@ const App = () => (
             <Route
               element={
                 <ProtectedRoute requireSubscription>
-                  <AppLayout variant="client" />
+                  <CartProvider>
+                    <AppLayout variant="client" />
+                  </CartProvider>
                 </ProtectedRoute>
               }
             >
