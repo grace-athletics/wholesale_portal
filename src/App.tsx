@@ -5,7 +5,11 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { AppLayout } from "@/components/layout/AppLayout";
-import { ProtectedRoute } from "@/components/layout/ProtectedRoute";
+import {
+  ProtectedRoute,
+  PublicOnlyRoute,
+  AuthOnlyRoute,
+} from "@/components/layout/ProtectedRoute";
 
 // Public pages
 import Login from "./pages/Login";
@@ -18,6 +22,7 @@ import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
 import NewOrder from "./pages/NewOrder";
 import Orders from "./pages/Orders";
+import OrderDetail from "./pages/OrderDetail";
 import Builders from "./pages/Builders";
 import Mockups from "./pages/Mockups";
 import Account from "./pages/Account";
@@ -26,6 +31,7 @@ import LogoVault from "./pages/LogoVault";
 // Admin pages
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminOrders from "./pages/admin/AdminOrders";
+import AdminOrderDetail from "./pages/admin/AdminOrderDetail";
 import AdminProducts from "./pages/admin/AdminProducts";
 import AdminClients from "./pages/admin/AdminClients";
 import AdminRevenue from "./pages/admin/AdminRevenue";
@@ -40,14 +46,16 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <Routes>
-            {/* Public routes */}
+            {/* Public-only routes — redirect logged-in users */}
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/subscribe" element={<Subscribe />} />
+            <Route path="/login" element={<PublicOnlyRoute><Login /></PublicOnlyRoute>} />
+            <Route path="/signup" element={<PublicOnlyRoute><Signup /></PublicOnlyRoute>} />
             <Route path="/reset-password" element={<ResetPassword />} />
 
-            {/* Client portal (auth + subscription required) */}
+            {/* Subscribe — requires auth, but not subscription */}
+            <Route path="/subscribe" element={<AuthOnlyRoute><Subscribe /></AuthOnlyRoute>} />
+
+            {/* Client portal — auth + active subscription required */}
             <Route
               element={
                 <ProtectedRoute requireSubscription>
@@ -58,13 +66,14 @@ const App = () => (
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/order/new" element={<NewOrder />} />
               <Route path="/orders" element={<Orders />} />
+              <Route path="/orders/:id" element={<OrderDetail />} />
               <Route path="/builders" element={<Builders />} />
               <Route path="/mockups" element={<Mockups />} />
               <Route path="/account" element={<Account />} />
               <Route path="/account/logos" element={<LogoVault />} />
             </Route>
 
-            {/* Admin portal */}
+            {/* Admin portal — admin role required */}
             <Route
               element={
                 <ProtectedRoute requireAdmin>
@@ -74,6 +83,7 @@ const App = () => (
             >
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/admin/orders" element={<AdminOrders />} />
+              <Route path="/admin/orders/:id" element={<AdminOrderDetail />} />
               <Route path="/admin/products" element={<AdminProducts />} />
               <Route path="/admin/clients" element={<AdminClients />} />
               <Route path="/admin/revenue" element={<AdminRevenue />} />
