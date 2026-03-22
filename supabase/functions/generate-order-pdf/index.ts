@@ -328,10 +328,10 @@ serve(async (req) => {
       y -= 16;
 
       const angleLabels: Record<number, string> = {
-        0: "Front",
-        1: "Back",
-        2: "Heel / Side",
-        3: "Palm Side",
+        1: "Front",
+        2: "Back",
+        3: "Heel / Side",
+        4: "Palm Side",
       };
 
       // 2x2 grid of images
