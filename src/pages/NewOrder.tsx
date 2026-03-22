@@ -11,11 +11,12 @@ import { motion } from "framer-motion";
 import { toast } from "sonner";
 
 export default function NewOrder() {
-  const { items } = useCart();
+  const { items, clearCart } = useCart();
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [logoChangeRequested, setLogoChangeRequested] = useState(false);
   const [logoChangeNotes, setLogoChangeNotes] = useState("");
   const [newLogoFiles, setNewLogoFiles] = useState<Record<string, File | null>>({});
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
 
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["products"],
@@ -30,13 +31,51 @@ export default function NewOrder() {
     },
   });
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     if (items.length === 0) {
       toast.error("Add at least one item to your order");
       return;
     }
-    // TODO: Stripe Checkout integration
-    toast.info("Stripe checkout coming soon — order saved to cart");
+
+    setCheckoutLoading(true);
+    try {
+      const orderItems = items.map((item) => ({
+        product_id: item.product.id,
+        product_name: item.product.name,
+        leather_type: item.config.leather_type || null,
+        hand: item.config.hand || null,
+        position: item.config.position || null,
+        has_flag: item.config.has_flag,
+        quantity: item.config.quantity,
+        unit_price: item.unitPrice,
+        line_total: item.lineTotal,
+        builder_recipe_url: item.config.builder_recipe_url || null,
+        notes: item.config.notes || null,
+      }));
+
+      const { data, error } = await supabase.functions.invoke("create-order-checkout", {
+        body: {
+          items: orderItems,
+          notes: null,
+          logo_change_requested: logoChangeRequested,
+          logo_change_notes: logoChangeNotes || null,
+        },
+      });
+
+      if (error) throw error;
+
+      if (data?.url) {
+        clearCart();
+        window.open(data.url, "_blank");
+        toast.success(`Order ${data.order_number} created! Complete payment in the new tab.`);
+      } else {
+        throw new Error("No checkout URL returned");
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Failed to create order");
+    } finally {
+      setCheckoutLoading(false);
+    }
   };
 
   return (
@@ -123,7 +162,7 @@ export default function NewOrder() {
             <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
               Your Order
             </h2>
-            <OrderCart onCheckout={handleCheckout} />
+            <OrderCart onCheckout={handleCheckout} loading={checkoutLoading} />
           </div>
         </div>
       </div>

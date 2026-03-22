@@ -2,13 +2,14 @@ import { useCart } from "@/contexts/CartContext";
 import { formatCents } from "@/lib/pricing";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Trash2, ShoppingCart, Sparkles } from "lucide-react";
+import { Trash2, ShoppingCart, Sparkles, Loader2 } from "lucide-react";
 
 interface OrderCartProps {
   onCheckout: () => void;
+  loading?: boolean;
 }
 
-export function OrderCart({ onCheckout }: OrderCartProps) {
+export function OrderCart({ onCheckout, loading = false }: OrderCartProps) {
   const { items, removeItem, cartTotal, totalSavings } = useCart();
 
   if (items.length === 0) {
@@ -101,8 +102,15 @@ export function OrderCart({ onCheckout }: OrderCartProps) {
           <span className="text-xl font-bold">{formatCents(cartTotal)}</span>
         </div>
 
-        <Button className="w-full" size="lg" onClick={onCheckout}>
-          Proceed to Checkout
+        <Button className="w-full" size="lg" onClick={onCheckout} disabled={loading}>
+          {loading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Processing…
+            </>
+          ) : (
+            "Proceed to Checkout"
+          )}
         </Button>
       </div>
     </div>
