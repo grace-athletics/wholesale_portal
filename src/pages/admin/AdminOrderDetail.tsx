@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { StatusBadge, StatusStepper } from "@/components/order/StatusBadge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, Download, FileText } from "lucide-react";
+import { ArrowLeft, Download, FileText, Loader2 } from "lucide-react";
 import { formatCents } from "@/lib/pricing";
 import { format } from "date-fns";
 import { toast } from "sonner";
