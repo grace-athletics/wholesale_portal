@@ -11,6 +11,7 @@ import { ProtectedRoute } from "@/components/layout/ProtectedRoute";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Subscribe from "./pages/Subscribe";
+import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 
 // Client pages
@@ -44,6 +45,7 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/subscribe" element={<Subscribe />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
 
             {/* Client portal (auth + subscription required) */}
             <Route
