@@ -82,7 +82,7 @@ serve(async (req) => {
           subscription_status: "active",
           stripe_customer_id: customerId,
           subscription_started_at:
-            new Date(sub.start_date * 1000).toISOString(),
+            new Date(sub.created * 1000).toISOString(),
         })
         .eq("id", user.id);
     } else {
