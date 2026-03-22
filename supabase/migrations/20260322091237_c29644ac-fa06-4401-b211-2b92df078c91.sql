@@ -1,0 +1,1 @@
+SELECT setval('order_number_seq', 6, true);
