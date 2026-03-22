@@ -162,7 +162,7 @@ export default function NewOrder() {
             <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
               Your Order
             </h2>
-            <OrderCart onCheckout={handleCheckout} />
+            <OrderCart onCheckout={handleCheckout} loading={checkoutLoading} />
           </div>
         </div>
       </div>
