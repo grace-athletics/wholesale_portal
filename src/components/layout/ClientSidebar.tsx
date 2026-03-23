@@ -9,6 +9,7 @@ import {
   User,
   LogOut,
 } from "lucide-react";
+import logo from "@/assets/logo.png";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -61,10 +62,8 @@ export function ClientSidebar() {
       <SidebarHeader className="px-4 py-5">
         {!collapsed && (
           <div>
-            <h1 className="text-sm font-bold tracking-widest text-sidebar-primary">
-              MY GLOVE BRAND
-            </h1>
-            <p className="text-xs text-sidebar-muted mt-0.5">
+            <img src={logo} alt="My Glove Brand" className="h-8 object-contain" />
+            <p className="text-xs text-sidebar-muted mt-1.5">
               Wholesale Portal
             </p>
           </div>

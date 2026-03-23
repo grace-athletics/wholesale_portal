@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, CheckCircle2 } from "lucide-react";
+import logo from "@/assets/logo.png";
 
 export default function ResetPassword() {
   const navigate = useNavigate();
@@ -86,9 +87,7 @@ export default function ResetPassword() {
           animate={{ opacity: 1, y: 0 }}
           className="w-full max-w-sm text-center space-y-6"
         >
-          <h1 className="text-xl font-bold tracking-[0.2em] text-primary">
-            MY GLOVE BRAND
-          </h1>
+          <img src={logo} alt="My Glove Brand" className="h-10 object-contain mx-auto" />
           <h2 className="text-xl font-semibold">Invalid Reset Link</h2>
           <p className="text-sm text-muted-foreground">
             This link has expired or is invalid. Please request a new password reset.
@@ -110,9 +109,7 @@ export default function ResetPassword() {
         className="w-full max-w-sm space-y-8"
       >
         <div className="text-center">
-          <h1 className="text-xl font-bold tracking-[0.2em] text-primary">
-            MY GLOVE BRAND
-          </h1>
+          <img src={logo} alt="My Glove Brand" className="h-10 object-contain mx-auto" />
           <p className="mt-1 text-sm text-muted-foreground">Set your new password</p>
         </div>
 
