@@ -170,6 +170,12 @@ export default function NewOrder() {
           </div>
         </div>
       </div>
+
+      <CheckoutDrawer
+        open={showCheckout}
+        onClose={() => setShowCheckout(false)}
+        clientSecret={checkoutSecret}
+      />
     </div>
   );
 }
