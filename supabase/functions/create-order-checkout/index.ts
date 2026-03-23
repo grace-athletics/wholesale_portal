@@ -59,7 +59,6 @@ serve(async (req) => {
     if (!items || items.length === 0) throw new Error("No items provided");
     logStep("Items received", { count: items.length });
 
-    // Calculate total (verify server-side)
     const totalAmount = items.reduce((sum, item) => sum + item.line_total, 0);
     logStep("Total calculated", { totalAmount });
 
@@ -111,12 +110,11 @@ serve(async (req) => {
       note: "Order placed",
     });
 
-    // 4. Create Stripe checkout session for one-time payment
+    // 4. Create Stripe checkout session (embedded)
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
       apiVersion: "2025-08-27.basil",
     });
 
-    // Find or create Stripe customer
     const customers = await stripe.customers.list({ email: user.email, limit: 1 });
     let customerId: string | undefined;
     if (customers.data.length > 0) {
@@ -142,8 +140,8 @@ serve(async (req) => {
         },
       ],
       mode: "payment",
-      success_url: `${origin}/orders/${order.id}?payment=success`,
-      cancel_url: `${origin}/order/new?payment=cancelled&order=${order.id}`,
+      ui_mode: "embedded",
+      return_url: `${origin}/orders/${order.id}?payment=success`,
       metadata: {
         order_id: order.id,
         order_number: order.order_number,
@@ -154,7 +152,7 @@ serve(async (req) => {
 
     return new Response(
       JSON.stringify({
-        url: session.url,
+        clientSecret: session.client_secret,
         order_id: order.id,
         order_number: order.order_number,
       }),
