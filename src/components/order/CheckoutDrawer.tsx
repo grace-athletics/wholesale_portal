@@ -20,7 +20,7 @@ interface CheckoutDrawerProps {
 }
 
 export function CheckoutDrawer({ open, onClose, clientSecret }: CheckoutDrawerProps) {
-  const fetchClientSecret = useCallback(() => {
+  const fetchClientSecret = useCallback(async () => {
     return clientSecret!;
   }, [clientSecret]);
 
