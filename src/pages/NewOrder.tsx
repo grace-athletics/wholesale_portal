@@ -7,6 +7,7 @@ import { ProductGrid } from "@/components/order/ProductGrid";
 import { ConfigPanel } from "@/components/order/ConfigPanel";
 import { OrderCart } from "@/components/order/OrderCart";
 import { LogoSection } from "@/components/order/LogoSection";
+import { CheckoutDrawer } from "@/components/order/CheckoutDrawer";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 
