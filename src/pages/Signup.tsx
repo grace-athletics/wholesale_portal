@@ -30,6 +30,8 @@ export default function Signup() {
   const update = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm((f) => ({ ...f, [field]: e.target.value }));
 
+  const [signupComplete, setSignupComplete] = useState(false);
+
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -52,15 +54,14 @@ export default function Signup() {
           full_name: form.full_name,
           company_name: form.company_name,
         },
-        emailRedirectTo: window.location.origin,
+        emailRedirectTo: `${window.location.origin}/login`,
       },
     });
 
     if (error) {
       toast.error(error.message);
     } else {
-      toast.success("Account created! Check your email to verify, then subscribe to access the portal.");
-      navigate("/login");
+      setSignupComplete(true);
     }
     setLoading(false);
   };
