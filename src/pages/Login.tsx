@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { Eye, EyeOff } from "lucide-react";
+import logo from "@/assets/logo.png";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -53,9 +54,7 @@ export default function Login() {
           <div className="absolute bottom-1/3 right-1/4 w-48 h-48 rounded-full bg-primary blur-[80px]" />
         </div>
         <div className="relative z-10 px-12 max-w-md">
-          <h1 className="text-2xl font-bold tracking-[0.25em] text-primary mb-3">
-            MY GLOVE BRAND
-          </h1>
+            <img src={logo} alt="My Glove Brand" className="h-12 object-contain" />
           <p className="text-sidebar-foreground text-lg font-light">
             Wholesale Portal
           </p>
@@ -76,9 +75,7 @@ export default function Login() {
         >
           {/* Mobile-only branding */}
           <div className="text-center lg:hidden">
-            <h1 className="text-xl font-bold tracking-[0.2em] text-primary">
-              MY GLOVE BRAND
-            </h1>
+            <img src={logo} alt="My Glove Brand" className="h-10 object-contain mx-auto" />
             <p className="mt-1 text-sm text-muted-foreground">Wholesale Portal</p>
           </div>
 

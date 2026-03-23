@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import logo from "@/assets/logo.png";
 import { loadStripe } from "@stripe/stripe-js";
 import {
   EmbeddedCheckoutProvider,
@@ -33,9 +34,7 @@ export default function Subscribe() {
       <div className="flex min-h-screen items-center justify-center bg-background px-4">
         <div className="w-full max-w-lg space-y-4">
           <div className="text-center">
-            <h1 className="text-xl font-bold tracking-widest text-primary">
-              MY GLOVE BRAND
-            </h1>
+            <img src={logo} alt="My Glove Brand" className="h-10 object-contain mx-auto" />
             <h2 className="text-lg font-semibold mt-2">Complete Payment</h2>
           </div>
           <div className="rounded-lg border bg-card p-1 min-h-[400px]">
@@ -61,9 +60,7 @@ export default function Subscribe() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="w-full max-w-md text-center space-y-6">
-        <h1 className="text-xl font-bold tracking-widest text-primary">
-          MY GLOVE BRAND
-        </h1>
+        <img src={logo} alt="My Glove Brand" className="h-10 object-contain mx-auto" />
         <h2 className="text-2xl font-semibold">Activate Your Subscription</h2>
         <p className="text-muted-foreground">
           Access the wholesale portal for{" "}

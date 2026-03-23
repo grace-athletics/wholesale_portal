@@ -6,6 +6,7 @@ import {
   DollarSign,
   LogOut,
 } from "lucide-react";
+import logo from "@/assets/logo.png";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/contexts/AuthContext";
 import {
@@ -42,10 +43,8 @@ export function AdminSidebar() {
       <SidebarHeader className="px-4 py-5">
         {!collapsed && (
           <div>
-            <h1 className="text-sm font-bold tracking-widest text-sidebar-primary">
-              MY GLOVE BRAND
-            </h1>
-            <p className="text-xs text-sidebar-muted mt-0.5">
+            <img src={logo} alt="My Glove Brand" className="h-8 object-contain" />
+            <p className="text-xs text-sidebar-muted mt-1.5">
               Admin Portal
             </p>
           </div>
