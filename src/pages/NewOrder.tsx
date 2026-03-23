@@ -18,6 +18,8 @@ export default function NewOrder() {
   const [logoChangeNotes, setLogoChangeNotes] = useState("");
   const [newLogoFiles, setNewLogoFiles] = useState<Record<string, File | null>>({});
   const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [checkoutSecret, setCheckoutSecret] = useState<string | null>(null);
+  const [showCheckout, setShowCheckout] = useState(false);
 
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["products"],
