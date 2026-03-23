@@ -66,6 +66,37 @@ export default function Signup() {
     setLoading(false);
   };
 
+  if (signupComplete) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background px-4">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.4 }}
+          className="w-full max-w-md text-center space-y-6"
+        >
+          <div className="mx-auto w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+            <Check className="h-8 w-8 text-primary" />
+          </div>
+          <h2 className="text-2xl font-semibold">Verification Email Sent</h2>
+          <p className="text-muted-foreground">
+            We've sent a verification link to{" "}
+            <span className="font-medium text-foreground">{form.email}</span>.
+            Please check your inbox and click the link to complete your sign-up.
+          </p>
+          <p className="text-sm text-muted-foreground">
+            Once verified, you'll be redirected to the login page to sign in and activate your subscription.
+          </p>
+          <Link to="/login">
+            <Button variant="outline" className="mt-4">
+              Go to Login
+            </Button>
+          </Link>
+        </motion.div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex min-h-screen bg-background">
       {/* Left branding panel */}
