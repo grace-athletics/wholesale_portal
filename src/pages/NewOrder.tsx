@@ -67,12 +67,13 @@ export default function NewOrder() {
 
       if (error) throw error;
 
-      if (data?.url) {
+      if (data?.clientSecret) {
         clearCart();
-        window.open(data.url, "_blank");
-        toast.success(`Order ${data.order_number} created! Complete payment in the new tab.`);
+        setCheckoutSecret(data.clientSecret);
+        setShowCheckout(true);
+        toast.success(`Order ${data.order_number} created! Complete payment below.`);
       } else {
-        throw new Error("No checkout URL returned");
+        throw new Error("No checkout session returned");
       }
     } catch (err: any) {
       toast.error(err.message || "Failed to create order");
