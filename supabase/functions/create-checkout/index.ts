@@ -67,13 +67,13 @@ serve(async (req) => {
         },
       ],
       mode: "subscription",
-      success_url: `${origin}/dashboard?checkout=success`,
-      cancel_url: `${origin}/subscribe?checkout=cancelled`,
+      ui_mode: "embedded",
+      return_url: `${origin}/dashboard?checkout=success`,
     });
 
     logStep("Checkout session created", { sessionId: session.id });
 
-    return new Response(JSON.stringify({ url: session.url }), {
+    return new Response(JSON.stringify({ clientSecret: session.client_secret }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
     });

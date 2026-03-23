@@ -7,6 +7,7 @@ import { ProductGrid } from "@/components/order/ProductGrid";
 import { ConfigPanel } from "@/components/order/ConfigPanel";
 import { OrderCart } from "@/components/order/OrderCart";
 import { LogoSection } from "@/components/order/LogoSection";
+import { CheckoutDrawer } from "@/components/order/CheckoutDrawer";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 
@@ -17,6 +18,8 @@ export default function NewOrder() {
   const [logoChangeNotes, setLogoChangeNotes] = useState("");
   const [newLogoFiles, setNewLogoFiles] = useState<Record<string, File | null>>({});
   const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [checkoutSecret, setCheckoutSecret] = useState<string | null>(null);
+  const [showCheckout, setShowCheckout] = useState(false);
 
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["products"],
@@ -64,12 +67,13 @@ export default function NewOrder() {
 
       if (error) throw error;
 
-      if (data?.url) {
+      if (data?.clientSecret) {
         clearCart();
-        window.open(data.url, "_blank");
-        toast.success(`Order ${data.order_number} created! Complete payment in the new tab.`);
+        setCheckoutSecret(data.clientSecret);
+        setShowCheckout(true);
+        toast.success(`Order ${data.order_number} created! Complete payment below.`);
       } else {
-        throw new Error("No checkout URL returned");
+        throw new Error("No checkout session returned");
       }
     } catch (err: any) {
       toast.error(err.message || "Failed to create order");
@@ -166,6 +170,12 @@ export default function NewOrder() {
           </div>
         </div>
       </div>
+
+      <CheckoutDrawer
+        open={showCheckout}
+        onClose={() => setShowCheckout(false)}
+        clientSecret={checkoutSecret}
+      />
     </div>
   );
 }
