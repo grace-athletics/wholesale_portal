@@ -1,30 +1,62 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { loadStripe } from "@stripe/stripe-js";
+import {
+  EmbeddedCheckoutProvider,
+  EmbeddedCheckout,
+} from "@stripe/react-stripe-js";
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 export default function Subscribe() {
   const { profile } = useAuth();
+  const [showCheckout, setShowCheckout] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleCheckout = async () => {
-    setLoading(true);
-    try {
-      const { data, error } = await supabase.functions.invoke("create-checkout");
-      if (error) throw error;
-      if (data?.url) {
-        window.open(data.url, "_blank");
-      } else {
-        throw new Error("No checkout URL returned");
-      }
-    } catch (err: any) {
-      toast.error(err.message || "Failed to start checkout");
-    } finally {
-      setLoading(false);
-    }
+  const fetchClientSecret = useCallback(async () => {
+    const { data, error } = await supabase.functions.invoke("create-checkout");
+    if (error) throw error;
+    if (!data?.clientSecret) throw new Error("No client secret returned");
+    return data.clientSecret as string;
+  }, []);
+
+  const handleStart = () => {
+    setShowCheckout(true);
   };
+
+  if (showCheckout) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background px-4">
+        <div className="w-full max-w-lg space-y-4">
+          <div className="text-center">
+            <h1 className="text-xl font-bold tracking-widest text-primary">
+              MY GLOVE BRAND
+            </h1>
+            <h2 className="text-lg font-semibold mt-2">Complete Payment</h2>
+          </div>
+          <div className="rounded-lg border bg-card p-1 min-h-[400px]">
+            <EmbeddedCheckoutProvider
+              stripe={stripePromise}
+              options={{ fetchClientSecret }}
+            >
+              <EmbeddedCheckout />
+            </EmbeddedCheckoutProvider>
+          </div>
+          <Button
+            variant="ghost"
+            className="w-full text-muted-foreground"
+            onClick={() => setShowCheckout(false)}
+          >
+            ← Back
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -38,18 +70,11 @@ export default function Subscribe() {
           <span className="font-semibold text-foreground">$49/month</span>.
           Place unlimited orders, use the Glove Builder, and manage your brand.
         </p>
-        <Button size="lg" className="w-full" onClick={handleCheckout} disabled={loading}>
-          {loading ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Redirecting to Stripe…
-            </>
-          ) : (
-            "Activate Subscription — $49/mo"
-          )}
+        <Button size="lg" className="w-full" onClick={handleStart}>
+          Activate Subscription — $49/mo
         </Button>
         <p className="text-xs text-muted-foreground">
-          You'll be redirected to Stripe to complete payment.
+          Secure payment powered by Stripe.
         </p>
       </div>
     </div>
