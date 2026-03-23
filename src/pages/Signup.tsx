@@ -109,8 +109,11 @@ export default function Signup() {
           <h1 className="text-2xl font-bold tracking-[0.25em] text-primary mb-3">
             MY GLOVE BRAND
           </h1>
-          <p className="text-sidebar-foreground text-lg font-light mb-8">
-            Wholesale Portal — $49/month
+          <p className="text-sidebar-foreground text-xl font-light mb-4">
+            Launch and scale your glove brand with ease.
+          </p>
+          <p className="text-sidebar-muted text-sm mb-8">
+            Design, order, and manage your entire production process — all in one platform.
           </p>
           <ul className="space-y-3">
             {benefits.map((b) => (
