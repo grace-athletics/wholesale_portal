@@ -14,6 +14,12 @@ interface LogoInfo {
   palm_logo_filename: string | null;
   wrist_logo_filename: string | null;
   thumb_logo_filename: string | null;
+  batting_back_hand_logo_url: string | null;
+  batting_back_hand_logo_filename: string | null;
+  batting_back_wrist_logo_url: string | null;
+  batting_back_wrist_logo_filename: string | null;
+  batting_front_wrist_logo_url: string | null;
+  batting_front_wrist_logo_filename: string | null;
 }
 
 interface LogoSectionProps {
