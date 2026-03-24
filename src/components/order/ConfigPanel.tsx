@@ -28,6 +28,13 @@ import {
 } from "@/components/ui/select";
 import { Plus, Minus, AlertTriangle, CheckCircle2, ExternalLink } from "lucide-react";
 
+export interface ConfigPanelHandle {
+  getPriceResult: () => { unitPrice: number; lineTotal: number };
+  getConfig: () => CartItemConfig;
+  handleAdd: () => void;
+  isValid: () => boolean;
+}
+
 interface ConfigPanelProps {
   product: Product;
   onAdded: () => void;
