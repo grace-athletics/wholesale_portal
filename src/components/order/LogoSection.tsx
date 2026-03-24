@@ -80,6 +80,10 @@ export function LogoSection({
     ? logos?.batting_back_hand_logo_url || logos?.batting_back_wrist_logo_url || logos?.batting_front_wrist_logo_url
     : logos?.palm_logo_url || logos?.wrist_logo_url || logos?.thumb_logo_url;
 
+  useEffect(() => {
+    onLogoStatusChange?.(!!hasAnyLogo);
+  }, [hasAnyLogo, onLogoStatusChange]);
+
   const handleFileSelect = (key: string, file: File | null) => {
     if (file) {
       const validTypes = ["image/png", "image/jpeg", "image/svg+xml"];
