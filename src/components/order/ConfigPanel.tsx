@@ -26,14 +26,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Minus, AlertTriangle, CheckCircle2, ExternalLink, Upload, X, Loader2 } from "lucide-react";
-
-const GLOVE_ANGLES = ["Front", "Back", "Thumb", "Pinky"] as const;
+import { Plus, Minus, AlertTriangle, CheckCircle2, ExternalLink } from "lucide-react";
 
 interface ConfigPanelProps {
   product: Product;
   onAdded: () => void;
-  onGloveImages?: (images: Record<number, File>) => void;
 }
 
 function isBattingGlove(product: Product) {
@@ -60,12 +57,11 @@ function buildDefaultConfig(product: Product): CartItemConfig {
   };
 }
 
-export function ConfigPanel({ product, onAdded, onGloveImages }: ConfigPanelProps) {
+export function ConfigPanel({ product, onAdded }: ConfigPanelProps) {
   const { items, addItem } = useCart();
   const batting = isBattingGlove(product);
 
   const [config, setConfig] = useState<CartItemConfig>(() => buildDefaultConfig(product));
-  const [gloveImages, setGloveImages] = useState<Record<number, File>>({});
 
   // Reset config when product changes
   useEffect(() => {
@@ -101,11 +97,7 @@ export function ConfigPanel({ product, onAdded, onGloveImages }: ConfigPanelProp
       return;
     }
     addItem(product, config);
-    if (Object.keys(gloveImages).length > 0 && onGloveImages) {
-      onGloveImages(gloveImages);
-    }
     setConfig(buildDefaultConfig(product));
-    setGloveImages({});
     onAdded();
   };
 
