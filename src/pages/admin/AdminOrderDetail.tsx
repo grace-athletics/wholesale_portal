@@ -206,7 +206,7 @@ export default function AdminOrderDetail() {
               {client?.company_name || client?.full_name || "Unknown client"} · {format(new Date(order.created_at), "MMM d, yyyy")}
             </p>
           </div>
-          <div className="ml-auto flex gap-2">
+          <div className="ml-auto">
             <Button
               variant="outline"
               size="sm"
@@ -216,20 +216,9 @@ export default function AdminOrderDetail() {
               {generatePdf.isPending ? (
                 <><Loader2 className="h-4 w-4 mr-1 animate-spin" /> Generating…</>
               ) : (
-                <><FileText className="h-4 w-4 mr-1" /> Generate PDF</>
+                <><Download className="h-4 w-4 mr-1" /> Download Order Form</>
               )}
             </Button>
-            {order.pdf_url && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => loadPdfPreview(order.pdf_url!, `${order.order_number}.pdf`).catch(() => {
-                  toast.error("Could not load PDF preview.");
-                })}
-              >
-                <Download className="h-4 w-4 mr-1" /> Preview PDF
-              </Button>
-            )}
           </div>
         </div>
 
