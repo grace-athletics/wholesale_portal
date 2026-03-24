@@ -53,7 +53,7 @@ export default function Dashboard() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("orders")
-        .select("id, order_number, status, total_amount, created_at")
+        .select("id, order_number, status, total_amount, created_at, user_id")
         .order("created_at", { ascending: false })
         .limit(5);
       if (error) throw error;
@@ -61,6 +61,20 @@ export default function Dashboard() {
     },
     enabled: !!user,
   });
+
+  const { data: profiles = [] } = useQuery({
+    queryKey: ["dashboard-profiles"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("id, full_name, company_name");
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user,
+  });
+
+  const profileMap = new Map(profiles.map((p) => [p.id, p]));
 
   const { data: allOrders = [] } = useQuery({
     queryKey: ["my-orders-all"],
@@ -94,18 +108,17 @@ export default function Dashboard() {
   });
 
   const totalOrders = allOrders.length;
-  const totalSpent = allOrders.reduce((s, o) => s + (o.total_amount || 0), 0);
-  const activeStatuses = ["Received", "Processing", "In Production", "Shipped"];
-  const activeOrders = allOrders.filter((o) => activeStatuses.includes(o.status));
+  const totalSales = allOrders.reduce((s, o) => s + (o.total_amount || 0), 0);
   const inProduction = allOrders.filter((o) => o.status === "In Production").length;
+  const totalGlovesSold = orderItemsSummary.reduce((s, i) => s + i.quantity, 0);
 
   const shippedRecently = orders.find((o) => o.status === "Shipped");
 
   const kpis = [
     { label: "Total Orders", value: totalOrders.toString(), icon: ShoppingBag },
-    { label: "Total Spent", value: formatCents(totalSpent), icon: DollarSign },
+    { label: "Total Sales", value: formatCents(totalSales), icon: DollarSign },
     { label: "In Production", value: inProduction.toString(), icon: Loader },
-    { label: "Active Orders", value: activeOrders.length.toString(), icon: Package },
+    { label: "Total Gloves Sold", value: totalGlovesSold.toString(), icon: Package },
   ];
 
   const quickActions = [
@@ -226,6 +239,7 @@ export default function Dashboard() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Order #</TableHead>
+                  <TableHead className="hidden sm:table-cell">Customer</TableHead>
                   <TableHead className="hidden sm:table-cell">Items</TableHead>
                   <TableHead>Total</TableHead>
                   <TableHead>Status</TableHead>
@@ -233,30 +247,36 @@ export default function Dashboard() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {orders.map((order) => (
-                  <TableRow
-                    key={order.id}
-                    className="cursor-pointer hover:bg-muted/50"
-                    onClick={() => (window.location.href = `/orders/${order.id}`)}
-                  >
-                    <TableCell className="font-medium">{order.order_number}</TableCell>
-                    <TableCell className="hidden sm:table-cell text-muted-foreground text-xs max-w-[200px] truncate">
-                      {summarizeItems(order.id)}
-                    </TableCell>
-                    <TableCell>{formatCents(order.total_amount)}</TableCell>
-                    <TableCell>
-                      <Badge
-                        variant="secondary"
-                        className={statusColor[order.status] || ""}
-                      >
-                        {order.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="hidden sm:table-cell text-muted-foreground text-xs">
-                      {new Date(order.created_at).toLocaleDateString()}
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {orders.map((order) => {
+                  const client = profileMap.get(order.user_id);
+                  return (
+                    <TableRow
+                      key={order.id}
+                      className="cursor-pointer hover:bg-muted/50"
+                      onClick={() => (window.location.href = `/orders/${order.id}`)}
+                    >
+                      <TableCell className="font-medium">{order.order_number}</TableCell>
+                      <TableCell className="hidden sm:table-cell text-sm">
+                        {client?.company_name || client?.full_name || "—"}
+                      </TableCell>
+                      <TableCell className="hidden sm:table-cell text-muted-foreground text-xs max-w-[200px] truncate">
+                        {summarizeItems(order.id)}
+                      </TableCell>
+                      <TableCell>{formatCents(order.total_amount)}</TableCell>
+                      <TableCell>
+                        <Badge
+                          variant="secondary"
+                          className={statusColor[order.status] || ""}
+                        >
+                          {order.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="hidden sm:table-cell text-muted-foreground text-xs">
+                        {new Date(order.created_at).toLocaleDateString()}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           </div>
