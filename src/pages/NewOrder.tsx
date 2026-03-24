@@ -40,6 +40,33 @@ export default function NewOrder() {
     },
   });
 
+  const uploadGloveImages = async (orderId: string) => {
+    const allImages = pendingImagesRef.current;
+    for (const [_itemId, angleFiles] of Object.entries(allImages)) {
+      for (const [angleIdx, file] of Object.entries(angleFiles)) {
+        const angle = Number(angleIdx) + 1; // 1-based for DB
+        const ext = file.name.split(".").pop() || "png";
+        const path = `${orderId}/angle-${angle}-${_itemId}.${ext}`;
+        try {
+          const { error: uploadErr } = await supabase.storage
+            .from("order-images")
+            .upload(path, file, { upsert: true });
+          if (uploadErr) throw uploadErr;
+          const { data: urlData } = supabase.storage
+            .from("order-images")
+            .getPublicUrl(path);
+          await supabase.from("order_images").insert({
+            order_id: orderId,
+            angle,
+            image_url: urlData.publicUrl,
+          });
+        } catch (err: any) {
+          console.error(`Failed to upload angle ${angle}:`, err.message);
+        }
+      }
+    }
+  };
+
   const handleCheckout = async () => {
     if (items.length === 0) {
       toast.error("Add at least one item to your order");
