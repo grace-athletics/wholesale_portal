@@ -58,6 +58,11 @@ export function OrderCart({ onCheckout, loading = false }: OrderCartProps) {
                       {item.config.position}
                     </Badge>
                   )}
+                  {item.config.size && (
+                    <Badge variant="outline" className="text-[10px] px-1.5 py-0">
+                      {item.config.size}
+                    </Badge>
+                  )}
                   {item.config.has_flag && (
                     <Badge variant="outline" className="text-[10px] px-1.5 py-0">
                       🏴 Flag
