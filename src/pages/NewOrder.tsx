@@ -236,6 +236,33 @@ export default function NewOrder() {
               />
             </motion.div>
           )}
+
+          {/* Line Total + Add to Order — below all steps */}
+          {selectedProduct && (
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.25 }}
+            >
+              <div className="flex items-center justify-between rounded-lg border bg-card p-5">
+                <div>
+                  <p className="text-xs text-muted-foreground">Line Total</p>
+                  <p className="text-xl font-bold">
+                    {formatCents(configRef.current?.getPriceResult().lineTotal ?? 0)}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {formatCents(configRef.current?.getPriceResult().unitPrice ?? 0)} × {configRef.current?.getConfig().quantity ?? 0}
+                  </p>
+                </div>
+                <Button
+                  onClick={() => configRef.current?.handleAdd()}
+                  disabled={!configRef.current?.isValid()}
+                >
+                  <Plus className="h-4 w-4 mr-1" /> Add to Order
+                </Button>
+              </div>
+            </motion.div>
+          )}
         </div>
 
         {/* Right: Cart (sticky on desktop) */}
