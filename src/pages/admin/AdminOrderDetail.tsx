@@ -208,13 +208,68 @@ export default function AdminOrderDetail() {
         </CardContent>
       </Card>
 
-      {/* Glove Screenshots */}
-      <GloveImageUpload orderId={id!} />
+      {/* Glove Screenshots (read-only from wholesaler uploads) */}
+      {orderImages.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <ImageIcon className="h-4 w-4" /> Glove Screenshots
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {orderImages.map((img) => {
+                const angleLabels = ["Front", "Back", "Thumb", "Pinky"];
+                return (
+                  <div key={img.id} className="space-y-1">
+                    <p className="text-xs font-medium text-muted-foreground text-center">
+                      {angleLabels[img.angle - 1] || `Angle ${img.angle}`}
+                    </p>
+                    <div className="aspect-square rounded-md border bg-muted/30 flex items-center justify-center overflow-hidden">
+                      <img
+                        src={img.image_url}
+                        alt={angleLabels[img.angle - 1] || `Angle ${img.angle}`}
+                        className="max-h-full max-w-full object-contain"
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
-      {/* Line Items */}
+      {/* Glove Design Links */}
+      {items && items.some((i) => i.builder_recipe_url) && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <ExternalLink className="h-4 w-4" /> Glove Design Links
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {items.filter((i) => i.builder_recipe_url).map((item) => (
+              <div key={item.id} className="flex items-center gap-3">
+                <span className="text-sm font-medium">{item.product_name}</span>
+                <a
+                  href={item.builder_recipe_url!}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-primary hover:underline flex items-center gap-1"
+                >
+                  View Design <ExternalLink className="h-3 w-3" />
+                </a>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Build Breakdown */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Line Items</CardTitle>
+          <CardTitle className="text-base">Build Breakdown</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           <Table>
@@ -224,6 +279,8 @@ export default function AdminOrderDetail() {
                 <TableHead>Leather</TableHead>
                 <TableHead>Hand</TableHead>
                 <TableHead>Position</TableHead>
+                <TableHead>Size</TableHead>
+                <TableHead>Flag</TableHead>
                 <TableHead className="text-center">Qty</TableHead>
                 <TableHead className="text-right">Unit</TableHead>
                 <TableHead className="text-right">Total</TableHead>
@@ -236,13 +293,22 @@ export default function AdminOrderDetail() {
                   <TableCell>{item.leather_type || "—"}</TableCell>
                   <TableCell>{item.hand || "—"}</TableCell>
                   <TableCell>{item.position || "—"}</TableCell>
+                  <TableCell>{item.size || "—"}</TableCell>
+                  <TableCell>{item.has_flag ? "Yes" : "No"}</TableCell>
                   <TableCell className="text-center">{item.quantity}</TableCell>
                   <TableCell className="text-right">{formatCents(item.unit_price)}</TableCell>
                   <TableCell className="text-right font-medium">{formatCents(item.line_total)}</TableCell>
                 </TableRow>
               ))}
+              {items && items.some((i) => i.notes) && items.filter((i) => i.notes).map((item) => (
+                <TableRow key={`note-${item.id}`}>
+                  <TableCell colSpan={9} className="text-xs text-muted-foreground italic">
+                    Note ({item.product_name}): {item.notes}
+                  </TableCell>
+                </TableRow>
+              ))}
               <TableRow>
-                <TableCell colSpan={6} className="text-right font-semibold">Order Total</TableCell>
+                <TableCell colSpan={8} className="text-right font-semibold">Order Total</TableCell>
                 <TableCell className="text-right font-bold text-primary">{formatCents(order.total_amount)}</TableCell>
               </TableRow>
             </TableBody>
@@ -284,6 +350,20 @@ export default function AdminOrderDetail() {
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground whitespace-pre-wrap">{order.notes}</p>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Logo Change Info */}
+      {order.logo_change_requested && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Logo Change Requested</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+              {order.logo_change_notes || "No details provided"}
+            </p>
           </CardContent>
         </Card>
       )}
