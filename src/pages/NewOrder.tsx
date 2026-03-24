@@ -195,6 +195,7 @@ export default function NewOrder() {
                   setTick((t) => t + 1);
                   toast.success("Added to order");
                 }}
+                onConfigChange={() => setTick((t) => t + 1)}
               />
             </motion.div>
           )}
