@@ -120,6 +120,7 @@ export const ConfigPanel = forwardRef<ConfigPanelHandle, ConfigPanelProps>(funct
     getConfig: () => config,
     handleAdd,
     isValid: () => !(product.show_recipe_url && config.builder_recipe_url !== "" && !recipeValid),
+    updateNotes: (notes: string) => update("notes", notes),
   }));
 
   return (
