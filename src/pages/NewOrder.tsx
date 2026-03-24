@@ -8,13 +8,12 @@ import { ConfigPanel } from "@/components/order/ConfigPanel";
 import { OrderCart } from "@/components/order/OrderCart";
 import { LogoSection } from "@/components/order/LogoSection";
 import { CheckoutDrawer } from "@/components/order/CheckoutDrawer";
+import { GloveScreenshotStep } from "@/components/order/GloveScreenshotStep";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 
 // Pending images keyed by cart item id -> angle index -> File
 type PendingImages = Record<string, Record<number, File>>;
-
-const ANGLE_LABELS = ["Front", "Back", "Thumb", "Pinky"];
 
 export default function NewOrder() {
   const { items, clearCart } = useCart();
@@ -40,11 +39,14 @@ export default function NewOrder() {
     },
   });
 
+  // Check if any cart items need glove screenshots
+  const hasCustomGloves = items.some((item) => item.product.show_recipe_url);
+
   const uploadGloveImages = async (orderId: string) => {
     const allImages = pendingImagesRef.current;
     for (const [_itemId, angleFiles] of Object.entries(allImages)) {
       for (const [angleIdx, file] of Object.entries(angleFiles)) {
-        const angle = Number(angleIdx) + 1; // 1-based for DB
+        const angle = Number(angleIdx) + 1;
         const ext = file.name.split(".").pop() || "png";
         const path = `${orderId}/angle-${angle}-${_itemId}.${ext}`;
         try {
@@ -73,7 +75,6 @@ export default function NewOrder() {
       return;
     }
 
-    // Validate batting glove minimum total of 15
     const battingTotal = items
       .filter((i) => i.product.name.toLowerCase().includes("batting"))
       .reduce((sum, i) => sum + i.config.quantity, 0);
@@ -114,7 +115,6 @@ export default function NewOrder() {
       if (error) throw error;
 
       if (data?.clientSecret) {
-        // Upload glove images if any
         const orderId = data.order_id;
         if (orderId) {
           await uploadGloveImages(orderId);
@@ -149,7 +149,7 @@ export default function NewOrder() {
       </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left: Product selection + config */}
+        {/* Left: Steps */}
         <div className="lg:col-span-2 space-y-6">
           {/* Step 1: Product Grid */}
           <div>
@@ -187,22 +187,28 @@ export default function NewOrder() {
               <ConfigPanel
                 product={selectedProduct}
                 onAdded={() => toast.success("Added to order")}
-                onGloveImages={(images) => {
-                  // Store images keyed by the newest cart item ID (added right before this callback)
-                  // Use a short timeout to let cart state update
-                  setTimeout(() => {
-                    const latestItems = JSON.parse(localStorage.getItem("mgb-cart") || "[]");
-                    const lastItem = latestItems[latestItems.length - 1];
-                    if (lastItem?.id) {
-                      pendingImagesRef.current[lastItem.id] = images;
-                    }
-                  }, 50);
-                }}
               />
             </motion.div>
           )}
 
-          {/* Logo Section — shown after at least 1 item */}
+          {/* Step 3: Upload Glove Screenshots */}
+          {hasCustomGloves && (
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.25 }}
+            >
+              <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+                Step 3 — Upload Glove Screenshots
+              </h2>
+              <GloveScreenshotStep
+                items={items.filter((item) => item.product.show_recipe_url)}
+                pendingImagesRef={pendingImagesRef}
+              />
+            </motion.div>
+          )}
+
+          {/* Step 4: Confirm Logos */}
           {items.length > 0 && (
             <motion.div
               initial={{ opacity: 0, y: 8 }}
@@ -210,7 +216,7 @@ export default function NewOrder() {
               transition={{ duration: 0.25 }}
             >
               <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
-                Logos
+                {hasCustomGloves ? "Step 4" : "Step 3"} — Confirm Logos
               </h2>
               <LogoSection
                 logoChangeRequested={logoChangeRequested}
