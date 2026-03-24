@@ -33,6 +33,7 @@ export interface ConfigPanelHandle {
   getConfig: () => CartItemConfig;
   handleAdd: () => void;
   isValid: () => boolean;
+  updateNotes: (notes: string) => void;
 }
 
 interface ConfigPanelProps {
@@ -119,6 +120,7 @@ export const ConfigPanel = forwardRef<ConfigPanelHandle, ConfigPanelProps>(funct
     getConfig: () => config,
     handleAdd,
     isValid: () => !(product.show_recipe_url && config.builder_recipe_url !== "" && !recipeValid),
+    updateNotes: (notes: string) => update("notes", notes),
   }));
 
   return (
@@ -349,17 +351,6 @@ export const ConfigPanel = forwardRef<ConfigPanelHandle, ConfigPanelProps>(funct
         </div>
       )}
 
-
-      {/* Notes */}
-      <div className="space-y-2">
-        <Label>Notes (optional)</Label>
-        <Textarea
-          value={config.notes}
-          onChange={(e) => update("notes", e.target.value)}
-          placeholder="Any special instructions..."
-          rows={2}
-        />
-      </div>
 
     </div>
   );
