@@ -38,6 +38,7 @@ export default function NewOrder() {
   const pendingImagesRef = useRef<PendingImages>({});
   const configRef = useRef<ConfigPanelHandle>(null);
   const [currentGloveImages, setCurrentGloveImages] = useState<Record<number, File>>({});
+  const [hasLogosOnFile, setHasLogosOnFile] = useState(false);
   const [, setTick] = useState(0);
 
   const { data: products = [], isLoading } = useQuery({
@@ -321,6 +322,7 @@ export default function NewOrder() {
                 setLogoChangeNotes={setLogoChangeNotes}
                 newLogoFiles={newLogoFiles}
                 setNewLogoFiles={setNewLogoFiles}
+                onLogoStatusChange={setHasLogosOnFile}
               />
             </motion.div>
           )}
@@ -343,12 +345,33 @@ export default function NewOrder() {
                       {formatCents(configRef.current?.getPriceResult().unitPrice ?? 0)} × {configRef.current?.getConfig().quantity ?? 0}
                     </p>
                   </div>
-                  <Button
-                    onClick={() => configRef.current?.handleAdd()}
-                    disabled={!configRef.current?.isValid()}
-                  >
-                    <Plus className="h-4 w-4 mr-1" /> Add to Order
-                  </Button>
+                  {(() => {
+                    const configValid = configRef.current?.isValid() ?? false;
+                    const batting = isBattingProduct(selectedProduct);
+                    const needsScreenshots = selectedProduct?.show_recipe_url;
+                    const requiredAngles = batting ? BATTING_ANGLES.length : GLOVE_ANGLES.length;
+                    const screenshotsComplete = !needsScreenshots || Object.keys(currentGloveImages).length >= requiredAngles;
+                    const logosReady = hasLogosOnFile || logoChangeRequested;
+                    const allReady = configValid && screenshotsComplete && logosReady;
+
+                    return (
+                      <div className="space-y-2">
+                        <Button
+                          onClick={() => configRef.current?.handleAdd()}
+                          disabled={!allReady}
+                        >
+                          <Plus className="h-4 w-4 mr-1" /> Add to Order
+                        </Button>
+                        {!allReady && (
+                          <div className="text-xs text-muted-foreground space-y-0.5">
+                            {!configValid && <p>• Complete product configuration</p>}
+                            {needsScreenshots && !screenshotsComplete && <p>• Upload all glove screenshots</p>}
+                            {!logosReady && <p>• Confirm logos on file or request a change</p>}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })()}
                 </div>
 
                 <div className="space-y-2 border-t pt-4">
