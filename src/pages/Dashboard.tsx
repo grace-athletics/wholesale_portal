@@ -208,10 +208,47 @@ export default function Dashboard() {
         ))}
       </div>
 
+      {/* Quick actions */}
+      <motion.div {...fadeIn} transition={{ duration: 0.3, delay: 0.25 }}>
+        <h2 className="font-semibold mb-3">Quick Actions</h2>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          {quickActions.map((action) => {
+            const content = (
+              <div className="rounded-lg border bg-card p-4 hover:border-primary/40 hover:shadow-sm transition-all cursor-pointer group">
+                <action.icon className="h-5 w-5 text-primary mb-2 group-hover:scale-110 transition-transform" />
+                <p className="text-sm font-medium">{action.label}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  {action.description}
+                </p>
+              </div>
+            );
+
+            if (action.href) {
+              return (
+                <a
+                  key={action.label}
+                  href={action.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {content}
+                </a>
+              );
+            }
+
+            return (
+              <Link key={action.label} to={action.to!}>
+                {content}
+              </Link>
+            );
+          })}
+        </div>
+      </motion.div>
+
       {/* Recent orders */}
       <motion.div
         {...fadeIn}
-        transition={{ duration: 0.3, delay: 0.25 }}
+        transition={{ duration: 0.3, delay: 0.3 }}
         className="rounded-lg border bg-card"
       >
         <div className="flex items-center justify-between p-4 pb-0 sm:p-6 sm:pb-0">
@@ -281,43 +318,6 @@ export default function Dashboard() {
             </Table>
           </div>
         )}
-      </motion.div>
-
-      {/* Quick actions */}
-      <motion.div {...fadeIn} transition={{ duration: 0.3, delay: 0.3 }}>
-        <h2 className="font-semibold mb-3">Quick Actions</h2>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          {quickActions.map((action) => {
-            const content = (
-              <div className="rounded-lg border bg-card p-4 hover:border-primary/40 hover:shadow-sm transition-all cursor-pointer group">
-                <action.icon className="h-5 w-5 text-primary mb-2 group-hover:scale-110 transition-transform" />
-                <p className="text-sm font-medium">{action.label}</p>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  {action.description}
-                </p>
-              </div>
-            );
-
-            if (action.href) {
-              return (
-                <a
-                  key={action.label}
-                  href={action.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {content}
-                </a>
-              );
-            }
-
-            return (
-              <Link key={action.label} to={action.to!}>
-                {content}
-              </Link>
-            );
-          })}
-        </div>
       </motion.div>
     </div>
   );
