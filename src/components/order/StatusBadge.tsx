@@ -17,7 +17,7 @@ export function StatusBadge({ status }: { status: string }) {
   );
 }
 
-const ORDER_STATUSES = ["Order Placed", "Processing", "In Production", "Shipped", "Delivered"];
+const ORDER_STATUSES = ["Order Placed", "Order Submitted", "Processing", "In Production", "Shipped", "Delivered"];
 
 const STATUS_WEEKS: Record<string, string> = {
   "Order Placed": "Week 1",

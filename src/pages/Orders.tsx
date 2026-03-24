@@ -26,7 +26,7 @@ import {
 import { ShoppingBag, Search, PlusCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const STATUSES = ["All", "Order Placed", "Processing", "In Production", "Shipped", "Delivered"];
+const STATUSES = ["All", "Order Placed", "Order Submitted", "Processing", "In Production", "Shipped", "Delivered"];
 
 export default function Orders() {
   const { user } = useAuth();
