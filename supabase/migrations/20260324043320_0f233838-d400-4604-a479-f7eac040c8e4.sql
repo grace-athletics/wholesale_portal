@@ -1,0 +1,1 @@
+UPDATE products SET base_price = 3400 WHERE id = 'e3850eff-bc27-4064-bec1-abd10fbdb79d';
