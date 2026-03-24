@@ -71,7 +71,7 @@ serve(async (req) => {
         notes: orderNotes,
         logo_change_requested: logoChangeRequested,
         logo_change_notes: logoChangeNotes,
-        status: "Received",
+        status: "Order Placed",
       })
       .select("id, order_number")
       .single();
@@ -105,7 +105,7 @@ serve(async (req) => {
     // 3. Insert initial status history
     await supabaseAdmin.from("order_status_history").insert({
       order_id: order.id,
-      new_status: "Received",
+      new_status: "Order Placed",
       changed_by: user.id,
       note: "Order placed",
     });

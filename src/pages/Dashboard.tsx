@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/table";
 
 const statusColor: Record<string, string> = {
-  Received: "bg-status-gray/15 text-status-gray",
+  "Order Placed": "bg-status-gray/15 text-status-gray",
   Processing: "bg-primary/15 text-primary",
   "In Production": "bg-status-blue/15 text-status-blue",
   Shipped: "bg-status-purple/15 text-status-purple",

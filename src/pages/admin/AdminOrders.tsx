@@ -45,13 +45,13 @@ export default function AdminOrders() {
     const matchesSearch = !search || haystack.includes(search.toLowerCase());
     const matchesTab =
       tab === "all" ||
-      (tab === "attention" && o.status === "Received") ||
-      (tab === "active" && !["Delivered", "Received"].includes(o.status)) ||
+      (tab === "attention" && o.status === "Order Placed") ||
+      (tab === "active" && !["Delivered", "Order Placed"].includes(o.status)) ||
       (tab === "completed" && o.status === "Delivered");
     return matchesSearch && matchesTab;
   });
 
-  const attentionCount = (orders ?? []).filter((o) => o.status === "Received").length;
+  const attentionCount = (orders ?? []).filter((o) => o.status === "Order Placed").length;
 
   return (
     <div className="space-y-6">
