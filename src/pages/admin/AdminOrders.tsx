@@ -73,7 +73,7 @@ export default function AdminOrders() {
         <TabsList>
           <TabsTrigger value="all">All ({orders?.length ?? 0})</TabsTrigger>
           <TabsTrigger value="attention">
-            Needs Attention {attentionCount > 0 && `(${attentionCount})`}
+            Need To Submit {attentionCount > 0 && `(${attentionCount})`}
           </TabsTrigger>
           <TabsTrigger value="active">Active</TabsTrigger>
           <TabsTrigger value="completed">Completed</TabsTrigger>
