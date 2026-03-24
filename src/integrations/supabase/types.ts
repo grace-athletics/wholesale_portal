@@ -16,6 +16,12 @@ export type Database = {
     Tables: {
       client_logos: {
         Row: {
+          batting_back_hand_logo_filename: string | null
+          batting_back_hand_logo_url: string | null
+          batting_back_wrist_logo_filename: string | null
+          batting_back_wrist_logo_url: string | null
+          batting_front_wrist_logo_filename: string | null
+          batting_front_wrist_logo_url: string | null
           id: string
           palm_logo_filename: string | null
           palm_logo_url: string | null
@@ -28,6 +34,12 @@ export type Database = {
           wrist_logo_url: string | null
         }
         Insert: {
+          batting_back_hand_logo_filename?: string | null
+          batting_back_hand_logo_url?: string | null
+          batting_back_wrist_logo_filename?: string | null
+          batting_back_wrist_logo_url?: string | null
+          batting_front_wrist_logo_filename?: string | null
+          batting_front_wrist_logo_url?: string | null
           id?: string
           palm_logo_filename?: string | null
           palm_logo_url?: string | null
@@ -40,6 +52,12 @@ export type Database = {
           wrist_logo_url?: string | null
         }
         Update: {
+          batting_back_hand_logo_filename?: string | null
+          batting_back_hand_logo_url?: string | null
+          batting_back_wrist_logo_filename?: string | null
+          batting_back_wrist_logo_url?: string | null
+          batting_front_wrist_logo_filename?: string | null
+          batting_front_wrist_logo_url?: string | null
           id?: string
           palm_logo_filename?: string | null
           palm_logo_url?: string | null

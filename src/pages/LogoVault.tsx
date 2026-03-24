@@ -8,11 +8,19 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 
-const LOGO_SLOTS = [
+const GLOVE_LOGO_SLOTS = [
   { key: "palm", label: "Palm Logo", urlField: "palm_logo_url", fnField: "palm_logo_filename" },
   { key: "wrist", label: "Wrist Logo", urlField: "wrist_logo_url", fnField: "wrist_logo_filename" },
   { key: "thumb", label: "Thumb Logo", urlField: "thumb_logo_url", fnField: "thumb_logo_filename" },
 ] as const;
+
+const BATTING_LOGO_SLOTS = [
+  { key: "batting_back_hand", label: "Back of Hand", urlField: "batting_back_hand_logo_url", fnField: "batting_back_hand_logo_filename" },
+  { key: "batting_back_wrist", label: "Back of Wrist", urlField: "batting_back_wrist_logo_url", fnField: "batting_back_wrist_logo_filename" },
+  { key: "batting_front_wrist", label: "Front of Wrist", urlField: "batting_front_wrist_logo_url", fnField: "batting_front_wrist_logo_filename" },
+] as const;
+
+const ALL_SLOTS = [...GLOVE_LOGO_SLOTS, ...BATTING_LOGO_SLOTS];
 
 type LogoRecord = {
   id: string;
