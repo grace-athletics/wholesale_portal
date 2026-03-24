@@ -319,22 +319,34 @@ export default function NewOrder() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.25 }}
             >
-              <div className="flex items-center justify-between rounded-lg border bg-card p-5">
-                <div>
-                  <p className="text-xs text-muted-foreground">Line Total</p>
-                  <p className="text-xl font-bold">
-                    {formatCents(configRef.current?.getPriceResult().lineTotal ?? 0)}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {formatCents(configRef.current?.getPriceResult().unitPrice ?? 0)} × {configRef.current?.getConfig().quantity ?? 0}
-                  </p>
+              <div className="rounded-lg border bg-card p-5 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-xs text-muted-foreground">Line Total</p>
+                    <p className="text-xl font-bold">
+                      {formatCents(configRef.current?.getPriceResult().lineTotal ?? 0)}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {formatCents(configRef.current?.getPriceResult().unitPrice ?? 0)} × {configRef.current?.getConfig().quantity ?? 0}
+                    </p>
+                  </div>
+                  <Button
+                    onClick={() => configRef.current?.handleAdd()}
+                    disabled={!configRef.current?.isValid()}
+                  >
+                    <Plus className="h-4 w-4 mr-1" /> Add to Order
+                  </Button>
                 </div>
-                <Button
-                  onClick={() => configRef.current?.handleAdd()}
-                  disabled={!configRef.current?.isValid()}
-                >
-                  <Plus className="h-4 w-4 mr-1" /> Add to Order
-                </Button>
+
+                <div className="space-y-2 border-t pt-4">
+                  <Label>Notes (optional)</Label>
+                  <Textarea
+                    value={configRef.current?.getConfig().notes || ""}
+                    onChange={(e) => configRef.current?.updateNotes(e.target.value)}
+                    placeholder="Any special instructions..."
+                    rows={2}
+                  />
+                </div>
               </div>
             </motion.div>
           )}
