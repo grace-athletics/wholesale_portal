@@ -27,6 +27,8 @@ export default function NewOrder() {
   const [checkoutSecret, setCheckoutSecret] = useState<string | null>(null);
   const [showCheckout, setShowCheckout] = useState(false);
   const pendingImagesRef = useRef<PendingImages>({});
+  const configRef = useRef<ConfigPanelHandle>(null);
+  const [, setTick] = useState(0);
 
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["products"],
