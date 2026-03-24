@@ -45,6 +45,7 @@ export function LogoSection({
   setLogoChangeNotes,
   newLogoFiles,
   setNewLogoFiles,
+  isBatting = false,
 }: LogoSectionProps) {
   const { user } = useAuth();
   const [logos, setLogos] = useState<LogoInfo | null>(null);
