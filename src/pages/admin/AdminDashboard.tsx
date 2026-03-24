@@ -39,7 +39,7 @@ export default function AdminDashboard() {
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
   const mrr = orders?.filter((o) => o.created_at >= monthStart).reduce((sum, o) => sum + o.total_amount, 0) ?? 0;
 
-  const needsAttention = orders?.filter((o) => o.status === "Received") ?? [];
+  const needsAttention = orders?.filter((o) => o.status === "Order Placed") ?? [];
   const recentOrders = orders?.slice(0, 8) ?? [];
 
   // Map user_id to profile

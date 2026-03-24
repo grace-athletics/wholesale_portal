@@ -2,7 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 const STATUS_STYLES: Record<string, string> = {
-  Received: "bg-status-gray/15 text-status-gray",
+  "Order Placed": "bg-status-gray/15 text-status-gray",
   Processing: "bg-primary/15 text-primary",
   "In Production": "bg-status-blue/15 text-status-blue",
   Shipped: "bg-status-purple/15 text-status-purple",
@@ -17,10 +17,10 @@ export function StatusBadge({ status }: { status: string }) {
   );
 }
 
-const ORDER_STATUSES = ["Received", "Processing", "In Production", "Shipped", "Delivered"];
+const ORDER_STATUSES = ["Order Placed", "Processing", "In Production", "Shipped", "Delivered"];
 
 const STEP_COLORS: Record<string, { active: string; completed: string }> = {
-  Received: { active: "border-status-gray bg-status-gray", completed: "border-status-gray bg-status-gray" },
+  "Order Placed": { active: "border-status-gray bg-status-gray", completed: "border-status-gray bg-status-gray" },
   Processing: { active: "border-primary bg-primary", completed: "border-primary bg-primary" },
   "In Production": { active: "border-status-blue bg-status-blue", completed: "border-status-blue bg-status-blue" },
   Shipped: { active: "border-status-purple bg-status-purple", completed: "border-status-purple bg-status-purple" },

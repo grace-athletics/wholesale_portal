@@ -15,7 +15,7 @@ import { toast } from "sonner";
 import { useState } from "react";
 import GloveImageUpload from "@/components/order/GloveImageUpload";
 
-const ORDER_STATUSES = ["Received", "Processing", "In Production", "Shipped", "Delivered"];
+const ORDER_STATUSES = ["Order Placed", "Processing", "In Production", "Shipped", "Delivered"];
 
 export default function AdminOrderDetail() {
   const { id } = useParams<{ id: string }>();
