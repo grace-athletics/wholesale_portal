@@ -38,6 +38,7 @@ export interface ConfigPanelHandle {
 interface ConfigPanelProps {
   product: Product;
   onAdded: () => void;
+  onConfigChange?: () => void;
 }
 
 function isBattingGlove(product: Product) {
