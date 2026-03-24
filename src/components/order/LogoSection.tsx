@@ -53,6 +53,7 @@ export function LogoSection({
   newLogoFiles,
   setNewLogoFiles,
   isBatting = false,
+  onLogoStatusChange,
 }: LogoSectionProps) {
   const { user } = useAuth();
   const [logos, setLogos] = useState<LogoInfo | null>(null);
