@@ -22,9 +22,6 @@ export default function AdminOrderDetail() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [newStatus, setNewStatus] = useState<string | null>(null);
-  const [pdfPreviewUrl, setPdfPreviewUrl] = useState<string | null>(null);
-  const [pdfFileName, setPdfFileName] = useState<string>("order.pdf");
-  const [isPdfOpen, setIsPdfOpen] = useState(false);
 
   const { data: order, isLoading } = useQuery({
     queryKey: ["admin-order", id],
@@ -123,30 +120,6 @@ export default function AdminOrderDetail() {
     },
     onError: () => toast.error("Failed to update status"),
   });
-
-  const loadPdfPreview = useCallback(async (pdfUrl: string, fileName: string) => {
-    const response = await fetch(pdfUrl);
-    if (!response.ok) throw new Error("Failed to load PDF");
-
-    const blob = await response.blob();
-    const blobUrl = URL.createObjectURL(blob);
-
-    if (pdfPreviewUrl) {
-      URL.revokeObjectURL(pdfPreviewUrl);
-    }
-
-    setPdfPreviewUrl(blobUrl);
-    setPdfFileName(fileName);
-    setIsPdfOpen(true);
-  }, [pdfPreviewUrl]);
-
-  const closePdfPreview = useCallback(() => {
-    setIsPdfOpen(false);
-    if (pdfPreviewUrl) {
-      URL.revokeObjectURL(pdfPreviewUrl);
-      setPdfPreviewUrl(null);
-    }
-  }, [pdfPreviewUrl]);
 
   const generatePdf = useMutation({
     mutationFn: async () => {
@@ -444,33 +417,6 @@ export default function AdminOrderDetail() {
         )}
       </div>
 
-      <Dialog open={isPdfOpen} onOpenChange={(open) => !open && closePdfPreview()}>
-        <DialogContent className="max-w-6xl h-[90vh] flex flex-col">
-          <DialogHeader className="flex flex-row items-center justify-between space-y-0">
-            <DialogTitle>PDF Preview</DialogTitle>
-            {pdfPreviewUrl && (
-              <a href={pdfPreviewUrl} download={pdfFileName}>
-                <Button variant="outline" size="sm">
-                  <Download className="h-4 w-4 mr-1" /> Download PDF
-                </Button>
-              </a>
-            )}
-          </DialogHeader>
-          <div className="flex-1 rounded-md border overflow-hidden bg-muted/20">
-            {pdfPreviewUrl ? (
-              <iframe
-                src={pdfPreviewUrl}
-                title="Order PDF Preview"
-                className="w-full h-full"
-              />
-            ) : (
-              <div className="h-full flex items-center justify-center text-sm text-muted-foreground">
-                PDF preview unavailable.
-              </div>
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
-    </>
+    </div>
   );
 }
