@@ -19,6 +19,14 @@ export function StatusBadge({ status }: { status: string }) {
 
 const ORDER_STATUSES = ["Order Placed", "Processing", "In Production", "Shipped", "Delivered"];
 
+const STATUS_WEEKS: Record<string, string> = {
+  "Order Placed": "Week 1",
+  Processing: "Week 2–3",
+  "In Production": "Week 4–5",
+  Shipped: "Week 6–7",
+  Delivered: "Week 8",
+};
+
 const STEP_COLORS: Record<string, { active: string; completed: string }> = {
   "Order Placed": { active: "border-status-gray bg-status-gray", completed: "border-status-gray bg-status-gray" },
   Processing: { active: "border-primary bg-primary", completed: "border-primary bg-primary" },
@@ -59,11 +67,14 @@ export function StatusStepper({ currentStatus }: { currentStatus: string }) {
               >
                 {status}
               </span>
+              <span className="text-[9px] text-muted-foreground mt-0.5">
+                {STATUS_WEEKS[status]}
+              </span>
             </div>
             {i < ORDER_STATUSES.length - 1 && (
               <div
                 className={cn(
-                  "flex-1 h-0.5 mx-1 mt-[-16px]",
+                  "flex-1 h-0.5 mx-1 mt-[-28px]",
                   i < currentIndex ? "bg-primary" : "bg-border"
                 )}
               />
@@ -73,4 +84,19 @@ export function StatusStepper({ currentStatus }: { currentStatus: string }) {
       })}
     </div>
   );
+}
+
+/** Returns estimated delivery date (8 weeks from order placed) */
+export function getEstimatedDelivery(createdAt: string): Date {
+  const date = new Date(createdAt);
+  date.setDate(date.getDate() + 56); // 8 weeks
+  return date;
+}
+
+export function formatEstimatedDelivery(createdAt: string): string {
+  return getEstimatedDelivery(createdAt).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
 }

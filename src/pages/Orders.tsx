@@ -5,7 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { formatCents } from "@/lib/pricing";
-import { StatusBadge } from "@/components/order/StatusBadge";
+import { StatusBadge, formatEstimatedDelivery } from "@/components/order/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -158,6 +158,7 @@ export default function Orders() {
                 <TableHead className="hidden md:table-cell">Items</TableHead>
                 <TableHead>Total</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead className="hidden sm:table-cell">Est. Delivery</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -179,6 +180,11 @@ export default function Orders() {
                   </TableCell>
                   <TableCell>
                     <StatusBadge status={order.status} />
+                  </TableCell>
+                  <TableCell className="hidden sm:table-cell text-muted-foreground text-xs">
+                    {order.status === "Delivered"
+                      ? "Delivered"
+                      : formatEstimatedDelivery(order.created_at)}
                   </TableCell>
                 </TableRow>
               ))}
