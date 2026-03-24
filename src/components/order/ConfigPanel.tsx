@@ -74,7 +74,7 @@ export function ConfigPanel({ product, onAdded }: ConfigPanelProps) {
 
   // Calculate price preview
   const sameModelQty =
-    countSameModel(product.id, config.leather_type, items) + config.quantity;
+    countSameModel(product.id, config.leather_type, items, config.builder_recipe_url, config.has_flag) + config.quantity;
   const priceResult = calculateItemPrice(product, config, sameModelQty);
   const nudge = getStockNudge(product, config.leather_type, sameModelQty);
 
