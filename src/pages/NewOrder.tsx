@@ -187,6 +187,17 @@ export default function NewOrder() {
               <ConfigPanel
                 product={selectedProduct}
                 onAdded={() => toast.success("Added to order")}
+                onGloveImages={(images) => {
+                  // Store images keyed by the newest cart item ID (added right before this callback)
+                  // Use a short timeout to let cart state update
+                  setTimeout(() => {
+                    const latestItems = JSON.parse(localStorage.getItem("mgb-cart") || "[]");
+                    const lastItem = latestItems[latestItems.length - 1];
+                    if (lastItem?.id) {
+                      pendingImagesRef.current[lastItem.id] = images;
+                    }
+                  }, 50);
+                }}
               />
             </motion.div>
           )}
