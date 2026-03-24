@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { StatusBadge, StatusStepper } from "@/components/order/StatusBadge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, Download, ExternalLink, FileText, Image as ImageIcon, Loader2 } from "lucide-react";
+import { ArrowLeft, Download, ExternalLink, FileText, Image as ImageIcon, Loader2, Stamp } from "lucide-react";
 import { formatCents } from "@/lib/pricing";
 import { format } from "date-fns";
 import { toast } from "sonner";
@@ -76,6 +76,21 @@ export default function AdminOrderDetail() {
       const { data, error } = await supabase.from("profiles").select("*").eq("id", order!.user_id).single();
       if (error) throw error;
       return data;
+    },
+    enabled: !!order?.user_id,
+  });
+
+  const { data: clientLogos } = useQuery({
+    queryKey: ["admin-client-logos", order?.user_id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("client_logos")
+        .select("*")
+        .eq("user_id", order!.user_id)
+        .order("version", { ascending: false })
+        .limit(1);
+      if (error) throw error;
+      return data?.[0] || null;
     },
     enabled: !!order?.user_id,
   });
@@ -242,7 +257,39 @@ export default function AdminOrderDetail() {
         </CardContent>
       </Card>
 
-      {/* Glove Design Links */}
+      {/* Client Logos */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base flex items-center gap-2">
+            <Stamp className="h-4 w-4" /> Client Logos
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {clientLogos ? (
+            <div className="grid grid-cols-3 gap-4">
+              {[
+                { url: clientLogos.palm_logo_url, label: "Palm Stamp" },
+                { url: clientLogos.thumb_logo_url, label: "Thumb Logo" },
+                { url: clientLogos.wrist_logo_url, label: "Wrist Logo" },
+              ].map((logo) => (
+                <div key={logo.label} className="space-y-1 text-center">
+                  <p className="text-xs font-medium text-muted-foreground">{logo.label}</p>
+                  <div className="aspect-square rounded-md border bg-muted/30 flex items-center justify-center overflow-hidden p-2">
+                    {logo.url ? (
+                      <img src={logo.url} alt={logo.label} className="max-h-full max-w-full object-contain" />
+                    ) : (
+                      <p className="text-xs text-muted-foreground italic">Not uploaded</p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground italic">No logos on file for this client.</p>
+          )}
+        </CardContent>
+      </Card>
+
       {items && items.some((i) => i.builder_recipe_url) && (
         <Card>
           <CardHeader>
