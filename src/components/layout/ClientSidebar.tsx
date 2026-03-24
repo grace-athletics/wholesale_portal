@@ -41,7 +41,7 @@ const toolsNav = [
     icon: ExternalLink,
     external: true,
   },
-  { title: "Mockup Studio", url: "/mockups", icon: Image },
+  { title: "Mockup Generator", url: "https://mockups.myglovebrand.com/", icon: Image, external: true },
 ];
 
 const accountNav = [

@@ -135,10 +135,10 @@ export default function Dashboard() {
       href: "https://www.myglovebuilder.com/",
     },
     {
-      label: "Mockup Studio",
+      label: "Mockup Generator",
       description: "Create product mockups",
       icon: Image,
-      to: "/mockups",
+      href: "https://mockups.myglovebrand.com/",
     },
     {
       label: "Track Orders",
