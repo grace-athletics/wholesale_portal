@@ -95,6 +95,23 @@ export function ConfigPanel({ product, onAdded }: ConfigPanelProps) {
       return;
     }
     addItem(product, config);
+    // Reset config to defaults
+    const dl =
+      product.leather_options && product.leather_options.length > 0
+        ? product.leather_options[0]
+        : "";
+    setConfig({
+      leather_type: dl,
+      hand: product.has_hand_option ? "RHT" : null,
+      position:
+        product.position_options && product.position_options.length > 0
+          ? product.position_options[0]
+          : null,
+      has_flag: false,
+      quantity: product.min_order_qty,
+      builder_recipe_url: "",
+      notes: "",
+    });
     onAdded();
   };
 
