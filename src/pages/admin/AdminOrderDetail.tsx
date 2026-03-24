@@ -157,13 +157,23 @@ export default function AdminOrderDetail() {
       return data;
     },
     onSuccess: async (data) => {
-      toast.success("PDF generated!");
       queryClient.invalidateQueries({ queryKey: ["admin-order", id] });
       if (data?.pdf_url) {
         try {
-          await loadPdfPreview(data.pdf_url, `${order?.order_number || "order"}.pdf`);
+          const response = await fetch(data.pdf_url);
+          if (!response.ok) throw new Error("Failed to fetch PDF");
+          const blob = await response.blob();
+          const blobUrl = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = blobUrl;
+          a.download = `${order?.order_number || "order"}.pdf`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          setTimeout(() => URL.revokeObjectURL(blobUrl), 5000);
+          toast.success("Order form downloaded!");
         } catch {
-          toast.error("PDF generated, but preview could not be loaded in-app.");
+          toast.error("PDF generated but download failed.");
         }
       }
     },
