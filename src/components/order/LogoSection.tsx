@@ -30,6 +30,7 @@ interface LogoSectionProps {
   newLogoFiles: Record<string, File | null>;
   setNewLogoFiles: (files: Record<string, File | null>) => void;
   isBatting?: boolean;
+  onLogoStatusChange?: (hasLogos: boolean) => void;
 }
 
 const GLOVE_LOGO_SLOTS = [
