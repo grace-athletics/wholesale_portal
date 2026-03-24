@@ -352,17 +352,6 @@ export const ConfigPanel = forwardRef<ConfigPanelHandle, ConfigPanelProps>(funct
       )}
 
 
-      {/* Notes */}
-      <div className="space-y-2">
-        <Label>Notes (optional)</Label>
-        <Textarea
-          value={config.notes}
-          onChange={(e) => update("notes", e.target.value)}
-          placeholder="Any special instructions..."
-          rows={2}
-        />
-      </div>
-
     </div>
   );
 });
