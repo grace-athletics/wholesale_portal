@@ -27,6 +27,7 @@ import {
 
 const statusColor: Record<string, string> = {
   "Order Placed": "bg-status-gray/15 text-status-gray",
+  "Order Submitted": "bg-status-amber/15 text-status-amber",
   Processing: "bg-primary/15 text-primary",
   "In Production": "bg-status-blue/15 text-status-blue",
   Shipped: "bg-status-purple/15 text-status-purple",

@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 
 const STATUS_STYLES: Record<string, string> = {
   "Order Placed": "bg-status-gray/15 text-status-gray",
+  "Order Submitted": "bg-status-amber/15 text-status-amber",
   Processing: "bg-primary/15 text-primary",
   "In Production": "bg-status-blue/15 text-status-blue",
   Shipped: "bg-status-purple/15 text-status-purple",
@@ -21,6 +22,7 @@ const ORDER_STATUSES = ["Order Placed", "Order Submitted", "Processing", "In Pro
 
 const STATUS_WEEKS: Record<string, string> = {
   "Order Placed": "Week 1",
+  "Order Submitted": "Week 1",
   Processing: "Week 2–3",
   "In Production": "Week 4–5",
   Shipped: "Week 6–7",
@@ -29,6 +31,7 @@ const STATUS_WEEKS: Record<string, string> = {
 
 const STEP_COLORS: Record<string, { active: string; completed: string }> = {
   "Order Placed": { active: "border-status-gray bg-status-gray", completed: "border-status-gray bg-status-gray" },
+  "Order Submitted": { active: "border-status-amber bg-status-amber", completed: "border-status-amber bg-status-amber" },
   Processing: { active: "border-primary bg-primary", completed: "border-primary bg-primary" },
   "In Production": { active: "border-status-blue bg-status-blue", completed: "border-status-blue bg-status-blue" },
   Shipped: { active: "border-status-purple bg-status-purple", completed: "border-status-purple bg-status-purple" },
