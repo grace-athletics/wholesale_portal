@@ -30,6 +30,7 @@ export default function NewOrder() {
   const [showCheckout, setShowCheckout] = useState(false);
   const pendingImagesRef = useRef<PendingImages>({});
   const configRef = useRef<ConfigPanelHandle>(null);
+  const [currentGloveImages, setCurrentGloveImages] = useState<Record<number, File>>({});
   const [, setTick] = useState(0);
 
   const { data: products = [], isLoading } = useQuery({
