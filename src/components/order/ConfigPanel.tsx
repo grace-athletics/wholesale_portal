@@ -33,6 +33,7 @@ export interface ConfigPanelHandle {
   getConfig: () => CartItemConfig;
   handleAdd: () => void;
   isValid: () => boolean;
+  updateNotes: (notes: string) => void;
 }
 
 interface ConfigPanelProps {
