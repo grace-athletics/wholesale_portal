@@ -76,10 +76,10 @@ export default function AdminDashboard() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Needs Attention */}
+        {/* Need To Submit */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Needs Attention ({needsAttention.length})</CardTitle>
+            <CardTitle className="text-base">Need To Submit ({needsAttention.length})</CardTitle>
           </CardHeader>
           <CardContent>
             {needsAttention.length === 0 ? (
