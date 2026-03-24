@@ -7,6 +7,8 @@ import { ProductGrid } from "@/components/order/ProductGrid";
 import { ConfigPanel, ConfigPanelHandle } from "@/components/order/ConfigPanel";
 import { Button } from "@/components/ui/button";
 import { Plus, Upload, X } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { OrderCart } from "@/components/order/OrderCart";
 import { LogoSection } from "@/components/order/LogoSection";
 import { CheckoutDrawer } from "@/components/order/CheckoutDrawer";
