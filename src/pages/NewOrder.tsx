@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Product } from "@/lib/pricing";
+import { Product, BATTING_MIN_TOTAL } from "@/lib/pricing";
 import { useCart } from "@/contexts/CartContext";
 import { ProductGrid } from "@/components/order/ProductGrid";
 import { ConfigPanel } from "@/components/order/ConfigPanel";
@@ -40,6 +40,18 @@ export default function NewOrder() {
       return;
     }
 
+    // Validate batting glove minimum total of 15
+    const battingTotal = items
+      .filter((i) => i.product.name.toLowerCase().includes("batting"))
+      .reduce((sum, i) => sum + i.config.quantity, 0);
+
+    if (battingTotal > 0 && battingTotal < BATTING_MIN_TOTAL) {
+      toast.error(
+        `Batting Gloves require a minimum total of ${BATTING_MIN_TOTAL} pairs across all sizes. You currently have ${battingTotal}.`
+      );
+      return;
+    }
+
     setCheckoutLoading(true);
     try {
       const orderItems = items.map((item) => ({
@@ -48,6 +60,7 @@ export default function NewOrder() {
         leather_type: item.config.leather_type || null,
         hand: item.config.hand || null,
         position: item.config.position || null,
+        size: item.config.size || null,
         has_flag: item.config.has_flag,
         quantity: item.config.quantity,
         unit_price: item.unitPrice,

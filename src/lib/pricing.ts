@@ -22,11 +22,24 @@ export interface CartItemConfig {
   leather_type: string;
   hand: string | null;
   position: string | null;
+  size: string | null;
   has_flag: boolean;
   quantity: number;
   builder_recipe_url: string;
   notes: string;
 }
+
+export const BATTING_GLOVE_SIZES = [
+  { group: "Youth", sizes: ["Youth S", "Youth M", "Youth L"] },
+  { group: "Adult", sizes: ["Adult S", "Adult M", "Adult L", "Adult XL", "Adult XXL"] },
+];
+
+export const ALL_BATTING_SIZES = BATTING_GLOVE_SIZES.flatMap((g) => g.sizes);
+
+/** Minimum total batting gloves across all sizes in an order */
+export const BATTING_MIN_TOTAL = 15;
+/** Minimum per size/design for batting gloves */
+export const BATTING_MIN_PER_SIZE = 5;
 
 export interface CartItem {
   id: string; // unique cart item ID

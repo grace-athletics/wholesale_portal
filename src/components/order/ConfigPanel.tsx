@@ -6,6 +6,9 @@ import {
   countSameModel,
   getStockNudge,
   formatCents,
+  BATTING_GLOVE_SIZES,
+  ALL_BATTING_SIZES,
+  BATTING_MIN_PER_SIZE,
 } from "@/lib/pricing";
 import { useCart } from "@/contexts/CartContext";
 import { Button } from "@/components/ui/button";
@@ -17,7 +20,9 @@ import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -28,45 +33,39 @@ interface ConfigPanelProps {
   onAdded: () => void;
 }
 
-export function ConfigPanel({ product, onAdded }: ConfigPanelProps) {
-  const { items, addItem } = useCart();
+function isBattingGlove(product: Product) {
+  return product.name.toLowerCase().includes("batting");
+}
 
-  const defaultLeather =
+function buildDefaultConfig(product: Product): CartItemConfig {
+  const dl =
     product.leather_options && product.leather_options.length > 0
       ? product.leather_options[0]
       : "";
-
-  const [config, setConfig] = useState<CartItemConfig>({
-    leather_type: defaultLeather,
+  return {
+    leather_type: dl,
     hand: product.has_hand_option ? "RHT" : null,
     position:
       product.position_options && product.position_options.length > 0
         ? product.position_options[0]
         : null,
+    size: isBattingGlove(product) ? ALL_BATTING_SIZES[0] : null,
     has_flag: false,
-    quantity: product.min_order_qty,
+    quantity: isBattingGlove(product) ? BATTING_MIN_PER_SIZE : product.min_order_qty,
     builder_recipe_url: "",
     notes: "",
-  });
+  };
+}
+
+export function ConfigPanel({ product, onAdded }: ConfigPanelProps) {
+  const { items, addItem } = useCart();
+  const batting = isBattingGlove(product);
+
+  const [config, setConfig] = useState<CartItemConfig>(() => buildDefaultConfig(product));
 
   // Reset config when product changes
   useEffect(() => {
-    const dl =
-      product.leather_options && product.leather_options.length > 0
-        ? product.leather_options[0]
-        : "";
-    setConfig({
-      leather_type: dl,
-      hand: product.has_hand_option ? "RHT" : null,
-      position:
-        product.position_options && product.position_options.length > 0
-          ? product.position_options[0]
-          : null,
-      has_flag: false,
-      quantity: product.min_order_qty,
-      builder_recipe_url: "",
-      notes: "",
-    });
+    setConfig(buildDefaultConfig(product));
   }, [product.id]);
 
   const update = (field: string, value: any) =>
@@ -90,34 +89,48 @@ export function ConfigPanel({ product, onAdded }: ConfigPanelProps) {
     !config.builder_recipe_url ||
     config.builder_recipe_url.startsWith("https://www.myglovebuilder.com");
 
+  // Min qty for batting gloves is per-size (5)
+  const minQty = batting ? BATTING_MIN_PER_SIZE : product.min_order_qty;
+
   const handleAdd = () => {
     if (product.show_recipe_url && config.builder_recipe_url && !recipeValid) {
       return;
     }
     addItem(product, config);
-    // Reset config to defaults
-    const dl =
-      product.leather_options && product.leather_options.length > 0
-        ? product.leather_options[0]
-        : "";
-    setConfig({
-      leather_type: dl,
-      hand: product.has_hand_option ? "RHT" : null,
-      position:
-        product.position_options && product.position_options.length > 0
-          ? product.position_options[0]
-          : null,
-      has_flag: false,
-      quantity: product.min_order_qty,
-      builder_recipe_url: "",
-      notes: "",
-    });
+    setConfig(buildDefaultConfig(product));
     onAdded();
   };
 
   return (
     <div className="space-y-5 rounded-lg border bg-card p-5">
       <h3 className="font-semibold">Configure: {product.name}</h3>
+
+      {/* Size (batting gloves only) */}
+      {batting && (
+        <div className="space-y-2">
+          <Label>Size</Label>
+          <Select
+            value={config.size || ""}
+            onValueChange={(v) => update("size", v)}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select size" />
+            </SelectTrigger>
+            <SelectContent>
+              {BATTING_GLOVE_SIZES.map((group) => (
+                <SelectGroup key={group.group}>
+                  <SelectLabel>{group.group}</SelectLabel>
+                  {group.sizes.map((sz) => (
+                    <SelectItem key={sz} value={sz}>
+                      {sz}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      )}
 
       {/* Leather type */}
       {showLeather && (
@@ -206,7 +219,7 @@ export function ConfigPanel({ product, onAdded }: ConfigPanelProps) {
 
       {/* Quantity */}
       <div className="space-y-2">
-        <Label>Quantity</Label>
+        <Label>Quantity {batting ? "(per size, min 5)" : ""}</Label>
         <div className="flex items-center gap-3">
           <Button
             type="button"
@@ -214,10 +227,7 @@ export function ConfigPanel({ product, onAdded }: ConfigPanelProps) {
             size="icon"
             className="h-8 w-8"
             onClick={() =>
-              update(
-                "quantity",
-                Math.max(product.min_order_qty, config.quantity - 1)
-              )
+              update("quantity", Math.max(minQty, config.quantity - 1))
             }
           >
             <Minus className="h-3 w-3" />
@@ -228,11 +238,11 @@ export function ConfigPanel({ product, onAdded }: ConfigPanelProps) {
             onChange={(e) =>
               update(
                 "quantity",
-                Math.max(product.min_order_qty, parseInt(e.target.value) || product.min_order_qty)
+                Math.max(minQty, parseInt(e.target.value) || minQty)
               )
             }
             className="w-20 text-center"
-            min={product.min_order_qty}
+            min={minQty}
           />
           <Button
             type="button"
@@ -244,7 +254,7 @@ export function ConfigPanel({ product, onAdded }: ConfigPanelProps) {
             <Plus className="h-3 w-3" />
           </Button>
           <span className="text-xs text-muted-foreground">
-            Min: {product.min_order_qty}
+            Min: {minQty}
           </span>
         </div>
       </div>
