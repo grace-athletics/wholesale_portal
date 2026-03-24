@@ -42,6 +42,20 @@ export default function AdminOrderDetail() {
     enabled: !!id,
   });
 
+  const { data: orderImages = [] } = useQuery({
+    queryKey: ["order-images", id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("order_images")
+        .select("*")
+        .eq("order_id", id!)
+        .order("angle", { ascending: true });
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!id,
+  });
+
   const { data: statusHistory } = useQuery({
     queryKey: ["admin-order-history", id],
     queryFn: async () => {
