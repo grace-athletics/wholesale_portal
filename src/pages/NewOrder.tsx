@@ -1,10 +1,12 @@
 import { useState, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Product, BATTING_MIN_TOTAL } from "@/lib/pricing";
+import { Product, BATTING_MIN_TOTAL, formatCents } from "@/lib/pricing";
 import { useCart } from "@/contexts/CartContext";
 import { ProductGrid } from "@/components/order/ProductGrid";
-import { ConfigPanel } from "@/components/order/ConfigPanel";
+import { ConfigPanel, ConfigPanelHandle } from "@/components/order/ConfigPanel";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 import { OrderCart } from "@/components/order/OrderCart";
 import { LogoSection } from "@/components/order/LogoSection";
 import { CheckoutDrawer } from "@/components/order/CheckoutDrawer";
