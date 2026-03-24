@@ -189,9 +189,32 @@ export default function NewOrder() {
                 Step 2 — Configure
               </h2>
               <ConfigPanel
+                ref={configRef}
                 product={selectedProduct}
-                onAdded={() => toast.success("Added to order")}
+                onAdded={() => {
+                  setTick((t) => t + 1);
+                  toast.success("Added to order");
+                }}
               />
+
+              {/* Line Total + Add to Order */}
+              <div className="flex items-center justify-between pt-4 mt-4 border-t rounded-lg border bg-card p-5">
+                <div>
+                  <p className="text-xs text-muted-foreground">Line Total</p>
+                  <p className="text-xl font-bold">
+                    {formatCents(configRef.current?.getPriceResult().lineTotal ?? 0)}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {formatCents(configRef.current?.getPriceResult().unitPrice ?? 0)} × {configRef.current?.getConfig().quantity ?? 0}
+                  </p>
+                </div>
+                <Button
+                  onClick={() => configRef.current?.handleAdd()}
+                  disabled={!configRef.current?.isValid()}
+                >
+                  <Plus className="h-4 w-4 mr-1" /> Add to Order
+                </Button>
+              </div>
             </motion.div>
           )}
 
