@@ -108,7 +108,14 @@ export const ConfigPanel = forwardRef<ConfigPanelHandle, ConfigPanelProps>(funct
     onAdded();
   };
 
-  return (
+  useImperativeHandle(ref, () => ({
+    getPriceResult: () => priceResult,
+    getConfig: () => config,
+    handleAdd,
+    isValid: () => !(product.show_recipe_url && config.builder_recipe_url !== "" && !recipeValid),
+  }));
+
+
     <div className="space-y-5 rounded-lg border bg-card p-5">
       <h3 className="font-semibold">Configure: {product.name}</h3>
 
