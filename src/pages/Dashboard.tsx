@@ -94,18 +94,17 @@ export default function Dashboard() {
   });
 
   const totalOrders = allOrders.length;
-  const totalSpent = allOrders.reduce((s, o) => s + (o.total_amount || 0), 0);
-  const activeStatuses = ["Received", "Processing", "In Production", "Shipped"];
-  const activeOrders = allOrders.filter((o) => activeStatuses.includes(o.status));
+  const totalSales = allOrders.reduce((s, o) => s + (o.total_amount || 0), 0);
   const inProduction = allOrders.filter((o) => o.status === "In Production").length;
+  const totalGlovesSold = orderItemsSummary.reduce((s, i) => s + i.quantity, 0);
 
   const shippedRecently = orders.find((o) => o.status === "Shipped");
 
   const kpis = [
     { label: "Total Orders", value: totalOrders.toString(), icon: ShoppingBag },
-    { label: "Total Spent", value: formatCents(totalSpent), icon: DollarSign },
+    { label: "Total Sales", value: formatCents(totalSales), icon: DollarSign },
     { label: "In Production", value: inProduction.toString(), icon: Loader },
-    { label: "Active Orders", value: activeOrders.length.toString(), icon: Package },
+    { label: "Total Gloves Sold", value: totalGlovesSold.toString(), icon: Package },
   ];
 
   const quickActions = [
