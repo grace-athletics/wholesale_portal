@@ -12,7 +12,7 @@ import { ArrowLeft, Download, ExternalLink, FileText, Image as ImageIcon, Loader
 import { formatCents } from "@/lib/pricing";
 import { format } from "date-fns";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 const ORDER_STATUSES = ["Order Placed", "Order Submitted", "Processing", "In Production", "Shipped", "Delivered"];
 
@@ -97,14 +97,12 @@ export default function AdminOrderDetail() {
 
   const updateStatus = useMutation({
     mutationFn: async (status: string) => {
-      // Update order status
       const { error: orderErr } = await supabase
         .from("orders")
         .update({ status, status_updated_at: new Date().toISOString() })
         .eq("id", id!);
       if (orderErr) throw orderErr;
 
-      // Insert history entry
       const { error: histErr } = await supabase.from("order_status_history").insert({
         order_id: id!,
         old_status: order!.status,
@@ -122,6 +120,17 @@ export default function AdminOrderDetail() {
     onError: () => toast.error("Failed to update status"),
   });
 
+  const openPdfInBrowser = useCallback(async (pdfUrl: string) => {
+    const response = await fetch(pdfUrl);
+    if (!response.ok) throw new Error("Failed to load PDF");
+
+    const blob = await response.blob();
+    const blobUrl = URL.createObjectURL(blob);
+    window.open(blobUrl, "_blank", "noopener,noreferrer");
+
+    setTimeout(() => URL.revokeObjectURL(blobUrl), 60_000);
+  }, []);
+
   const generatePdf = useMutation({
     mutationFn: async () => {
       const { data, error } = await supabase.functions.invoke("generate-order-pdf", {
@@ -130,11 +139,15 @@ export default function AdminOrderDetail() {
       if (error) throw error;
       return data;
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       toast.success("PDF generated!");
       queryClient.invalidateQueries({ queryKey: ["admin-order", id] });
       if (data?.pdf_url) {
-        window.open(data.pdf_url, "_blank");
+        try {
+          await openPdfInBrowser(data.pdf_url);
+        } catch {
+          window.open(data.pdf_url, "_blank", "noopener,noreferrer");
+        }
       }
     },
     onError: () => toast.error("Failed to generate PDF"),
@@ -179,11 +192,13 @@ export default function AdminOrderDetail() {
             )}
           </Button>
           {order.pdf_url && (
-            <a href={order.pdf_url} target="_blank" rel="noopener noreferrer">
-              <Button variant="outline" size="sm">
-                <Download className="h-4 w-4 mr-1" /> Download PDF
-              </Button>
-            </a>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => openPdfInBrowser(order.pdf_url!)}
+            >
+              <Download className="h-4 w-4 mr-1" /> Open PDF
+            </Button>
           )}
         </div>
       </div>
