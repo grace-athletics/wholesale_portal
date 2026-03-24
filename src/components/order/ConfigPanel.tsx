@@ -355,21 +355,6 @@ export const ConfigPanel = forwardRef<ConfigPanelHandle, ConfigPanelProps>(funct
         />
       </div>
 
-      {/* Price + Add button */}
-      <div className="flex items-center justify-between pt-2 border-t">
-        <div>
-          <p className="text-xs text-muted-foreground">Line Total</p>
-          <p className="text-xl font-bold">
-            {formatCents(priceResult.lineTotal)}
-          </p>
-          <p className="text-xs text-muted-foreground">
-            {formatCents(priceResult.unitPrice)} × {config.quantity}
-          </p>
-        </div>
-        <Button onClick={handleAdd} disabled={product.show_recipe_url && config.builder_recipe_url !== "" && !recipeValid}>
-          <Plus className="h-4 w-4 mr-1" /> Add to Order
-        </Button>
-      </div>
     </div>
   );
-}
+});
