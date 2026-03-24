@@ -80,6 +80,21 @@ export default function AdminOrderDetail() {
     enabled: !!order?.user_id,
   });
 
+  const { data: clientLogos } = useQuery({
+    queryKey: ["admin-client-logos", order?.user_id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("client_logos")
+        .select("*")
+        .eq("user_id", order!.user_id)
+        .order("version", { ascending: false })
+        .limit(1);
+      if (error) throw error;
+      return data?.[0] || null;
+    },
+    enabled: !!order?.user_id,
+  });
+
   const updateStatus = useMutation({
     mutationFn: async (status: string) => {
       // Update order status
