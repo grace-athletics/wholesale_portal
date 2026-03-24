@@ -65,7 +65,7 @@ export default function Subscribe() {
         <p className="text-muted-foreground">
           Access the wholesale portal for{" "}
           <span className="font-semibold text-foreground">$49/month</span>.
-          Place unlimited orders, use the Glove Builder, and manage your brand.
+          Place unlimited orders, use the Blank Glove Builder, and manage your brand.
         </p>
         <Button size="lg" className="w-full" onClick={handleStart}>
           Activate Subscription — $49/mo

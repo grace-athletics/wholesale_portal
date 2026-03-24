@@ -36,7 +36,7 @@ const mainNav = [
 
 const toolsNav = [
   {
-    title: "Glove Builder",
+    title: "Blank Glove Builder",
     url: "https://www.myglovebuilder.com/",
     icon: ExternalLink,
     external: true,
