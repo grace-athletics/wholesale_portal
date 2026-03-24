@@ -13,7 +13,7 @@ import { ArrowLeft, Download, ExternalLink, FileText, Image as ImageIcon, Loader
 import { formatCents } from "@/lib/pricing";
 import { format } from "date-fns";
 import { toast } from "sonner";
-import { useState, useCallback } from "react";
+import { useState } from "react";
 
 const ORDER_STATUSES = ["Order Placed", "Order Submitted", "Processing", "In Production", "Shipped", "Delivered"];
 
