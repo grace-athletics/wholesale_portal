@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Product, BATTING_MIN_TOTAL } from "@/lib/pricing";
@@ -11,6 +11,11 @@ import { CheckoutDrawer } from "@/components/order/CheckoutDrawer";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 
+// Pending images keyed by cart item id -> angle index -> File
+type PendingImages = Record<string, Record<number, File>>;
+
+const ANGLE_LABELS = ["Front", "Back", "Thumb", "Pinky"];
+
 export default function NewOrder() {
   const { items, clearCart } = useCart();
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -20,6 +25,7 @@ export default function NewOrder() {
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [checkoutSecret, setCheckoutSecret] = useState<string | null>(null);
   const [showCheckout, setShowCheckout] = useState(false);
+  const pendingImagesRef = useRef<PendingImages>({});
 
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["products"],
@@ -33,6 +39,33 @@ export default function NewOrder() {
       return data as Product[];
     },
   });
+
+  const uploadGloveImages = async (orderId: string) => {
+    const allImages = pendingImagesRef.current;
+    for (const [_itemId, angleFiles] of Object.entries(allImages)) {
+      for (const [angleIdx, file] of Object.entries(angleFiles)) {
+        const angle = Number(angleIdx) + 1; // 1-based for DB
+        const ext = file.name.split(".").pop() || "png";
+        const path = `${orderId}/angle-${angle}-${_itemId}.${ext}`;
+        try {
+          const { error: uploadErr } = await supabase.storage
+            .from("order-images")
+            .upload(path, file, { upsert: true });
+          if (uploadErr) throw uploadErr;
+          const { data: urlData } = supabase.storage
+            .from("order-images")
+            .getPublicUrl(path);
+          await supabase.from("order_images").insert({
+            order_id: orderId,
+            angle,
+            image_url: urlData.publicUrl,
+          });
+        } catch (err: any) {
+          console.error(`Failed to upload angle ${angle}:`, err.message);
+        }
+      }
+    }
+  };
 
   const handleCheckout = async () => {
     if (items.length === 0) {
@@ -81,7 +114,14 @@ export default function NewOrder() {
       if (error) throw error;
 
       if (data?.clientSecret) {
+        // Upload glove images if any
+        const orderId = data.order_id;
+        if (orderId) {
+          await uploadGloveImages(orderId);
+        }
+
         clearCart();
+        pendingImagesRef.current = {};
         setCheckoutSecret(data.clientSecret);
         setShowCheckout(true);
         toast.success(`Order ${data.order_number} created! Complete payment below.`);
@@ -147,6 +187,17 @@ export default function NewOrder() {
               <ConfigPanel
                 product={selectedProduct}
                 onAdded={() => toast.success("Added to order")}
+                onGloveImages={(images) => {
+                  // Store images keyed by the newest cart item ID (added right before this callback)
+                  // Use a short timeout to let cart state update
+                  setTimeout(() => {
+                    const latestItems = JSON.parse(localStorage.getItem("mgb-cart") || "[]");
+                    const lastItem = latestItems[latestItems.length - 1];
+                    if (lastItem?.id) {
+                      pendingImagesRef.current[lastItem.id] = images;
+                    }
+                  }, 50);
+                }}
               />
             </motion.div>
           )}

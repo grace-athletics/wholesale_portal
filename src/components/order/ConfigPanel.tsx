@@ -26,11 +26,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Minus, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { Plus, Minus, AlertTriangle, CheckCircle2, ExternalLink, Upload, X, Loader2 } from "lucide-react";
+
+const GLOVE_ANGLES = ["Front", "Back", "Thumb", "Pinky"] as const;
 
 interface ConfigPanelProps {
   product: Product;
   onAdded: () => void;
+  onGloveImages?: (images: Record<number, File>) => void;
 }
 
 function isBattingGlove(product: Product) {
@@ -57,11 +60,12 @@ function buildDefaultConfig(product: Product): CartItemConfig {
   };
 }
 
-export function ConfigPanel({ product, onAdded }: ConfigPanelProps) {
+export function ConfigPanel({ product, onAdded, onGloveImages }: ConfigPanelProps) {
   const { items, addItem } = useCart();
   const batting = isBattingGlove(product);
 
   const [config, setConfig] = useState<CartItemConfig>(() => buildDefaultConfig(product));
+  const [gloveImages, setGloveImages] = useState<Record<number, File>>({});
 
   // Reset config when product changes
   useEffect(() => {
@@ -97,7 +101,11 @@ export function ConfigPanel({ product, onAdded }: ConfigPanelProps) {
       return;
     }
     addItem(product, config);
+    if (Object.keys(gloveImages).length > 0 && onGloveImages) {
+      onGloveImages(gloveImages);
+    }
     setConfig(buildDefaultConfig(product));
+    setGloveImages({});
     onAdded();
   };
 
@@ -284,11 +292,31 @@ export function ConfigPanel({ product, onAdded }: ConfigPanelProps) {
       {product.show_recipe_url && (
         <div className="space-y-2">
           <Label>Glove Design Link (from myglovebuilder.com)</Label>
-          <Input
-            value={config.builder_recipe_url}
-            onChange={(e) => update("builder_recipe_url", e.target.value)}
-            placeholder="https://www.myglovebuilder.com/pages/custom-gloves?product=fielders&recipe_id=..."
-          />
+          <div className="flex gap-2">
+            <Input
+              value={config.builder_recipe_url}
+              onChange={(e) => update("builder_recipe_url", e.target.value)}
+              placeholder="https://www.myglovebuilder.com/pages/custom-gloves?product=fielders&recipe_id=..."
+              className="flex-1"
+            />
+            {config.builder_recipe_url && recipeValid && (
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                asChild
+              >
+                <a
+                  href={config.builder_recipe_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="Open design in new tab"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                </a>
+              </Button>
+            )}
+          </div>
           {config.builder_recipe_url && !recipeValid && (
             <p className="text-xs text-destructive">
               Must start with https://www.myglovebuilder.com
@@ -306,6 +334,67 @@ export function ConfigPanel({ product, onAdded }: ConfigPanelProps) {
             </a>
             , copy your recipe link, paste it here.
           </p>
+        </div>
+      )}
+
+      {/* Glove Screenshot Uploads */}
+      {product.show_recipe_url && (
+        <div className="space-y-2">
+          <Label>Glove Screenshots (4 angles)</Label>
+          <p className="text-xs text-muted-foreground">
+            Open your design link, run the screenshot bookmarklet, then upload the 4 PNGs here.
+          </p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {GLOVE_ANGLES.map((label, idx) => {
+              const file = gloveImages[idx];
+              return (
+                <div key={label} className="space-y-1">
+                  <p className="text-xs font-medium text-muted-foreground text-center">
+                    {label}
+                  </p>
+                  <div className="aspect-square rounded-md border bg-muted/30 flex items-center justify-center overflow-hidden relative group">
+                    {file ? (
+                      <>
+                        <img
+                          src={URL.createObjectURL(file)}
+                          alt={label}
+                          className="max-h-full max-w-full object-contain"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setGloveImages((prev) => {
+                              const next = { ...prev };
+                              delete next[idx];
+                              return next;
+                            });
+                          }}
+                          className="absolute top-1 right-1 bg-destructive text-destructive-foreground rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </>
+                    ) : (
+                      <label className="cursor-pointer flex flex-col items-center gap-1 p-2">
+                        <Upload className="h-5 w-5 text-muted-foreground/50" />
+                        <span className="text-[10px] text-muted-foreground">Upload</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => {
+                            const f = e.target.files?.[0];
+                            if (f) setGloveImages((prev) => ({ ...prev, [idx]: f }));
+                            e.target.value = "";
+                          }}
+                        />
+                      </label>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       )}
 
