@@ -23,12 +23,19 @@ interface LogoSectionProps {
   setLogoChangeNotes: (v: string) => void;
   newLogoFiles: Record<string, File | null>;
   setNewLogoFiles: (files: Record<string, File | null>) => void;
+  isBatting?: boolean;
 }
 
-const LOGO_SLOTS = [
-  { key: "palm", label: "Palm Logo", urlKey: "palm_logo_url", fnKey: "palm_logo_filename" },
-  { key: "wrist", label: "Wrist Logo", urlKey: "wrist_logo_url", fnKey: "wrist_logo_filename" },
-  { key: "thumb", label: "Thumb Logo", urlKey: "thumb_logo_url", fnKey: "thumb_logo_filename" },
+const GLOVE_LOGO_SLOTS = [
+  { key: "palm", label: "Palm", urlKey: "palm_logo_url", fnKey: "palm_logo_filename" },
+  { key: "wrist", label: "Wrist", urlKey: "wrist_logo_url", fnKey: "wrist_logo_filename" },
+  { key: "thumb", label: "Thumb", urlKey: "thumb_logo_url", fnKey: "thumb_logo_filename" },
+] as const;
+
+const BATTING_LOGO_SLOTS = [
+  { key: "palm", label: "Back of Hand", urlKey: "palm_logo_url", fnKey: "palm_logo_filename" },
+  { key: "wrist", label: "Back of Wrist", urlKey: "wrist_logo_url", fnKey: "wrist_logo_filename" },
+  { key: "thumb", label: "Front of Wrist", urlKey: "thumb_logo_url", fnKey: "thumb_logo_filename" },
 ] as const;
 
 export function LogoSection({
@@ -38,10 +45,12 @@ export function LogoSection({
   setLogoChangeNotes,
   newLogoFiles,
   setNewLogoFiles,
+  isBatting = false,
 }: LogoSectionProps) {
   const { user } = useAuth();
   const [logos, setLogos] = useState<LogoInfo | null>(null);
   const [loading, setLoading] = useState(true);
+  const LOGO_SLOTS = isBatting ? BATTING_LOGO_SLOTS : GLOVE_LOGO_SLOTS;
 
   useEffect(() => {
     async function fetchLogos() {
