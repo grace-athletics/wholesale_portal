@@ -213,10 +213,68 @@ export default function NewOrder() {
               <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
                 Step 3 — Upload Glove Screenshots
               </h2>
-              <GloveScreenshotStep
-                items={items.filter((item) => item.product.show_recipe_url)}
-                pendingImagesRef={pendingImagesRef}
-              />
+              <div className="rounded-lg border bg-card p-4 space-y-3">
+                <p className="text-xs text-muted-foreground">
+                  Upload 4 angle screenshots of your custom glove (Front, Back, Thumb, Pinky). Open your design link, run the screenshot bookmarklet, then upload the PNGs here.
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {GLOVE_ANGLES.map((label, idx) => {
+                    const file = currentGloveImages[idx];
+                    return (
+                      <div key={label} className="space-y-1">
+                        <p className="text-xs font-medium text-muted-foreground text-center">{label}</p>
+                        <div className="aspect-square rounded-md border bg-muted/30 flex items-center justify-center overflow-hidden relative group">
+                          {file ? (
+                            <>
+                              <img
+                                src={URL.createObjectURL(file)}
+                                alt={label}
+                                className="max-h-full max-w-full object-contain"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const updated = { ...currentGloveImages };
+                                  delete updated[idx];
+                                  setCurrentGloveImages(updated);
+                                }}
+                                className="absolute top-1 right-1 bg-destructive text-destructive-foreground rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
+                              >
+                                <X className="h-3 w-3" />
+                              </button>
+                            </>
+                          ) : (
+                            <label className="cursor-pointer flex flex-col items-center gap-1 p-2">
+                              <Upload className="h-5 w-5 text-muted-foreground/50" />
+                              <span className="text-[10px] text-muted-foreground">Upload</span>
+                              <input
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                onChange={(e) => {
+                                  const f = e.target.files?.[0];
+                                  if (f) setCurrentGloveImages((prev) => ({ ...prev, [idx]: f }));
+                                  e.target.value = "";
+                                }}
+                              />
+                            </label>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Also show uploads for existing cart items that need screenshots */}
+              {items.filter((item) => item.product.show_recipe_url).length > 0 && (
+                <div className="mt-4">
+                  <GloveScreenshotStep
+                    items={items.filter((item) => item.product.show_recipe_url)}
+                    pendingImagesRef={pendingImagesRef}
+                  />
+                </div>
+              )}
             </motion.div>
           )}
 
