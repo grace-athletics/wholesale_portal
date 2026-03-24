@@ -1,0 +1,1 @@
+UPDATE products SET is_active = false WHERE name IN ('Stock Glove', 'Infield Glove', 'Outfield Glove', 'First Base Mitt', 'Catcher Mitt', 'Trainer Glove');
