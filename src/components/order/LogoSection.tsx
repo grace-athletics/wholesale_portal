@@ -23,6 +23,7 @@ interface LogoSectionProps {
   setLogoChangeNotes: (v: string) => void;
   newLogoFiles: Record<string, File | null>;
   setNewLogoFiles: (files: Record<string, File | null>) => void;
+  isBatting?: boolean;
 }
 
 const LOGO_SLOTS = [
