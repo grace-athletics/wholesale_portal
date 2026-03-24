@@ -33,9 +33,9 @@ const GLOVE_LOGO_SLOTS = [
 ] as const;
 
 const BATTING_LOGO_SLOTS = [
-  { key: "palm", label: "Back of Hand", urlKey: "palm_logo_url", fnKey: "palm_logo_filename" },
-  { key: "wrist", label: "Back of Wrist", urlKey: "wrist_logo_url", fnKey: "wrist_logo_filename" },
-  { key: "thumb", label: "Front of Wrist", urlKey: "thumb_logo_url", fnKey: "thumb_logo_filename" },
+  { key: "batting_back_hand", label: "Back of Hand", urlKey: "batting_back_hand_logo_url", fnKey: "batting_back_hand_logo_filename" },
+  { key: "batting_back_wrist", label: "Back of Wrist", urlKey: "batting_back_wrist_logo_url", fnKey: "batting_back_wrist_logo_filename" },
+  { key: "batting_front_wrist", label: "Front of Wrist", urlKey: "batting_front_wrist_logo_url", fnKey: "batting_front_wrist_logo_filename" },
 ] as const;
 
 export function LogoSection({
