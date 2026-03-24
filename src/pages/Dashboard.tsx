@@ -142,7 +142,7 @@ export default function Dashboard() {
     },
     {
       label: "Track Orders",
-      description: "View your order history",
+      description: "View your order status",
       icon: Clock,
       to: "/orders",
     },

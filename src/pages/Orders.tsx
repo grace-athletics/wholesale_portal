@@ -92,7 +92,7 @@ export default function Orders() {
         className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
       >
         <div>
-          <h1 className="text-2xl font-semibold">Order History</h1>
+          <h1 className="text-2xl font-semibold">Order Status</h1>
           <p className="text-muted-foreground text-sm mt-1">
             {orders.length} total order{orders.length !== 1 ? "s" : ""}
           </p>
