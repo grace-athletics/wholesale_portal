@@ -209,14 +209,14 @@ export default function AdminOrderDetail() {
       </Card>
 
       {/* Glove Screenshots (read-only from wholesaler uploads) */}
-      {orderImages.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base flex items-center gap-2">
-              <ImageIcon className="h-4 w-4" /> Glove Screenshots
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base flex items-center gap-2">
+            <ImageIcon className="h-4 w-4" /> Glove Screenshots
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {orderImages.length > 0 ? (
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {orderImages.map((img) => {
                 const angleLabels = ["Front", "Back", "Thumb", "Pinky"];
@@ -236,9 +236,11 @@ export default function AdminOrderDetail() {
                 );
               })}
             </div>
-          </CardContent>
-        </Card>
-      )}
+          ) : (
+            <p className="text-sm text-muted-foreground italic">No glove screenshots uploaded by client yet.</p>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Glove Design Links */}
       {items && items.some((i) => i.builder_recipe_url) && (
