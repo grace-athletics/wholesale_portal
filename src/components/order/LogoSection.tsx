@@ -30,6 +30,7 @@ interface LogoSectionProps {
   newLogoFiles: Record<string, File | null>;
   setNewLogoFiles: (files: Record<string, File | null>) => void;
   isBatting?: boolean;
+  onLogoStatusChange?: (hasLogos: boolean) => void;
 }
 
 const GLOVE_LOGO_SLOTS = [
@@ -52,6 +53,7 @@ export function LogoSection({
   newLogoFiles,
   setNewLogoFiles,
   isBatting = false,
+  onLogoStatusChange,
 }: LogoSectionProps) {
   const { user } = useAuth();
   const [logos, setLogos] = useState<LogoInfo | null>(null);
@@ -77,6 +79,10 @@ export function LogoSection({
   const hasAnyLogo = isBatting
     ? logos?.batting_back_hand_logo_url || logos?.batting_back_wrist_logo_url || logos?.batting_front_wrist_logo_url
     : logos?.palm_logo_url || logos?.wrist_logo_url || logos?.thumb_logo_url;
+
+  useEffect(() => {
+    onLogoStatusChange?.(!!hasAnyLogo);
+  }, [hasAnyLogo, onLogoStatusChange]);
 
   const handleFileSelect = (key: string, file: File | null) => {
     if (file) {
