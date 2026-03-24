@@ -49,6 +49,7 @@ export function LogoSection({
   const { user } = useAuth();
   const [logos, setLogos] = useState<LogoInfo | null>(null);
   const [loading, setLoading] = useState(true);
+  const LOGO_SLOTS = isBatting ? BATTING_LOGO_SLOTS : GLOVE_LOGO_SLOTS;
 
   useEffect(() => {
     async function fetchLogos() {
