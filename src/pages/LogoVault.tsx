@@ -44,6 +44,80 @@ type LogoRecord = {
 const VALID_TYPES = ["image/png", "image/jpeg", "image/svg+xml"];
 const MAX_SIZE = 10 * 1024 * 1024;
 
+function LogoGrid({ slots, logos, uploading, dragOver, handleDrop, handleDragOver, handleDragLeave, handleFileInput }: {
+  slots: readonly { key: string; label: string; urlField: string; fnField: string }[];
+  logos: LogoRecord | null;
+  uploading: Record<string, boolean>;
+  dragOver: string | null;
+  handleDrop: (key: string) => (e: React.DragEvent) => void;
+  handleDragOver: (key: string) => (e: React.DragEvent) => void;
+  handleDragLeave: () => void;
+  handleFileInput: (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => void;
+}) {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+      {slots.map((slot, i) => {
+        const url = logos?.[slot.urlField as keyof LogoRecord] as string | null;
+        const filename = logos?.[slot.fnField as keyof LogoRecord] as string | null;
+        const isUploading = uploading[slot.key];
+        const isDraggedOver = dragOver === slot.key;
+        return (
+          <motion.div
+            key={slot.key}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.25, delay: i * 0.05 }}
+            className="rounded-lg border bg-card overflow-hidden"
+          >
+            <div className="p-3 border-b">
+              <h3 className="text-sm font-semibold">{slot.label}</h3>
+            </div>
+            <div
+              onDrop={handleDrop(slot.key)}
+              onDragOver={handleDragOver(slot.key)}
+              onDragLeave={handleDragLeave}
+              className={`relative aspect-square flex items-center justify-center transition-colors ${
+                isDraggedOver ? "bg-primary/10 border-2 border-dashed border-primary" : "bg-muted/20"
+              }`}
+            >
+              {isUploading ? (
+                <div className="flex flex-col items-center gap-2">
+                  <RefreshCw className="h-6 w-6 text-primary animate-spin" />
+                  <p className="text-xs text-muted-foreground">Uploading...</p>
+                </div>
+              ) : url ? (
+                <img src={url} alt={slot.label} className="max-h-full max-w-full object-contain p-4" />
+              ) : (
+                <label className="cursor-pointer flex flex-col items-center gap-2 p-4 w-full h-full justify-center">
+                  <input type="file" accept=".png,.jpg,.jpeg,.svg" className="hidden" onChange={handleFileInput(slot.key)} />
+                  <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center">
+                    <Upload className="h-5 w-5 text-muted-foreground" />
+                  </div>
+                  <p className="text-xs text-muted-foreground text-center">Drag & drop or click to upload</p>
+                  <p className="text-[10px] text-muted-foreground">PNG, JPG, or SVG · Max 10MB</p>
+                </label>
+              )}
+            </div>
+            <div className="p-3 border-t space-y-2">
+              {filename && (
+                <p className="text-xs text-muted-foreground truncate" title={filename}>{filename}</p>
+              )}
+              {url && (
+                <label className="w-full">
+                  <input type="file" accept=".png,.jpg,.jpeg,.svg" className="hidden" onChange={handleFileInput(slot.key)} />
+                  <Button variant="outline" size="sm" className="w-full pointer-events-none" disabled={isUploading} asChild>
+                    <span><RefreshCw className="h-3 w-3 mr-1" />Update Logo</span>
+                  </Button>
+                </label>
+              )}
+            </div>
+          </motion.div>
+        );
+      })}
+    </div>
+  );
+}
+
 export default function LogoVault() {
   const { user } = useAuth();
   const [logos, setLogos] = useState<LogoRecord | null>(null);
