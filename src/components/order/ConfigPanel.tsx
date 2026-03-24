@@ -65,7 +65,7 @@ function buildDefaultConfig(product: Product): CartItemConfig {
   };
 }
 
-export const ConfigPanel = forwardRef<ConfigPanelHandle, ConfigPanelProps>(function ConfigPanel({ product, onAdded }, ref) {
+export const ConfigPanel = forwardRef<ConfigPanelHandle, ConfigPanelProps>(function ConfigPanel({ product, onAdded, onConfigChange }, ref) {
   const { items, addItem } = useCart();
   const batting = isBattingGlove(product);
 
@@ -75,6 +75,11 @@ export const ConfigPanel = forwardRef<ConfigPanelHandle, ConfigPanelProps>(funct
   useEffect(() => {
     setConfig(buildDefaultConfig(product));
   }, [product.id]);
+
+  // Notify parent of config changes for price display
+  useEffect(() => {
+    onConfigChange?.();
+  }, [config]);
 
   const update = (field: string, value: any) =>
     setConfig((c) => ({ ...c, [field]: value }));
