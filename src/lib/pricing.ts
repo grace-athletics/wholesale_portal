@@ -44,20 +44,25 @@ export interface PriceResult {
 }
 
 /**
- * Count how many units of the "same model" are in the cart.
- * Same model = same product_id + same leather_type.
- * Mix of RHT/LHT both count.
+ * Count how many units of the "exact same glove" are in the cart.
+ * Same glove = same product_id + same builder_recipe_url + same leather_type
+ *              + same has_flag.
+ * All four must match for stock pricing to apply.
  */
 export function countSameModel(
   productId: string,
   leatherType: string,
-  cartItems: CartItem[]
+  cartItems: CartItem[],
+  builderRecipeUrl?: string,
+  hasFlag?: boolean
 ): number {
   return cartItems
     .filter(
       (item) =>
         item.product.id === productId &&
-        item.config.leather_type === leatherType
+        item.config.leather_type === leatherType &&
+        item.config.builder_recipe_url === (builderRecipeUrl ?? "") &&
+        item.config.has_flag === (hasFlag ?? false)
     )
     .reduce((sum, item) => sum + item.config.quantity, 0);
 }
