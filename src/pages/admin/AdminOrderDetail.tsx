@@ -13,7 +13,7 @@ import { ArrowLeft, Download, ExternalLink, FileText, Image as ImageIcon, Loader
 import { formatCents } from "@/lib/pricing";
 import { format } from "date-fns";
 import { toast } from "sonner";
-import { useState, useCallback } from "react";
+import { useState } from "react";
 
 const ORDER_STATUSES = ["Order Placed", "Order Submitted", "Processing", "In Production", "Shipped", "Delivered"];
 
@@ -22,9 +22,6 @@ export default function AdminOrderDetail() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [newStatus, setNewStatus] = useState<string | null>(null);
-  const [pdfPreviewUrl, setPdfPreviewUrl] = useState<string | null>(null);
-  const [pdfFileName, setPdfFileName] = useState<string>("order.pdf");
-  const [isPdfOpen, setIsPdfOpen] = useState(false);
 
   const { data: order, isLoading } = useQuery({
     queryKey: ["admin-order", id],
@@ -124,30 +121,6 @@ export default function AdminOrderDetail() {
     onError: () => toast.error("Failed to update status"),
   });
 
-  const loadPdfPreview = useCallback(async (pdfUrl: string, fileName: string) => {
-    const response = await fetch(pdfUrl);
-    if (!response.ok) throw new Error("Failed to load PDF");
-
-    const blob = await response.blob();
-    const blobUrl = URL.createObjectURL(blob);
-
-    if (pdfPreviewUrl) {
-      URL.revokeObjectURL(pdfPreviewUrl);
-    }
-
-    setPdfPreviewUrl(blobUrl);
-    setPdfFileName(fileName);
-    setIsPdfOpen(true);
-  }, [pdfPreviewUrl]);
-
-  const closePdfPreview = useCallback(() => {
-    setIsPdfOpen(false);
-    if (pdfPreviewUrl) {
-      URL.revokeObjectURL(pdfPreviewUrl);
-      setPdfPreviewUrl(null);
-    }
-  }, [pdfPreviewUrl]);
-
   const generatePdf = useMutation({
     mutationFn: async () => {
       const { data, error } = await supabase.functions.invoke("generate-order-pdf", {
@@ -157,13 +130,23 @@ export default function AdminOrderDetail() {
       return data;
     },
     onSuccess: async (data) => {
-      toast.success("PDF generated!");
       queryClient.invalidateQueries({ queryKey: ["admin-order", id] });
       if (data?.pdf_url) {
         try {
-          await loadPdfPreview(data.pdf_url, `${order?.order_number || "order"}.pdf`);
+          const response = await fetch(data.pdf_url);
+          if (!response.ok) throw new Error("Failed to fetch PDF");
+          const blob = await response.blob();
+          const blobUrl = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = blobUrl;
+          a.download = `${order?.order_number || "order"}.pdf`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          setTimeout(() => URL.revokeObjectURL(blobUrl), 5000);
+          toast.success("Order form downloaded!");
         } catch {
-          toast.error("PDF generated, but preview could not be loaded in-app.");
+          toast.error("PDF generated but download failed.");
         }
       }
     },
@@ -184,7 +167,6 @@ export default function AdminOrderDetail() {
   }
 
   return (
-    <>
       <div className="space-y-6">
         <div className="flex items-center gap-4">
           <Link to="/admin/orders">
@@ -196,7 +178,7 @@ export default function AdminOrderDetail() {
               {client?.company_name || client?.full_name || "Unknown client"} · {format(new Date(order.created_at), "MMM d, yyyy")}
             </p>
           </div>
-          <div className="ml-auto flex gap-2">
+          <div className="ml-auto">
             <Button
               variant="outline"
               size="sm"
@@ -206,20 +188,9 @@ export default function AdminOrderDetail() {
               {generatePdf.isPending ? (
                 <><Loader2 className="h-4 w-4 mr-1 animate-spin" /> Generating…</>
               ) : (
-                <><FileText className="h-4 w-4 mr-1" /> Generate PDF</>
+                <><Download className="h-4 w-4 mr-1" /> Download Order Form</>
               )}
             </Button>
-            {order.pdf_url && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => loadPdfPreview(order.pdf_url!, `${order.order_number}.pdf`).catch(() => {
-                  toast.error("Could not load PDF preview.");
-                })}
-              >
-                <Download className="h-4 w-4 mr-1" /> Preview PDF
-              </Button>
-            )}
           </div>
         </div>
 
@@ -444,34 +415,5 @@ export default function AdminOrderDetail() {
           </Card>
         )}
       </div>
-
-      <Dialog open={isPdfOpen} onOpenChange={(open) => !open && closePdfPreview()}>
-        <DialogContent className="max-w-6xl h-[90vh] flex flex-col">
-          <DialogHeader className="flex flex-row items-center justify-between space-y-0">
-            <DialogTitle>PDF Preview</DialogTitle>
-            {pdfPreviewUrl && (
-              <a href={pdfPreviewUrl} download={pdfFileName}>
-                <Button variant="outline" size="sm">
-                  <Download className="h-4 w-4 mr-1" /> Download PDF
-                </Button>
-              </a>
-            )}
-          </DialogHeader>
-          <div className="flex-1 rounded-md border overflow-hidden bg-muted/20">
-            {pdfPreviewUrl ? (
-              <iframe
-                src={pdfPreviewUrl}
-                title="Order PDF Preview"
-                className="w-full h-full"
-              />
-            ) : (
-              <div className="h-full flex items-center justify-center text-sm text-muted-foreground">
-                PDF preview unavailable.
-              </div>
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
-    </>
   );
 }
