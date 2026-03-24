@@ -17,6 +17,11 @@ import { motion } from "framer-motion";
 import { toast } from "sonner";
 
 const GLOVE_ANGLES = ["Front", "Back", "Thumb", "Pinky"] as const;
+const BATTING_ANGLES = ["Front", "Back"] as const;
+
+function isBattingProduct(product: Product | null) {
+  return product?.name.toLowerCase().includes("batting") ?? false;
+}
 
 // Pending images keyed by cart item id -> angle index -> File
 type PendingImages = Record<string, Record<number, File>>;
