@@ -314,6 +314,7 @@ export default function NewOrder() {
                 {selectedProduct?.show_recipe_url ? "Step 4" : "Step 3"} — Confirm Logos
               </h2>
               <LogoSection
+                isBatting={isBattingProduct(selectedProduct)}
                 logoChangeRequested={logoChangeRequested}
                 setLogoChangeRequested={setLogoChangeRequested}
                 logoChangeNotes={logoChangeNotes}
