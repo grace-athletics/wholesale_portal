@@ -415,6 +415,6 @@ export default function AdminOrderDetail() {
             </CardContent>
           </Card>
         )}
-    </div>
+      </div>
   );
 }
