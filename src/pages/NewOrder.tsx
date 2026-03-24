@@ -1,10 +1,12 @@
 import { useState, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Product, BATTING_MIN_TOTAL } from "@/lib/pricing";
+import { Product, BATTING_MIN_TOTAL, formatCents } from "@/lib/pricing";
 import { useCart } from "@/contexts/CartContext";
 import { ProductGrid } from "@/components/order/ProductGrid";
-import { ConfigPanel } from "@/components/order/ConfigPanel";
+import { ConfigPanel, ConfigPanelHandle } from "@/components/order/ConfigPanel";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 import { OrderCart } from "@/components/order/OrderCart";
 import { LogoSection } from "@/components/order/LogoSection";
 import { CheckoutDrawer } from "@/components/order/CheckoutDrawer";
@@ -25,6 +27,8 @@ export default function NewOrder() {
   const [checkoutSecret, setCheckoutSecret] = useState<string | null>(null);
   const [showCheckout, setShowCheckout] = useState(false);
   const pendingImagesRef = useRef<PendingImages>({});
+  const configRef = useRef<ConfigPanelHandle>(null);
+  const [, setTick] = useState(0);
 
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["products"],
@@ -185,8 +189,13 @@ export default function NewOrder() {
                 Step 2 — Configure
               </h2>
               <ConfigPanel
+                ref={configRef}
                 product={selectedProduct}
-                onAdded={() => toast.success("Added to order")}
+                onAdded={() => {
+                  setTick((t) => t + 1);
+                  toast.success("Added to order");
+                }}
+                onConfigChange={() => setTick((t) => t + 1)}
               />
             </motion.div>
           )}
@@ -226,6 +235,33 @@ export default function NewOrder() {
                 newLogoFiles={newLogoFiles}
                 setNewLogoFiles={setNewLogoFiles}
               />
+            </motion.div>
+          )}
+
+          {/* Line Total + Add to Order — below all steps */}
+          {selectedProduct && (
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.25 }}
+            >
+              <div className="flex items-center justify-between rounded-lg border bg-card p-5">
+                <div>
+                  <p className="text-xs text-muted-foreground">Line Total</p>
+                  <p className="text-xl font-bold">
+                    {formatCents(configRef.current?.getPriceResult().lineTotal ?? 0)}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {formatCents(configRef.current?.getPriceResult().unitPrice ?? 0)} × {configRef.current?.getConfig().quantity ?? 0}
+                  </p>
+                </div>
+                <Button
+                  onClick={() => configRef.current?.handleAdd()}
+                  disabled={!configRef.current?.isValid()}
+                >
+                  <Plus className="h-4 w-4 mr-1" /> Add to Order
+                </Button>
+              </div>
             </motion.div>
           )}
         </div>

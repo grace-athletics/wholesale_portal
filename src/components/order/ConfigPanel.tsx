@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useImperativeHandle, forwardRef } from "react";
 import {
   Product,
   CartItemConfig,
@@ -28,9 +28,17 @@ import {
 } from "@/components/ui/select";
 import { Plus, Minus, AlertTriangle, CheckCircle2, ExternalLink } from "lucide-react";
 
+export interface ConfigPanelHandle {
+  getPriceResult: () => { unitPrice: number; lineTotal: number };
+  getConfig: () => CartItemConfig;
+  handleAdd: () => void;
+  isValid: () => boolean;
+}
+
 interface ConfigPanelProps {
   product: Product;
   onAdded: () => void;
+  onConfigChange?: () => void;
 }
 
 function isBattingGlove(product: Product) {
@@ -57,7 +65,7 @@ function buildDefaultConfig(product: Product): CartItemConfig {
   };
 }
 
-export function ConfigPanel({ product, onAdded }: ConfigPanelProps) {
+export const ConfigPanel = forwardRef<ConfigPanelHandle, ConfigPanelProps>(function ConfigPanel({ product, onAdded, onConfigChange }, ref) {
   const { items, addItem } = useCart();
   const batting = isBattingGlove(product);
 
@@ -67,6 +75,11 @@ export function ConfigPanel({ product, onAdded }: ConfigPanelProps) {
   useEffect(() => {
     setConfig(buildDefaultConfig(product));
   }, [product.id]);
+
+  // Notify parent of config changes for price display
+  useEffect(() => {
+    onConfigChange?.();
+  }, [config]);
 
   const update = (field: string, value: any) =>
     setConfig((c) => ({ ...c, [field]: value }));
@@ -100,6 +113,13 @@ export function ConfigPanel({ product, onAdded }: ConfigPanelProps) {
     setConfig(buildDefaultConfig(product));
     onAdded();
   };
+
+  useImperativeHandle(ref, () => ({
+    getPriceResult: () => priceResult,
+    getConfig: () => config,
+    handleAdd,
+    isValid: () => !(product.show_recipe_url && config.builder_recipe_url !== "" && !recipeValid),
+  }));
 
   return (
     <div className="space-y-5 rounded-lg border bg-card p-5">
@@ -341,21 +361,6 @@ export function ConfigPanel({ product, onAdded }: ConfigPanelProps) {
         />
       </div>
 
-      {/* Price + Add button */}
-      <div className="flex items-center justify-between pt-2 border-t">
-        <div>
-          <p className="text-xs text-muted-foreground">Line Total</p>
-          <p className="text-xl font-bold">
-            {formatCents(priceResult.lineTotal)}
-          </p>
-          <p className="text-xs text-muted-foreground">
-            {formatCents(priceResult.unitPrice)} × {config.quantity}
-          </p>
-        </div>
-        <Button onClick={handleAdd} disabled={product.show_recipe_url && config.builder_recipe_url !== "" && !recipeValid}>
-          <Plus className="h-4 w-4 mr-1" /> Add to Order
-        </Button>
-      </div>
     </div>
   );
-}
+});
