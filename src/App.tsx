@@ -71,7 +71,7 @@ const App = () => (
               <Route path="/orders" element={<Orders />} />
               <Route path="/orders/:id" element={<OrderDetail />} />
               <Route path="/builders" element={<Builders />} />
-              <Route path="/mockups" element={<Mockups />} />
+              {/* Mockup Generator now opens externally */}
               <Route path="/account" element={<Account />} />
               <Route path="/account/logos" element={<LogoVault />} />
             </Route>
