@@ -64,7 +64,7 @@ function buildDefaultConfig(product: Product): CartItemConfig {
   };
 }
 
-export function ConfigPanel({ product, onAdded }: ConfigPanelProps) {
+export const ConfigPanel = forwardRef<ConfigPanelHandle, ConfigPanelProps>(function ConfigPanel({ product, onAdded }, ref) {
   const { items, addItem } = useCart();
   const batting = isBattingGlove(product);
 
