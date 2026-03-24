@@ -229,7 +229,7 @@ serve(async (req) => {
 
       // Item details: flag, notes, builder URL
       const details: string[] = [];
-      if (item.has_flag) details.push("🏴 Flag added");
+      if (item.has_flag) details.push("[FLAG] Flag added");
       if (item.notes) details.push(`Note: ${item.notes}`);
       if (item.builder_recipe_url) details.push(`Builder: ${item.builder_recipe_url}`);
 
@@ -265,7 +265,7 @@ serve(async (req) => {
     // ===== LOGO CHANGE INFO =====
     if (order.logo_change_requested) {
       ensureSpace(40);
-      drawText("⚠ LOGO CHANGE REQUESTED", MARGIN, y, { font: fontBold, size: 10, color: rgb(0.8, 0.2, 0.1) });
+      drawText("* LOGO CHANGE REQUESTED", MARGIN, y, { font: fontBold, size: 10, color: rgb(0.8, 0.2, 0.1) });
       y -= 14;
       if (order.logo_change_notes) {
         drawText(order.logo_change_notes, MARGIN, y, { size: 9, color: rgb(0.35, 0.35, 0.35), maxWidth: CONTENT_W });
