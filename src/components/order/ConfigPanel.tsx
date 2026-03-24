@@ -115,7 +115,7 @@ export const ConfigPanel = forwardRef<ConfigPanelHandle, ConfigPanelProps>(funct
     isValid: () => !(product.show_recipe_url && config.builder_recipe_url !== "" && !recipeValid),
   }));
 
-
+  return (
     <div className="space-y-5 rounded-lg border bg-card p-5">
       <h3 className="font-semibold">Configure: {product.name}</h3>
 
