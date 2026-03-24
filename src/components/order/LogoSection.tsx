@@ -102,6 +102,7 @@ export function LogoSection({
               const filename = logos?.[slot.fnKey as keyof LogoInfo] as string | null;
               return (
                 <div key={slot.key} className="text-center space-y-1">
+                  <p className="text-xs font-medium text-muted-foreground">{slot.label}</p>
                   <div className="aspect-square rounded-md border bg-muted/50 flex items-center justify-center overflow-hidden">
                     {url ? (
                       <img
@@ -113,9 +114,6 @@ export function LogoSection({
                       <ImageIcon className="h-6 w-6 text-muted-foreground/40" />
                     )}
                   </div>
-                  <p className="text-[10px] text-muted-foreground truncate">
-                    {filename || slot.label}
-                  </p>
                 </div>
               );
             })}
