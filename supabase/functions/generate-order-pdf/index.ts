@@ -229,7 +229,7 @@ serve(async (req) => {
 
       // Item details: flag, notes, builder URL
       const details: string[] = [];
-      if (item.has_flag) details.push("🏴 Flag added");
+      if (item.has_flag) details.push("[FLAG] Flag added");
       if (item.notes) details.push(`Note: ${item.notes}`);
       if (item.builder_recipe_url) details.push(`Builder: ${item.builder_recipe_url}`);
 
