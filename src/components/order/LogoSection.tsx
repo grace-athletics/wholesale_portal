@@ -26,10 +26,16 @@ interface LogoSectionProps {
   isBatting?: boolean;
 }
 
-const LOGO_SLOTS = [
-  { key: "palm", label: "Palm Logo", urlKey: "palm_logo_url", fnKey: "palm_logo_filename" },
-  { key: "wrist", label: "Wrist Logo", urlKey: "wrist_logo_url", fnKey: "wrist_logo_filename" },
-  { key: "thumb", label: "Thumb Logo", urlKey: "thumb_logo_url", fnKey: "thumb_logo_filename" },
+const GLOVE_LOGO_SLOTS = [
+  { key: "palm", label: "Palm", urlKey: "palm_logo_url", fnKey: "palm_logo_filename" },
+  { key: "wrist", label: "Wrist", urlKey: "wrist_logo_url", fnKey: "wrist_logo_filename" },
+  { key: "thumb", label: "Thumb", urlKey: "thumb_logo_url", fnKey: "thumb_logo_filename" },
+] as const;
+
+const BATTING_LOGO_SLOTS = [
+  { key: "palm", label: "Back of Hand", urlKey: "palm_logo_url", fnKey: "palm_logo_filename" },
+  { key: "wrist", label: "Back of Wrist", urlKey: "wrist_logo_url", fnKey: "wrist_logo_filename" },
+  { key: "thumb", label: "Front of Wrist", urlKey: "thumb_logo_url", fnKey: "thumb_logo_filename" },
 ] as const;
 
 export function LogoSection({
