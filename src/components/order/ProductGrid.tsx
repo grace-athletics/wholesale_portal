@@ -39,11 +39,6 @@ export function ProductGrid({ products, selectedId, onSelect }: ProductGridProps
               <span className="text-lg font-bold">
                 {formatCents(product.base_price)}
               </span>
-              {product.stock_price && (
-                <span className="text-xs text-status-green font-medium">
-                  Stock: {formatCents(product.stock_price)}
-                </span>
-              )}
             </div>
             <div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
               <span>Min {product.min_order_qty}</span>

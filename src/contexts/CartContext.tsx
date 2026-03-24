@@ -46,7 +46,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const sameModelQty = countSameModel(
         item.product.id,
         item.config.leather_type,
-        currentItems
+        currentItems,
+        item.config.builder_recipe_url,
+        item.config.has_flag
       );
       const price = calculateItemPrice(item.product, item.config, sameModelQty);
       return { ...item, ...price };
