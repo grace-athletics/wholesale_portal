@@ -218,14 +218,14 @@ export default function NewOrder() {
           )}
 
           {/* Step 4: Confirm Logos */}
-          {items.length > 0 && (
+          {selectedProduct && (
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.25 }}
             >
               <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
-                {hasCustomGloves ? "Step 4" : "Step 3"} — Confirm Logos
+                {selectedProduct?.show_recipe_url ? "Step 4" : "Step 3"} — Confirm Logos
               </h2>
               <LogoSection
                 logoChangeRequested={logoChangeRequested}
