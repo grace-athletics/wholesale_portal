@@ -195,6 +195,17 @@ export default function NewOrder() {
                 ref={configRef}
                 product={selectedProduct}
                 onAdded={() => {
+                  // Transfer current glove images to the newly added cart item
+                  if (selectedProduct?.show_recipe_url && Object.keys(currentGloveImages).length > 0) {
+                    setTimeout(() => {
+                      const lastItem = items[items.length - 1];
+                      if (lastItem) {
+                        pendingImagesRef.current[lastItem.id] = { ...currentGloveImages };
+                      }
+                      setCurrentGloveImages({});
+                      setTick((t) => t + 1);
+                    }, 100);
+                  }
                   setTick((t) => t + 1);
                   toast.success("Added to order");
                 }}
