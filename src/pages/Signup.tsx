@@ -11,7 +11,7 @@ import logo from "@/assets/logo.png";
 
 const benefits = [
   "Unlimited custom glove orders",
-  "Access to Glove Builder & Mockup Generator",
+  "Access to Blank Glove Builder & Mockup Generator",
   "Korean & Japanese Kip leather options",
   "Stock pricing at 5+ units per model",
 ];

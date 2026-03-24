@@ -129,7 +129,7 @@ export default function Dashboard() {
       to: "/order/new",
     },
     {
-      label: "Glove Builder",
+      label: "Blank Glove Builder",
       description: "Design your custom glove",
       icon: ExternalLink,
       href: "https://www.myglovebuilder.com/",
