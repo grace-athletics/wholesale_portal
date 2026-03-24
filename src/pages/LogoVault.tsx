@@ -110,8 +110,8 @@ export default function LogoVault() {
       const url = signedData.signedUrl;
 
       // Update or insert client_logos record
-      const urlField = LOGO_SLOTS.find((s) => s.key === slotKey)!.urlField;
-      const fnField = LOGO_SLOTS.find((s) => s.key === slotKey)!.fnField;
+      const urlField = ALL_SLOTS.find((s) => s.key === slotKey)!.urlField;
+      const fnField = ALL_SLOTS.find((s) => s.key === slotKey)!.fnField;
 
       if (logos) {
         // Update existing record + increment version
