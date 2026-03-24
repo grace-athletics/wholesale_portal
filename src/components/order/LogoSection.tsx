@@ -74,7 +74,9 @@ export function LogoSection({
     fetchLogos();
   }, [user]);
 
-  const hasAnyLogo = logos?.palm_logo_url || logos?.wrist_logo_url || logos?.thumb_logo_url;
+  const hasAnyLogo = isBatting
+    ? logos?.batting_back_hand_logo_url || logos?.batting_back_wrist_logo_url || logos?.batting_front_wrist_logo_url
+    : logos?.palm_logo_url || logos?.wrist_logo_url || logos?.thumb_logo_url;
 
   const handleFileSelect = (key: string, file: File | null) => {
     if (file) {
