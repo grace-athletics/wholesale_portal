@@ -17,12 +17,12 @@ const corsHeaders = {
 }
 
 const EMAIL_SUBJECTS: Record<string, string> = {
-  signup: 'Confirm your email',
-  invite: "You've been invited",
-  magiclink: 'Your login link',
-  recovery: 'Reset your password',
-  email_change: 'Confirm your new email',
-  reauthentication: 'Your verification code',
+  signup: 'My Glove Brand Portal — Verify Your Email',
+  invite: "My Glove Brand Portal — You've Been Invited",
+  magiclink: 'My Glove Brand Portal — Your Login Link',
+  recovery: 'My Glove Brand Portal — Reset Your Password',
+  email_change: 'My Glove Brand Portal — Confirm Email Change',
+  reauthentication: 'My Glove Brand Portal — Verification Code',
 }
 
 // Template mapping
@@ -36,7 +36,7 @@ const EMAIL_TEMPLATES: Record<string, React.ComponentType<any>> = {
 }
 
 // Configuration
-const SITE_NAME = "mgb-portal"
+const SITE_NAME = "My Glove Brand"
 const SENDER_DOMAIN = "notify.portal.myglovebrand.com"
 const ROOT_DOMAIN = "portal.myglovebrand.com"
 const FROM_DOMAIN = "notify.portal.myglovebrand.com" // Domain shown in From address (may be root or sender subdomain)
