@@ -9,7 +9,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { StatusBadge, StatusStepper } from "@/components/order/StatusBadge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, Download, ExternalLink, FileText, Image as ImageIcon, Loader2, Stamp } from "lucide-react";
+import { ArrowLeft, Download, ExternalLink, FileText, Image as ImageIcon, Loader2, Stamp, Truck } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { formatCents } from "@/lib/pricing";
 import { format } from "date-fns";
 import { toast } from "sonner";
@@ -22,6 +23,8 @@ export default function AdminOrderDetail() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [newStatus, setNewStatus] = useState<string | null>(null);
+  const [trackingNumber, setTrackingNumber] = useState("");
+  const [trackingCarrier, setTrackingCarrier] = useState("");
 
   const { data: order, isLoading } = useQuery({
     queryKey: ["admin-order", id],
@@ -31,7 +34,11 @@ export default function AdminOrderDetail() {
       return data;
     },
     enabled: !!id,
-  });
+    onSuccess: (data) => {
+      setTrackingNumber(data.tracking_number ?? "");
+      setTrackingCarrier(data.tracking_carrier ?? "");
+    },
+  } as any);
 
   const { data: items } = useQuery({
     queryKey: ["admin-order-items", id],
@@ -121,12 +128,42 @@ export default function AdminOrderDetail() {
     onError: () => toast.error("Failed to update status"),
   });
 
+  const saveTracking = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase
+        .from("orders")
+        .update({ tracking_number: trackingNumber || null, tracking_carrier: trackingCarrier || null })
+        .eq("id", id!);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Tracking info saved");
+      queryClient.invalidateQueries({ queryKey: ["admin-order", id] });
+    },
+    onError: () => toast.error("Failed to save tracking info"),
+  });
+
   const generatePdf = useMutation({
     mutationFn: async () => {
       const { data, error } = await supabase.functions.invoke("generate-order-pdf", {
         body: { order_id: id },
       });
-      if (error) throw error;
+      if (error) {
+        // Try to extract actual error text from the Edge Function 500 response body
+        try {
+          const ctx = (error as any).context;
+          const text = ctx instanceof Response
+            ? await ctx.text()
+            : typeof ctx?.text === "function" ? await ctx.text() : null;
+          if (text) {
+            const parsed = JSON.parse(text);
+            if (parsed?.error) throw new Error(parsed.error);
+          }
+        } catch (inner) {
+          if (inner instanceof Error && inner.message !== (error as any).message) throw inner;
+        }
+        throw error;
+      }
       return data;
     },
     onSuccess: async (data) => {
@@ -150,7 +187,7 @@ export default function AdminOrderDetail() {
         }
       }
     },
-    onError: () => toast.error("Failed to generate PDF"),
+    onError: (err: any) => toast.error(`PDF failed: ${err?.message || String(err)}`),
   });
 
   if (isLoading) {
@@ -227,6 +264,55 @@ export default function AdminOrderDetail() {
           </CardContent>
         </Card>
 
+        {(order.status === "Shipped" || order.status === "Delivered") && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base flex items-center gap-2">
+                <Truck className="h-4 w-4" /> Tracking Information
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
+                <div className="space-y-1">
+                  <label className="text-xs font-medium text-muted-foreground">Carrier</label>
+                  <Select value={trackingCarrier} onValueChange={setTrackingCarrier}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select carrier" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="UPS">UPS</SelectItem>
+                      <SelectItem value="FedEx">FedEx</SelectItem>
+                      <SelectItem value="USPS">USPS</SelectItem>
+                      <SelectItem value="DHL">DHL</SelectItem>
+                      <SelectItem value="Other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-1">
+                  <label className="text-xs font-medium text-muted-foreground">Tracking Number</label>
+                  <Input
+                    value={trackingNumber}
+                    onChange={(e) => setTrackingNumber(e.target.value)}
+                    placeholder="Enter tracking number"
+                  />
+                </div>
+                <Button
+                  size="sm"
+                  disabled={saveTracking.isPending}
+                  onClick={() => saveTracking.mutate()}
+                >
+                  {saveTracking.isPending ? "Saving…" : "Save Tracking"}
+                </Button>
+              </div>
+              {order.tracking_number && (
+                <p className="mt-3 text-sm text-muted-foreground">
+                  Last saved: <span className="font-medium text-foreground">{order.tracking_carrier} {order.tracking_number}</span>
+                </p>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
         <Card>
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
@@ -235,27 +321,15 @@ export default function AdminOrderDetail() {
           </CardHeader>
           <CardContent>
             {orderImages.length > 0 ? (
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {orderImages.map((img) => {
-                  const angleLabels = ["Front", "Back", "Thumb", "Pinky"];
-                  return (
-                    <div key={img.id} className="space-y-1">
-                      <p className="text-xs font-medium text-muted-foreground text-center">
-                        {angleLabels[img.angle - 1] || `Angle ${img.angle}`}
-                      </p>
-                      <div className="aspect-square rounded-md border bg-muted/30 flex items-center justify-center overflow-hidden">
-                        <img
-                          src={img.image_url}
-                          alt={angleLabels[img.angle - 1] || `Angle ${img.angle}`}
-                          className="max-h-full max-w-full object-contain"
-                        />
-                      </div>
-                    </div>
-                  );
-                })}
+              <div className="rounded-md border bg-muted/30 overflow-hidden">
+                <img
+                  src={orderImages[0].image_url}
+                  alt="Glove composite"
+                  className="w-full object-contain max-h-96"
+                />
               </div>
             ) : (
-              <p className="text-sm text-muted-foreground italic">No glove screenshots uploaded by client yet.</p>
+              <p className="text-sm text-muted-foreground italic">No glove screenshot uploaded by client yet.</p>
             )}
           </CardContent>
         </Card>

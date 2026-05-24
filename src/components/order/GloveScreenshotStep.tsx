@@ -1,10 +1,9 @@
 import { MutableRefObject, useState } from "react";
 import { CartItem } from "@/lib/pricing";
-import { Upload, X } from "lucide-react";
+import { Upload, X, ImageIcon } from "lucide-react";
 import { Label } from "@/components/ui/label";
 
-const GLOVE_ANGLES = ["Front", "Back", "Thumb", "Pinky"] as const;
-
+// One composite screenshot per cart item (all 4 angles stitched into 1 image by the bookmarklet)
 type PendingImages = Record<string, Record<number, File>>;
 
 interface GloveScreenshotStepProps {
@@ -13,36 +12,27 @@ interface GloveScreenshotStepProps {
 }
 
 export function GloveScreenshotStep({ items, pendingImagesRef }: GloveScreenshotStepProps) {
-  // Force re-render when images change
   const [, setTick] = useState(0);
   const refresh = () => setTick((t) => t + 1);
 
-  const setImage = (itemId: string, angleIdx: number, file: File) => {
-    if (!pendingImagesRef.current[itemId]) {
-      pendingImagesRef.current[itemId] = {};
-    }
-    pendingImagesRef.current[itemId][angleIdx] = file;
+  const setImage = (itemId: string, file: File) => {
+    pendingImagesRef.current[itemId] = { 0: file };
     refresh();
   };
 
-  const removeImage = (itemId: string, angleIdx: number) => {
-    if (pendingImagesRef.current[itemId]) {
-      delete pendingImagesRef.current[itemId][angleIdx];
-      if (Object.keys(pendingImagesRef.current[itemId]).length === 0) {
-        delete pendingImagesRef.current[itemId];
-      }
-    }
+  const removeImage = (itemId: string) => {
+    delete pendingImagesRef.current[itemId];
     refresh();
   };
 
   return (
     <div className="space-y-4">
       <p className="text-xs text-muted-foreground">
-        Upload 4 angle screenshots for each custom glove. Open your design link, run the screenshot bookmarklet, then upload the PNGs here.
+        Run the <span className="font-medium text-foreground">MGB Screenshot</span> bookmarklet on your design page, then upload the composite image it saves.
       </p>
 
       {items.map((item) => {
-        const itemImages = pendingImagesRef.current[item.id] || {};
+        const file = pendingImagesRef.current[item.id]?.[0];
         const designUrl = item.config.builder_recipe_url;
 
         return (
@@ -54,62 +44,44 @@ export function GloveScreenshotStep({ items, pendingImagesRef }: GloveScreenshot
                 {item.config.has_flag ? " + Flag" : ""}
               </Label>
               {designUrl && (
-                <a
-                  href={designUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xs text-primary hover:underline"
-                >
+                <a href={designUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline">
                   Open Design ↗
                 </a>
               )}
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {GLOVE_ANGLES.map((label, idx) => {
-                const file = itemImages[idx];
-                return (
-                  <div key={label} className="space-y-1">
-                    <p className="text-xs font-medium text-muted-foreground text-center">
-                      {label}
-                    </p>
-                    <div className="aspect-square rounded-md border bg-muted/30 flex items-center justify-center overflow-hidden relative group">
-                      {file ? (
-                        <>
-                          <img
-                            src={URL.createObjectURL(file)}
-                            alt={label}
-                            className="max-h-full max-w-full object-contain"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => removeImage(item.id, idx)}
-                            className="absolute top-1 right-1 bg-destructive text-destructive-foreground rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
-                          >
-                            <X className="h-3 w-3" />
-                          </button>
-                        </>
-                      ) : (
-                        <label className="cursor-pointer flex flex-col items-center gap-1 p-2">
-                          <Upload className="h-5 w-5 text-muted-foreground/50" />
-                          <span className="text-[10px] text-muted-foreground">Upload</span>
-                          <input
-                            type="file"
-                            accept="image/*"
-                            className="hidden"
-                            onChange={(e) => {
-                              const f = e.target.files?.[0];
-                              if (f) setImage(item.id, idx, f);
-                              e.target.value = "";
-                            }}
-                          />
-                        </label>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+            {file ? (
+              <div className="relative rounded-md border overflow-hidden bg-muted/30 group">
+                <img
+                  src={URL.createObjectURL(file)}
+                  alt="Glove composite"
+                  className="w-full object-contain max-h-56"
+                />
+                <button
+                  type="button"
+                  onClick={() => removeImage(item.id)}
+                  className="absolute top-2 right-2 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </div>
+            ) : (
+              <label className="cursor-pointer flex flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed border-muted-foreground/30 bg-muted/20 p-6 hover:bg-muted/40 transition-colors">
+                <ImageIcon className="h-7 w-7 text-muted-foreground/50" />
+                <span className="text-sm text-muted-foreground">Upload composite screenshot</span>
+                <span className="text-xs text-muted-foreground/70">Run the bookmarklet, then upload the PNG it saves</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) setImage(item.id, f);
+                    e.target.value = "";
+                  }}
+                />
+              </label>
+            )}
           </div>
         );
       })}

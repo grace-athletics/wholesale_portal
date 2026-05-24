@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import logo from "@/assets/logo.png";
 import { loadStripe } from "@stripe/stripe-js";
+import { useSearchParams } from "react-router-dom";
 import {
   EmbeddedCheckoutProvider,
   EmbeddedCheckout,
@@ -14,9 +15,31 @@ import {
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 export default function Subscribe() {
-  const { profile } = useAuth();
+  const { profile, checkSubscription } = useAuth();
   const [showCheckout, setShowCheckout] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [activating, setActivating] = useState(false);
+  const [searchParams] = useSearchParams();
+
+  // After Stripe redirects back with ?checkout=success, sync subscription status.
+  // AuthOnlyRoute will auto-redirect to /dashboard once isSubscribed flips true.
+  useEffect(() => {
+    if (searchParams.get("checkout") !== "success") return;
+    setActivating(true);
+    const sync = async () => {
+      await checkSubscription();
+      // Poll every 2s in case the webhook is slightly delayed
+      const interval = setInterval(async () => {
+        await checkSubscription();
+      }, 2000);
+      // Stop polling after 30s regardless
+      setTimeout(() => {
+        clearInterval(interval);
+        setActivating(false);
+      }, 30_000);
+    };
+    sync();
+  }, []);
 
   const fetchClientSecret = useCallback(async () => {
     const { data, error } = await supabase.functions.invoke("create-checkout");
@@ -28,6 +51,19 @@ export default function Subscribe() {
   const handleStart = () => {
     setShowCheckout(true);
   };
+
+  if (activating) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background px-4">
+        <div className="text-center space-y-4">
+          <img src={logo} alt="My Glove Brand" className="h-10 object-contain mx-auto" />
+          <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
+          <p className="font-semibold">Activating your subscription…</p>
+          <p className="text-sm text-muted-foreground">This only takes a moment.</p>
+        </div>
+      </div>
+    );
+  }
 
   if (showCheckout) {
     return (

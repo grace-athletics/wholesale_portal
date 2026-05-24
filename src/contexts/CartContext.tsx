@@ -9,7 +9,7 @@ import {
 
 interface CartContextType {
   items: CartItem[];
-  addItem: (product: Product, config: CartItemConfig) => void;
+  addItem: (product: Product, config: CartItemConfig, id?: string) => string;
   removeItem: (itemId: string) => void;
   updateItemQty: (itemId: string, qty: number) => void;
   clearCart: () => void;
@@ -56,10 +56,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const addItem = useCallback(
-    (product: Product, config: CartItemConfig) => {
+    (product: Product, config: CartItemConfig, id?: string): string => {
+      const itemId = id ?? generateId();
       setItems((prev) => {
         const newItem: CartItem = {
-          id: generateId(),
+          id: itemId,
           product,
           config,
           unitPrice: 0,
@@ -69,6 +70,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         const updated = [...prev, newItem];
         return recalculateItems(updated);
       });
+      return itemId;
     },
     [recalculateItems]
   );

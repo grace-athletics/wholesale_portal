@@ -21,8 +21,8 @@ export default function Account() {
       } else {
         throw new Error("No portal URL returned");
       }
-    } catch (err: any) {
-      toast.error(err.message || "Failed to open billing portal");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to open billing portal");
     } finally {
       setPortalLoading(false);
     }

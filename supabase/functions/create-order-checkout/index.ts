@@ -55,6 +55,7 @@ serve(async (req) => {
     const orderNotes: string | null = body.notes || null;
     const logoChangeRequested: boolean = body.logo_change_requested || false;
     const logoChangeNotes: string | null = body.logo_change_notes || null;
+    const promoCode: string | null = body.promo_code || null;
 
     if (!items || items.length === 0) throw new Error("No items provided");
     logStep("Items received", { count: items.length });
@@ -123,6 +124,18 @@ serve(async (req) => {
 
     const origin = req.headers.get("origin") || "http://localhost:5173";
 
+    // Look up promo code in Stripe and resolve to a coupon discount
+    let discounts: { coupon: string }[] = [];
+    if (promoCode) {
+      const promoCodes = await stripe.promotionCodes.list({ code: promoCode, active: true, limit: 1 });
+      if (promoCodes.data.length > 0) {
+        discounts = [{ coupon: (promoCodes.data[0].coupon as any).id }];
+        logStep("Promo code applied", { code: promoCode });
+      } else {
+        logStep("Promo code not found", { code: promoCode });
+      }
+    }
+
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       customer_email: customerId ? undefined : user.email,
@@ -141,6 +154,7 @@ serve(async (req) => {
       ],
       mode: "payment",
       ui_mode: "embedded",
+      ...(discounts.length > 0 ? { discounts } : { allow_promotion_codes: true }),
       return_url: `${origin}/orders/${order.id}?payment=success`,
       metadata: {
         order_id: order.id,

@@ -2,14 +2,17 @@ import { useCart } from "@/contexts/CartContext";
 import { formatCents } from "@/lib/pricing";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Trash2, ShoppingCart, Sparkles, Loader2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Trash2, ShoppingCart, Sparkles, Loader2, Tag } from "lucide-react";
 
 interface OrderCartProps {
   onCheckout: () => void;
   loading?: boolean;
+  promoCode: string;
+  onPromoCodeChange: (code: string) => void;
 }
 
-export function OrderCart({ onCheckout, loading = false }: OrderCartProps) {
+export function OrderCart({ onCheckout, loading = false, promoCode, onPromoCodeChange }: OrderCartProps) {
   const { items, removeItem, cartTotal, totalSavings } = useCart();
 
   if (items.length === 0) {
@@ -105,6 +108,16 @@ export function OrderCart({ onCheckout, loading = false }: OrderCartProps) {
         <div className="flex items-center justify-between">
           <span className="font-semibold">Order Total</span>
           <span className="text-xl font-bold">{formatCents(cartTotal)}</span>
+        </div>
+
+        <div className="flex gap-2 items-center">
+          <Tag className="h-4 w-4 text-muted-foreground shrink-0" />
+          <Input
+            placeholder="Promo code (optional)"
+            value={promoCode}
+            onChange={(e) => onPromoCodeChange(e.target.value.toUpperCase())}
+            className="h-8 text-sm"
+          />
         </div>
 
         <Button className="w-full" size="lg" onClick={onCheckout} disabled={loading}>

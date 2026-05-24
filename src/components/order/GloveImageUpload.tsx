@@ -76,8 +76,8 @@ export default function GloveImageUpload({ orderId }: GloveImageUploadProps) {
 
       toast.success(`${ANGLE_LABELS[angle - 1]} image uploaded`);
       queryClient.invalidateQueries({ queryKey: ["order-images", orderId] });
-    } catch (err: any) {
-      toast.error(`Upload failed: ${err.message}`);
+    } catch (err) {
+      toast.error(`Upload failed: ${err instanceof Error ? err.message : String(err)}`);
     } finally {
       setUploading(null);
     }

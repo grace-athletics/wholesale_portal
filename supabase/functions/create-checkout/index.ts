@@ -68,7 +68,7 @@ serve(async (req) => {
       ],
       mode: "subscription",
       ui_mode: "embedded",
-      return_url: `${origin}/dashboard?checkout=success`,
+      return_url: `${origin}/subscribe?checkout=success`,
     });
 
     logStep("Checkout session created", { sessionId: session.id });

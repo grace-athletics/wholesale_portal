@@ -31,14 +31,14 @@ import { Plus, Minus, AlertTriangle, CheckCircle2, ExternalLink } from "lucide-r
 export interface ConfigPanelHandle {
   getPriceResult: () => { unitPrice: number; lineTotal: number };
   getConfig: () => CartItemConfig;
-  handleAdd: () => void;
+  handleAdd: () => string;
   isValid: () => boolean;
   updateNotes: (notes: string) => void;
 }
 
 interface ConfigPanelProps {
   product: Product;
-  onAdded: () => void;
+  onAdded: (newItemId: string) => void;
   onConfigChange?: () => void;
 }
 
@@ -82,7 +82,7 @@ export const ConfigPanel = forwardRef<ConfigPanelHandle, ConfigPanelProps>(funct
     onConfigChange?.();
   }, [config]);
 
-  const update = (field: string, value: any) =>
+  const update = (field: string, value: string | number | boolean | null) =>
     setConfig((c) => ({ ...c, [field]: value }));
 
   // Calculate price preview
@@ -106,13 +106,14 @@ export const ConfigPanel = forwardRef<ConfigPanelHandle, ConfigPanelProps>(funct
   // Min qty for batting gloves is per-size (5)
   const minQty = batting ? BATTING_MIN_PER_SIZE : product.min_order_qty;
 
-  const handleAdd = () => {
+  const handleAdd = (): string => {
     if (product.show_recipe_url && config.builder_recipe_url && !recipeValid) {
-      return;
+      return "";
     }
-    addItem(product, config);
+    const newId = addItem(product, config);
     setConfig(buildDefaultConfig(product));
-    onAdded();
+    onAdded(newId);
+    return newId;
   };
 
   useImperativeHandle(ref, () => ({

@@ -221,6 +221,8 @@ export type Database = {
           status_updated_at: string | null
           stripe_payment_intent_id: string | null
           total_amount: number
+          tracking_number: string | null
+          tracking_carrier: string | null
           updated_at: string
           user_id: string
         }
@@ -237,6 +239,8 @@ export type Database = {
           status_updated_at?: string | null
           stripe_payment_intent_id?: string | null
           total_amount?: number
+          tracking_number?: string | null
+          tracking_carrier?: string | null
           updated_at?: string
           user_id: string
         }
@@ -253,6 +257,8 @@ export type Database = {
           status_updated_at?: string | null
           stripe_payment_intent_id?: string | null
           total_amount?: number
+          tracking_number?: string | null
+          tracking_carrier?: string | null
           updated_at?: string
           user_id?: string
         }

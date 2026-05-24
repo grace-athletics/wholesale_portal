@@ -38,17 +38,17 @@ export const SignupEmail = ({
           <Text style={brandSub}>Wholesale Portal</Text>
         </Section>
         <Hr style={divider} />
-        <Heading style={h1}>Welcome to the Portal</Heading>
+        <Heading style={h1}>Confirm Your Email Address</Heading>
         <Text style={text}>
-          Thanks for creating your wholesale account! You're one step away from
-          designing and ordering custom gloves.
+          Thank you for signing up for the My Glove Brand Wholesale Portal.
         </Text>
         <Text style={text}>
-          Please verify your email address ({recipient}) by clicking the button below:
+          Please click the link below to confirm your email address. You will be
+          directed to the login page.
         </Text>
         <Section style={buttonContainer}>
           <Button style={button} href={confirmationUrl}>
-            Verify Email &amp; Get Started
+            Confirm Email Address
           </Button>
         </Section>
         <Text style={footer}>

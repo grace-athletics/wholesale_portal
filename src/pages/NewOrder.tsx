@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Product, BATTING_MIN_TOTAL, formatCents } from "@/lib/pricing";
@@ -6,7 +6,8 @@ import { useCart } from "@/contexts/CartContext";
 import { ProductGrid } from "@/components/order/ProductGrid";
 import { ConfigPanel, ConfigPanelHandle } from "@/components/order/ConfigPanel";
 import { Button } from "@/components/ui/button";
-import { Plus, Upload, X } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Plus, Upload, X, Truck } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { OrderCart } from "@/components/order/OrderCart";
@@ -35,11 +36,24 @@ export default function NewOrder() {
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [checkoutSecret, setCheckoutSecret] = useState<string | null>(null);
   const [showCheckout, setShowCheckout] = useState(false);
+  const [shipToName, setShipToName] = useState("");
+  const [shipToAddress, setShipToAddress] = useState("");
+  const [promoCode, setPromoCode] = useState("");
   const pendingImagesRef = useRef<PendingImages>({});
   const configRef = useRef<ConfigPanelHandle>(null);
   const [currentGloveImages, setCurrentGloveImages] = useState<Record<number, File>>({});
   const [hasLogosOnFile, setHasLogosOnFile] = useState(false);
   const [, setTick] = useState(0);
+  const [dragOverAngle, setDragOverAngle] = useState<number | null>(null);
+
+  const handleScreenshotDrop = useCallback((idx: number, e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOverAngle(null);
+    const file = e.dataTransfer.files?.[0];
+    if (file && file.type.startsWith("image/")) {
+      setCurrentGloveImages((prev) => ({ ...prev, [idx]: file }));
+    }
+  }, []);
 
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["products"],
@@ -54,12 +68,16 @@ export default function NewOrder() {
     },
   });
 
-  // Check if any cart items need glove screenshots
-  const hasCustomGloves = items.some((item) => item.product.show_recipe_url);
+  // Screenshots are available for all products
+  const hasCustomGloves = items.length > 0 || !!selectedProduct;
 
   const uploadGloveImages = async (orderId: string) => {
     const allImages = pendingImagesRef.current;
-    for (const [_itemId, angleFiles] of Object.entries(allImages)) {
+    const entries = Object.entries(allImages);
+    if (entries.length === 0) return;
+
+    let uploaded = 0;
+    for (const [_itemId, angleFiles] of entries) {
       for (const [angleIdx, file] of Object.entries(angleFiles)) {
         const angle = Number(angleIdx) + 1;
         const ext = file.name.split(".").pop() || "png";
@@ -72,16 +90,21 @@ export default function NewOrder() {
           const { data: urlData } = supabase.storage
             .from("order-images")
             .getPublicUrl(path);
-          await supabase.from("order_images").insert({
+          const { error: insertErr } = await supabase.from("order_images").insert({
             order_id: orderId,
             angle,
             image_url: urlData.publicUrl,
           });
-        } catch (err: any) {
-          console.error(`Failed to upload angle ${angle}:`, err.message);
+          if (insertErr) throw insertErr;
+          uploaded++;
+        } catch (err) {
+          const msg = err instanceof Error ? err.message : String(err);
+          console.error(`Failed to upload angle ${angle}:`, msg);
+          toast.error(`Screenshot upload failed: ${msg}`);
         }
       }
     }
+    if (uploaded > 0) toast.success(`${uploaded} glove screenshot(s) uploaded`);
   };
 
   const handleCheckout = async () => {
@@ -118,12 +141,18 @@ export default function NewOrder() {
         notes: item.config.notes || null,
       }));
 
+      const shippingNote = [
+        shipToName ? `Ship to: ${shipToName}` : "",
+        shipToAddress ? `Address: ${shipToAddress}` : "",
+      ].filter(Boolean).join("\n");
+
       const { data, error } = await supabase.functions.invoke("create-order-checkout", {
         body: {
           items: orderItems,
-          notes: null,
+          notes: shippingNote || null,
           logo_change_requested: logoChangeRequested,
           logo_change_notes: logoChangeNotes || null,
+          promo_code: promoCode.trim() || null,
         },
       });
 
@@ -143,8 +172,8 @@ export default function NewOrder() {
       } else {
         throw new Error("No checkout session returned");
       }
-    } catch (err: any) {
-      toast.error(err.message || "Failed to create order");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to create order");
     } finally {
       setCheckoutLoading(false);
     }
@@ -202,17 +231,11 @@ export default function NewOrder() {
               <ConfigPanel
                 ref={configRef}
                 product={selectedProduct}
-                onAdded={() => {
-                  // Transfer current glove images to the newly added cart item
-                  if (selectedProduct?.show_recipe_url && Object.keys(currentGloveImages).length > 0) {
-                    setTimeout(() => {
-                      const lastItem = items[items.length - 1];
-                      if (lastItem) {
-                        pendingImagesRef.current[lastItem.id] = { ...currentGloveImages };
-                      }
-                      setCurrentGloveImages({});
-                      setTick((t) => t + 1);
-                    }, 100);
+                onAdded={(newItemId) => {
+                  // Transfer current glove images to the newly added cart item using the known ID
+                  if (Object.keys(currentGloveImages).length > 0) {
+                    pendingImagesRef.current[newItemId] = { ...currentGloveImages };
+                    setCurrentGloveImages({});
                   }
                   setTick((t) => t + 1);
                   toast.success("Added to order");
@@ -223,80 +246,67 @@ export default function NewOrder() {
           )}
 
           {/* Step 3: Upload Glove Screenshots */}
-          {selectedProduct?.show_recipe_url && (
+          {selectedProduct && (
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.25 }}
             >
               <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
-                Step 3 — Upload Glove Screenshots
+                Step 3 — Upload Glove Screenshot
               </h2>
               <div className="rounded-lg border bg-card p-4 space-y-3">
                 <p className="text-xs text-muted-foreground">
-                  {isBattingProduct(selectedProduct)
-                    ? "Upload 2 screenshots of your batting glove design (Front, Back)."
-                    : "Upload 4 angle screenshots of your custom glove (Front, Back, Thumb, Pinky). Open your design link, run the screenshot bookmarklet, then upload the PNGs here."}
+                  Open your design link, run the <span className="font-medium text-foreground">MGB Screenshot</span> bookmarklet, then upload the composite image it saves.
                 </p>
-                {(() => {
-                  const angles = isBattingProduct(selectedProduct) ? BATTING_ANGLES : GLOVE_ANGLES;
-                  return (
-                    <div className={`grid gap-3 ${angles.length === 2 ? "grid-cols-2 sm:grid-cols-2" : "grid-cols-2 sm:grid-cols-4"}`}>
-                      {angles.map((label, idx) => {
-                        const file = currentGloveImages[idx];
-                        return (
-                          <div key={label} className="space-y-1">
-                            <p className="text-xs font-medium text-muted-foreground text-center">{label}</p>
-                            <div className="aspect-square rounded-md border bg-muted/30 flex items-center justify-center overflow-hidden relative group">
-                              {file ? (
-                                <>
-                                  <img
-                                    src={URL.createObjectURL(file)}
-                                    alt={label}
-                                    className="max-h-full max-w-full object-contain"
-                                  />
-                                  <button
-                                    type="button"
-                                    onClick={() => {
-                                      const updated = { ...currentGloveImages };
-                                      delete updated[idx];
-                                      setCurrentGloveImages(updated);
-                                    }}
-                                    className="absolute top-1 right-1 bg-destructive text-destructive-foreground rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
-                                  >
-                                    <X className="h-3 w-3" />
-                                  </button>
-                                </>
-                              ) : (
-                                <label className="cursor-pointer flex flex-col items-center gap-1 p-2">
-                                  <Upload className="h-5 w-5 text-muted-foreground/50" />
-                                  <span className="text-[10px] text-muted-foreground">Upload</span>
-                                  <input
-                                    type="file"
-                                    accept="image/*"
-                                    className="hidden"
-                                    onChange={(e) => {
-                                      const f = e.target.files?.[0];
-                                      if (f) setCurrentGloveImages((prev) => ({ ...prev, [idx]: f }));
-                                      e.target.value = "";
-                                    }}
-                                  />
-                                </label>
-                              )}
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  );
-                })()}
+                {currentGloveImages[0] ? (
+                  <div
+                    className="relative rounded-md border overflow-hidden bg-muted/30 group"
+                    onDragOver={(e) => { e.preventDefault(); setDragOverAngle(0); }}
+                    onDragLeave={() => setDragOverAngle(null)}
+                    onDrop={(e) => handleScreenshotDrop(0, e)}
+                  >
+                    <img
+                      src={URL.createObjectURL(currentGloveImages[0])}
+                      alt="Glove composite"
+                      className="w-full object-contain max-h-56"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setCurrentGloveImages({})}
+                      className="absolute top-2 right-2 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </div>
+                ) : (
+                  <label
+                    className={`cursor-pointer flex flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed p-8 transition-colors ${dragOverAngle === 0 ? "border-primary bg-primary/5" : "border-muted-foreground/30 bg-muted/20 hover:bg-muted/40"}`}
+                    onDragOver={(e) => { e.preventDefault(); setDragOverAngle(0); }}
+                    onDragLeave={() => setDragOverAngle(null)}
+                    onDrop={(e) => handleScreenshotDrop(0, e)}
+                  >
+                    <Upload className={`h-7 w-7 ${dragOverAngle === 0 ? "text-primary" : "text-muted-foreground/50"}`} />
+                    <span className="text-sm text-muted-foreground">{dragOverAngle === 0 ? "Drop image here" : "Upload or drop composite screenshot"}</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        const f = e.target.files?.[0];
+                        if (f) setCurrentGloveImages({ 0: f });
+                        e.target.value = "";
+                      }}
+                    />
+                  </label>
+                )}
               </div>
 
-              {/* Also show uploads for existing cart items that need screenshots */}
-              {items.filter((item) => item.product.show_recipe_url).length > 0 && (
+              {/* Screenshots for items already added to cart */}
+              {items.length > 0 && (
                 <div className="mt-4">
                   <GloveScreenshotStep
-                    items={items.filter((item) => item.product.show_recipe_url)}
+                    items={items}
                     pendingImagesRef={pendingImagesRef}
                   />
                 </div>
@@ -347,12 +357,8 @@ export default function NewOrder() {
                   </div>
                   {(() => {
                     const configValid = configRef.current?.isValid() ?? false;
-                    const batting = isBattingProduct(selectedProduct);
-                    const needsScreenshots = selectedProduct?.show_recipe_url;
-                    const requiredAngles = batting ? BATTING_ANGLES.length : GLOVE_ANGLES.length;
-                    const screenshotsComplete = !needsScreenshots || Object.keys(currentGloveImages).length >= requiredAngles;
                     const logosReady = hasLogosOnFile || logoChangeRequested;
-                    const allReady = configValid && screenshotsComplete && logosReady;
+                    const allReady = configValid && logosReady;
 
                     return (
                       <div className="space-y-2">
@@ -365,7 +371,6 @@ export default function NewOrder() {
                         {!allReady && (
                           <div className="text-xs text-muted-foreground space-y-0.5">
                             {!configValid && <p>• Complete product configuration</p>}
-                            {needsScreenshots && !screenshotsComplete && <p>• Upload all glove screenshots</p>}
                             {!logosReady && <p>• Confirm logos on file or request a change</p>}
                           </div>
                         )}
@@ -388,13 +393,54 @@ export default function NewOrder() {
           )}
         </div>
 
-        {/* Right: Cart (sticky on desktop) */}
+        {/* Right: Shipping + Cart (sticky on desktop) */}
         <div className="lg:col-span-1">
-          <div className="lg:sticky lg:top-20">
-            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
-              Your Order
-            </h2>
-            <OrderCart onCheckout={handleCheckout} loading={checkoutLoading} />
+          <div className="lg:sticky lg:top-20 space-y-4">
+            {/* Shipping Instructions */}
+            <div>
+              <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+                Shipping
+              </h2>
+              <div className="rounded-lg border bg-card p-4 space-y-3">
+                <div className="flex items-center gap-2 text-muted-foreground mb-1">
+                  <Truck className="h-4 w-4" />
+                  <span className="text-xs font-medium">Ship To</span>
+                </div>
+                <div className="space-y-2">
+                  <div>
+                    <Label className="text-xs">Customer / Team Name</Label>
+                    <Input
+                      className="mt-1"
+                      placeholder="e.g. Rake Baseball"
+                      value={shipToName}
+                      onChange={(e) => setShipToName(e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-xs">Ship-To Address</Label>
+                    <Textarea
+                      className="mt-1 resize-none"
+                      rows={3}
+                      placeholder={"123 Main St\nCity, State 12345"}
+                      value={shipToAddress}
+                      onChange={(e) => setShipToAddress(e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+                Your Order
+              </h2>
+              <OrderCart
+                onCheckout={handleCheckout}
+                loading={checkoutLoading}
+                promoCode={promoCode}
+                onPromoCodeChange={setPromoCode}
+              />
+            </div>
           </div>
         </div>
       </div>

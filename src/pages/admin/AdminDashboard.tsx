@@ -5,8 +5,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { StatusBadge } from "@/components/order/StatusBadge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "react-router-dom";
-import { DollarSign, ShoppingBag, Users, TrendingUp } from "lucide-react";
+import { DollarSign, ShoppingBag, Users, TrendingUp, AlertTriangle, ArrowRight } from "lucide-react";
 import { formatCents } from "@/lib/pricing";
+import { formatDistanceToNow } from "date-fns";
 
 export default function AdminDashboard() {
   const { data: orders, isLoading: ordersLoading } = useQuery({
@@ -55,6 +56,44 @@ export default function AdminDashboard() {
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-semibold">Admin Dashboard</h1>
+
+      {/* Urgent: orders needing submission */}
+      {needsAttention.length > 0 && (
+        <div className="rounded-lg border border-status-amber bg-status-amber/10 p-4">
+          <div className="flex items-start gap-3">
+            <AlertTriangle className="h-5 w-5 text-status-amber shrink-0 mt-0.5" />
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold text-status-amber">
+                {needsAttention.length} order{needsAttention.length > 1 ? "s" : ""} need{needsAttention.length === 1 ? "s" : ""} to be submitted
+              </p>
+              <div className="mt-2 space-y-1.5">
+                {needsAttention.slice(0, 5).map((o) => {
+                  const client = profileMap.get(o.user_id);
+                  return (
+                    <Link
+                      key={o.id}
+                      to={`/admin/orders/${o.id}`}
+                      className="flex items-center justify-between rounded-md bg-status-amber/10 px-3 py-2 hover:bg-status-amber/20 transition-colors group"
+                    >
+                      <div className="flex items-center gap-2 text-sm">
+                        <span className="font-semibold">{o.order_number}</span>
+                        <span className="text-muted-foreground">·</span>
+                        <span className="text-muted-foreground">{client?.company_name || client?.full_name || "Unknown"}</span>
+                        <span className="text-muted-foreground">·</span>
+                        <span className="text-muted-foreground text-xs">{formatDistanceToNow(new Date(o.created_at), { addSuffix: true })}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium">{formatCents(o.total_amount)}</span>
+                        <ArrowRight className="h-3.5 w-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

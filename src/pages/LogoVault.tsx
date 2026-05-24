@@ -215,8 +215,8 @@ export default function LogoVault() {
 
       toast.success(`${slotKey.charAt(0).toUpperCase() + slotKey.slice(1)} logo updated`);
       await fetchLogos();
-    } catch (err: any) {
-      toast.error(err.message || "Upload failed");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Upload failed");
     } finally {
       setUploading((prev) => ({ ...prev, [slotKey]: false }));
     }
