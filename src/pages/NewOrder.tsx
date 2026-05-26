@@ -223,7 +223,7 @@ export default function NewOrder() {
 
       if (error) throw error;
 
-      if (data?.clientSecret) {
+      if (data?.url) {
         const orderId = data.order_id;
         if (orderId) {
           await uploadGloveImages(orderId);
@@ -232,9 +232,9 @@ export default function NewOrder() {
         clearCart();
         clearDraft();
         pendingImagesRef.current = {};
-        setCheckoutSecret(data.clientSecret);
-        setShowCheckout(true);
-        toast.success(`Order ${data.order_number} created! Complete payment below.`);
+        toast.success(`Order ${data.order_number} created! Redirecting to payment…`);
+        // Redirect to Stripe hosted checkout
+        window.location.href = data.url;
       } else {
         throw new Error("No checkout session returned");
       }

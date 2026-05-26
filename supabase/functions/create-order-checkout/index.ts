@@ -153,9 +153,9 @@ serve(async (req) => {
         },
       ],
       mode: "payment",
-      ui_mode: "embedded",
       ...(discounts.length > 0 ? { discounts } : { allow_promotion_codes: true }),
-      return_url: `${origin}/orders/${order.id}?payment=success`,
+      success_url: `${origin}/orders/${order.id}?payment=success`,
+      cancel_url: `${origin}/orders?payment=cancelled`,
       metadata: {
         order_id: order.id,
         order_number: order.order_number,
@@ -166,7 +166,7 @@ serve(async (req) => {
 
     return new Response(
       JSON.stringify({
-        clientSecret: session.client_secret,
+        url: session.url,
         order_id: order.id,
         order_number: order.order_number,
       }),
