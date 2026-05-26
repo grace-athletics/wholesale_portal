@@ -3,3 +3,5 @@ project_id = "geqsjoshoiqftdfmbbuu"
 [functions]
   [functions.auth-email-hook]
     verify_jwt = false
+  [functions.stripe-webhook]
+    verify_jwt = false
