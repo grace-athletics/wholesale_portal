@@ -23,7 +23,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ShoppingBag, Search, PlusCircle } from "lucide-react";
+import { ShoppingBag, Search, PlusCircle, FileText } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const STATUSES = ["All", "Order Placed", "Order Submitted", "Processing", "In Production", "Shipped", "Delivered"];
@@ -39,7 +39,7 @@ export default function Orders() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("orders")
-        .select("id, order_number, status, total_amount, created_at")
+        .select("id, order_number, status, total_amount, created_at, pdf_url")
         .order("created_at", { ascending: false });
       if (error) throw error;
       return data;
@@ -158,6 +158,7 @@ export default function Orders() {
                 <TableHead className="hidden md:table-cell">Items</TableHead>
                 <TableHead>Total</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead className="hidden sm:table-cell">Order Form</TableHead>
                 <TableHead className="hidden sm:table-cell">Est. Delivery</TableHead>
               </TableRow>
             </TableHeader>
@@ -180,6 +181,26 @@ export default function Orders() {
                   </TableCell>
                   <TableCell>
                     <StatusBadge status={order.status} />
+                  </TableCell>
+                  <TableCell className="hidden sm:table-cell">
+                    {order.pdf_url ? (
+                      <a
+                        href={order.pdf_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="h-7 px-2.5 text-xs flex items-center gap-1"
+                        >
+                          <FileText className="h-3 w-3" /> View
+                        </Button>
+                      </a>
+                    ) : (
+                      <span className="text-muted-foreground text-xs">—</span>
+                    )}
                   </TableCell>
                   <TableCell className="hidden sm:table-cell text-muted-foreground text-xs">
                     {order.status === "Delivered"
