@@ -13,6 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 import {
   ArrowLeft,
   ExternalLink,
@@ -120,6 +121,27 @@ export default function OrderDetail() {
       <div className="rounded-lg border bg-card p-5">
         <StatusStepper currentStatus={order.status} />
       </div>
+
+      {/* Order Form PDF — visible once admin generates it */}
+      {order.pdf_url && (
+        <div className="rounded-lg border bg-card p-5 flex items-center justify-between gap-4">
+          <div>
+            <h2 className="font-semibold">Order Form</h2>
+            <p className="text-sm text-muted-foreground mt-0.5">
+              Your official order form is ready to view
+            </p>
+          </div>
+          <a
+            href={order.pdf_url}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button variant="outline" className="flex items-center gap-2 shrink-0">
+              <FileText className="h-4 w-4" /> View Order Form
+            </Button>
+          </a>
+        </div>
+      )}
 
       {/* Glove preview — only render slots for images that exist */}
       {images.length > 0 && (
