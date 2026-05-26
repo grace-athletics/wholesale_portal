@@ -26,3 +26,5 @@ if (missing.length > 0) {
     throw new Error(msg);
   }
 }
+
+createRoot(document.getElementById("root")!).render(<App />);
