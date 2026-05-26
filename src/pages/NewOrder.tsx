@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Product, BATTING_MIN_TOTAL, formatCents } from "@/lib/pricing";
@@ -27,18 +27,34 @@ function isBattingProduct(product: Product | null) {
 // Pending images keyed by cart item id -> angle index -> File
 type PendingImages = Record<string, Record<number, File>>;
 
+const DRAFT_KEY = "mgb-order-draft";
+
+function loadDraft(): Record<string, any> {
+  try {
+    const v = localStorage.getItem(DRAFT_KEY);
+    return v ? JSON.parse(v) : {};
+  } catch {
+    return {};
+  }
+}
+
+function clearDraft() {
+  localStorage.removeItem(DRAFT_KEY);
+}
+
 export default function NewOrder() {
   const { items, clearCart } = useCart();
+  const [draft] = useState(() => loadDraft());
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [logoChangeRequested, setLogoChangeRequested] = useState(false);
-  const [logoChangeNotes, setLogoChangeNotes] = useState("");
+  const [logoChangeRequested, setLogoChangeRequested] = useState<boolean>(draft.logoChangeRequested ?? false);
+  const [logoChangeNotes, setLogoChangeNotes] = useState<string>(draft.logoChangeNotes ?? "");
   const [newLogoFiles, setNewLogoFiles] = useState<Record<string, File | null>>({});
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [checkoutSecret, setCheckoutSecret] = useState<string | null>(null);
   const [showCheckout, setShowCheckout] = useState(false);
-  const [shipToName, setShipToName] = useState("");
-  const [shipToAddress, setShipToAddress] = useState("");
-  const [promoCode, setPromoCode] = useState("");
+  const [shipToName, setShipToName] = useState<string>(draft.shipToName ?? "");
+  const [shipToAddress, setShipToAddress] = useState<string>(draft.shipToAddress ?? "");
+  const [promoCode, setPromoCode] = useState<string>(draft.promoCode ?? "");
   const pendingImagesRef = useRef<PendingImages>({});
   const configRef = useRef<ConfigPanelHandle>(null);
   const [currentGloveImages, setCurrentGloveImages] = useState<Record<number, File>>({});
@@ -67,6 +83,29 @@ export default function NewOrder() {
       return data as Product[];
     },
   });
+
+  // Restore selected product from draft once products have loaded
+  useEffect(() => {
+    if (draft.selectedProductId && products.length > 0 && !selectedProduct) {
+      const p = products.find((p) => p.id === draft.selectedProductId);
+      if (p) setSelectedProduct(p);
+    }
+  }, [products]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Persist form state to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem(
+      DRAFT_KEY,
+      JSON.stringify({
+        selectedProductId: selectedProduct?.id ?? null,
+        logoChangeRequested,
+        logoChangeNotes,
+        shipToName,
+        shipToAddress,
+        promoCode,
+      })
+    );
+  }, [selectedProduct, logoChangeRequested, logoChangeNotes, shipToName, shipToAddress, promoCode]);
 
   // Screenshots are available for all products
   const hasCustomGloves = items.length > 0 || !!selectedProduct;
@@ -165,6 +204,7 @@ export default function NewOrder() {
         }
 
         clearCart();
+        clearDraft();
         pendingImagesRef.current = {};
         setCheckoutSecret(data.clientSecret);
         setShowCheckout(true);
