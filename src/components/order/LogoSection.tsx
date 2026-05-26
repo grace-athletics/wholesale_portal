@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Upload, Image as ImageIcon } from "lucide-react";
+import { Upload, Image as ImageIcon, X } from "lucide-react";
 import { toast } from "sonner";
 
 interface LogoInfo {
@@ -58,6 +58,7 @@ export function LogoSection({
   const { user } = useAuth();
   const [logos, setLogos] = useState<LogoInfo | null>(null);
   const [loading, setLoading] = useState(true);
+  const [dragOverKey, setDragOverKey] = useState<string | null>(null);
   const LOGO_SLOTS = isBatting ? BATTING_LOGO_SLOTS : GLOVE_LOGO_SLOTS;
 
   useEffect(() => {
@@ -169,28 +170,61 @@ export function LogoSection({
           <div className="grid grid-cols-3 gap-3">
             {LOGO_SLOTS.map((slot) => {
               const file = newLogoFiles[slot.key];
+              const isDragging = dragOverKey === slot.key;
               return (
                 <div key={slot.key} className="space-y-1">
                   <Label className="text-xs">{slot.label}</Label>
-                  <label className="block aspect-square rounded-md border-2 border-dashed border-border hover:border-primary/50 cursor-pointer transition-colors flex items-center justify-center bg-muted/30">
-                    <input
-                      type="file"
-                      accept=".png,.jpg,.jpeg,.svg"
-                      className="hidden"
-                      onChange={(e) =>
-                        handleFileSelect(slot.key, e.target.files?.[0] || null)
-                      }
-                    />
-                    {file ? (
-                      <div className="text-center px-1">
-                        <p className="text-[10px] text-primary font-medium truncate">
-                          {file.name}
-                        </p>
-                      </div>
-                    ) : (
-                      <Upload className="h-5 w-5 text-muted-foreground/50" />
+                  <div className="relative">
+                    <label
+                      className={`block aspect-square rounded-md border-2 border-dashed cursor-pointer transition-colors flex items-center justify-center overflow-hidden
+                        ${isDragging
+                          ? "border-primary bg-primary/5"
+                          : file
+                            ? "border-primary/40 bg-muted/30"
+                            : "border-border hover:border-primary/50 bg-muted/30"
+                        }`}
+                      onDragOver={(e) => { e.preventDefault(); setDragOverKey(slot.key); }}
+                      onDragLeave={() => setDragOverKey(null)}
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        setDragOverKey(null);
+                        const dropped = e.dataTransfer.files?.[0];
+                        if (dropped) handleFileSelect(slot.key, dropped);
+                      }}
+                    >
+                      <input
+                        type="file"
+                        accept=".png,.jpg,.jpeg,.svg"
+                        className="hidden"
+                        onChange={(e) =>
+                          handleFileSelect(slot.key, e.target.files?.[0] || null)
+                        }
+                      />
+                      {file ? (
+                        <img
+                          src={URL.createObjectURL(file)}
+                          alt={slot.label}
+                          className="max-h-full max-w-full object-contain p-2"
+                        />
+                      ) : (
+                        <div className="flex flex-col items-center gap-1.5 text-muted-foreground/50">
+                          <Upload className="h-5 w-5" />
+                          <span className="text-[10px] text-center leading-tight px-1">
+                            {isDragging ? "Drop here" : "Click or drag"}
+                          </span>
+                        </div>
+                      )}
+                    </label>
+                    {file && (
+                      <button
+                        type="button"
+                        onClick={() => handleFileSelect(slot.key, null)}
+                        className="absolute top-1 right-1 h-5 w-5 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center hover:opacity-80 transition-opacity"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
                     )}
-                  </label>
+                  </div>
                 </div>
               );
             })}
