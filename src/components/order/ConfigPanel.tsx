@@ -1,4 +1,4 @@
-import { useState, useEffect, useImperativeHandle, forwardRef } from "react";
+import { useState, useEffect, useRef, useImperativeHandle, forwardRef } from "react";
 import {
   Product,
   CartItemConfig,
@@ -80,9 +80,15 @@ export const ConfigPanel = forwardRef<ConfigPanelHandle, ConfigPanelProps>(funct
   const [config, setConfig] = useState<CartItemConfig>(() => initialConfig ?? buildDefaultConfig(product));
   const [showGuide, setShowGuide] = useState(false);
   const [guideSlide, setGuideSlide] = useState(0);
+  const isMounted = useRef(false);
 
-  // Reset config when product changes
+  // Reset config when the product changes — but NOT on initial mount,
+  // because that would overwrite initialConfig passed in for editing.
   useEffect(() => {
+    if (!isMounted.current) {
+      isMounted.current = true;
+      return;
+    }
     setConfig(buildDefaultConfig(product));
   }, [product.id]);
 
