@@ -290,7 +290,7 @@ export default function NewOrder() {
                 key={editingKey}
                 ref={configRef}
                 product={selectedProduct}
-                initialConfig={editingConfig ?? undefined}
+                initialConfig={editingConfig ?? (draft.draftConfig as CartItemConfig | undefined) ?? undefined}
                 onAdded={(newItemId) => {
                   // Transfer current glove images to the newly added cart item using the known ID
                   if (Object.keys(currentGloveImages).length > 0) {
@@ -300,10 +300,25 @@ export default function NewOrder() {
                   setTick((t) => t + 1);
                   toast.success(editingConfig ? "Item updated" : "Added to order");
                   setEditingConfig(null);
+                  // Clear the in-progress config from the draft
+                  try {
+                    const d = JSON.parse(localStorage.getItem(DRAFT_KEY) || "{}");
+                    localStorage.setItem(DRAFT_KEY, JSON.stringify({ ...d, draftConfig: null, selectedProductId: null }));
+                  } catch {}
                   // Reset the form so the user can start a fresh item
                   setSelectedProduct(null);
                 }}
-                onConfigChange={() => setTick((t) => t + 1)}
+                onConfigChange={() => {
+                  setTick((t) => t + 1);
+                  // Persist the current in-progress config so it survives navigation
+                  const cfg = configRef.current?.getConfig();
+                  if (cfg) {
+                    try {
+                      const d = JSON.parse(localStorage.getItem(DRAFT_KEY) || "{}");
+                      localStorage.setItem(DRAFT_KEY, JSON.stringify({ ...d, draftConfig: cfg }));
+                    } catch {}
+                  }
+                }}
               />
             </motion.div>
           )}
