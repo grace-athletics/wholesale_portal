@@ -147,10 +147,22 @@ serve(async (req) => {
 
     const W = 612, H = 792, M = 36, CW = W - M * 2;
 
-    // Pre-fetch logos
+    // Pre-fetch logos — use new logos from order if client requested a change, otherwise use logos on file
     const logoSrc = logos && logos.length > 0 ? logos[0] : null;
+    const newLogoUrls: Record<string, string> | null = (order.logo_change_requested && order.new_logo_urls)
+      ? (order.new_logo_urls as Record<string, string>)
+      : null;
+
     const logoImages: { label: string; img: any }[] = [];
-    if (logoSrc) {
+    if (newLogoUrls && Object.keys(newLogoUrls).length > 0) {
+      // Use newly submitted logos (stored in public order-images bucket)
+      for (const [key, url] of Object.entries(newLogoUrls)) {
+        const label = key.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+        const img = await fetchImage(pdfDoc, url);
+        logoImages.push({ label, img });
+      }
+    } else if (logoSrc) {
+      // Use logos on file (private client-logos bucket)
       for (const e of [
         { url: logoSrc.palm_logo_url,  label: "Palm Stamp"  },
         { url: logoSrc.thumb_logo_url, label: "Thumb Logo"  },

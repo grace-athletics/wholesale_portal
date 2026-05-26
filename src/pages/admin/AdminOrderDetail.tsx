@@ -334,14 +334,41 @@ export default function AdminOrderDetail() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className={order.logo_change_requested ? "border-destructive/50" : ""}>
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
-              <Stamp className="h-4 w-4" /> Client Logos
+              <Stamp className="h-4 w-4" />
+              {order.logo_change_requested ? (
+                <span className="flex items-center gap-2">
+                  Logos for This Order
+                  <span className="text-[10px] font-semibold bg-destructive text-destructive-foreground px-2 py-0.5 rounded-full uppercase tracking-wide">
+                    New Logos Requested
+                  </span>
+                </span>
+              ) : "Logos for This Order"}
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            {clientLogos ? (
+          <CardContent className="space-y-3">
+            {order.logo_change_requested && order.new_logo_urls && Object.keys(order.new_logo_urls).length > 0 ? (
+              <>
+                <p className="text-xs text-destructive font-medium">
+                  ⚠ Client submitted new logos — use these for this order
+                  {order.logo_change_notes && `: "${order.logo_change_notes}"`}
+                </p>
+                <div className="flex flex-wrap gap-4">
+                  {Object.entries(order.new_logo_urls as Record<string, string>).map(([key, url]) => (
+                    <div key={key} className="text-center space-y-1">
+                      <p className="text-xs font-medium text-muted-foreground capitalize">{key.replace(/_/g, " ")}</p>
+                      <a href={url} target="_blank" rel="noopener noreferrer">
+                        <div className="h-20 w-20 rounded-md border-2 border-destructive/40 bg-muted/30 flex items-center justify-center overflow-hidden p-1 hover:opacity-80 transition-opacity">
+                          <img src={url} alt={key} className="max-h-full max-w-full object-contain" />
+                        </div>
+                      </a>
+                    </div>
+                  ))}
+                </div>
+              </>
+            ) : clientLogos ? (
               <div className="grid grid-cols-3 gap-4">
                 {[
                   { url: clientLogos.palm_logo_url, label: "Palm Stamp" },
@@ -476,35 +503,6 @@ export default function AdminOrderDetail() {
           </Card>
         )}
 
-        {order.logo_change_requested && (
-          <Card className="border-destructive/40">
-            <CardHeader>
-              <CardTitle className="text-base text-destructive">⚠ Logo Change Requested</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-sm text-muted-foreground whitespace-pre-wrap">
-                {order.logo_change_notes || "No details provided"}
-              </p>
-              {order.new_logo_urls && Object.keys(order.new_logo_urls).length > 0 && (
-                <div className="space-y-2">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">New Logos from Client</p>
-                  <div className="flex flex-wrap gap-4">
-                    {Object.entries(order.new_logo_urls as Record<string, string>).map(([key, url]) => (
-                      <div key={key} className="text-center space-y-1">
-                        <a href={url} target="_blank" rel="noopener noreferrer">
-                          <div className="h-20 w-20 rounded-lg border-2 border-dashed bg-muted/30 flex items-center justify-center overflow-hidden hover:opacity-80 transition-opacity">
-                            <img src={url} alt={key} className="max-h-full max-w-full object-contain p-1" />
-                          </div>
-                        </a>
-                        <p className="text-xs font-medium capitalize">{key.replace(/_/g, " ")}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        )}
       </div>
   );
 }
