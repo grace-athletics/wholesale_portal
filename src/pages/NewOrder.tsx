@@ -19,7 +19,6 @@ import { Label } from "@/components/ui/label";
 import { OrderCart } from "@/components/order/OrderCart";
 import { LogoSection } from "@/components/order/LogoSection";
 import { CheckoutDrawer } from "@/components/order/CheckoutDrawer";
-import { GloveScreenshotStep } from "@/components/order/GloveScreenshotStep";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 
@@ -387,15 +386,6 @@ export default function NewOrder() {
                 )}
               </div>
 
-              {/* Screenshots for items already added to cart */}
-              {items.length > 0 && (
-                <div className="mt-4">
-                  <GloveScreenshotStep
-                    items={items}
-                    pendingImagesRef={pendingImagesRef}
-                  />
-                </div>
-              )}
             </motion.div>
           )}
 
