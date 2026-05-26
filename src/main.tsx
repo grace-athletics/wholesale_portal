@@ -20,16 +20,9 @@ if (missing.length > 0) {
   console.error(msg);
 
   // In development: throw so the Vite error overlay is impossible to miss.
-  // In production: render a plain error page so the blank white screen gets
-  // an actionable message instead.
+  // In production: log the warning but let the app render — it will show its
+  // own errors for missing config rather than a blank/broken page.
   if (import.meta.env.DEV) {
     throw new Error(msg);
-  } else {
-    document.getElementById("root")!.innerHTML = `
-      <div style="font-family:sans-serif;padding:40px;max-width:600px;margin:auto">
-        <h2 style="color:#b91c1c">Configuration Error</h2>
-        <p>The app is missing required environment variables. Please contact the site administrator.</p>
-        <pre style="background:#fef2f2;padding:16px;border-radius:8px;font-size:13px;overflow:auto">${missing.join("\n")}</pre>
-      </div>`;
   }
 }
