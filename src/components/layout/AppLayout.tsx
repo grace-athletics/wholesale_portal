@@ -16,11 +16,20 @@ function storageKey(userId: string) {
   return `mgb-onboarding-${userId}`;
 }
 
-function readStep(userId: string): OnboardingStep {
+function readStep(userId: string, createdAt?: string): OnboardingStep {
   const v = localStorage.getItem(storageKey(userId));
   if (v === "order") return "order";
   if (v === "done") return null;
-  return "logos"; // default: show step 1
+  // Auto-skip for existing accounts (older than 1 hour) — covers returning
+  // users on a new device or domain where localStorage has no record yet
+  if (createdAt) {
+    const ageMs = Date.now() - new Date(createdAt).getTime();
+    if (ageMs > 60 * 60 * 1000) {
+      writeStep(userId, "done");
+      return null;
+    }
+  }
+  return "logos"; // brand-new account — show step 1
 }
 
 function writeStep(userId: string, step: OnboardingStep | "done") {
@@ -36,7 +45,7 @@ export function AppLayout({ variant = "client" }: AppLayoutProps) {
   // Load onboarding state once user is known (client portal only)
   useEffect(() => {
     if (isAdminLayout || !user?.id) return;
-    setOnboardingStep(readStep(user.id));
+    setOnboardingStep(readStep(user.id, user.created_at));
   }, [user?.id, isAdminLayout]);
 
   // Advance step when user navigates to the target page

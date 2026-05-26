@@ -93,14 +93,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
+        // On a fresh sign-in, keep loading=true until profile is ready
+        // so ProtectedRoute never briefly redirects to /subscribe
+        if (event === "SIGNED_IN") setLoading(true);
         Promise.all([
           fetchProfile(session.user.id),
           fetchRole(session.user.id),
-        ]);
+        ]).finally(() => {
+          if (event === "SIGNED_IN") setLoading(false);
+        });
       } else {
         setProfile(null);
         setRole(null);
