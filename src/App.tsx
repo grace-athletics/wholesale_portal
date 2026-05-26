@@ -25,7 +25,6 @@ import NewOrder from "./pages/NewOrder";
 import Orders from "./pages/Orders";
 import OrderDetail from "./pages/OrderDetail";
 import Builders from "./pages/Builders";
-import Mockups from "./pages/Mockups";
 import Account from "./pages/Account";
 import LogoVault from "./pages/LogoVault";
 
@@ -71,8 +70,7 @@ const App = () => (
               <Route path="/orders" element={<Orders />} />
               <Route path="/orders/:id" element={<OrderDetail />} />
               <Route path="/builders" element={<Builders />} />
-              {/* Mockup Generator now opens externally */}
-              <Route path="/account" element={<Account />} />
+<Route path="/account" element={<Account />} />
               <Route path="/account/logos" element={<LogoVault />} />
             </Route>
 

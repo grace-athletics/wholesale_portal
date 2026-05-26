@@ -1,11 +1,10 @@
-import { LayoutGrid, PlusCircle, List, Image, User } from "lucide-react";
+import { LayoutGrid, PlusCircle, List, User } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 
 const tabs = [
   { title: "Home", url: "/dashboard", icon: LayoutGrid },
   { title: "Order", url: "/order/new", icon: PlusCircle },
   { title: "Orders", url: "/orders", icon: List },
-  { title: "Mockups", url: "https://mockups.myglovebrand.com/", icon: Image, external: true },
   { title: "Account", url: "/account", icon: User },
 ];
 

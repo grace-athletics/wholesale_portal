@@ -10,7 +10,6 @@ import {
   Package,
   PlusCircle,
   ExternalLink,
-  Image,
   Clock,
   Truck,
 } from "lucide-react";
@@ -135,12 +134,6 @@ export default function Dashboard() {
       description: "Design your custom glove",
       icon: ExternalLink,
       href: "https://www.myglovebuilder.com/",
-    },
-    {
-      label: "Mockup Generator",
-      description: "Create product mockups",
-      icon: Image,
-      href: "https://mockups.myglovebrand.com/",
     },
     {
       label: "Track Orders",
