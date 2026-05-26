@@ -7,7 +7,13 @@ import { ProductGrid } from "@/components/order/ProductGrid";
 import { ConfigPanel, ConfigPanelHandle } from "@/components/order/ConfigPanel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Upload, X, Truck } from "lucide-react";
+import { Plus, Upload, X, Truck, HelpCircle, Copy, Check } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { OrderCart } from "@/components/order/OrderCart";
@@ -61,6 +67,8 @@ export default function NewOrder() {
   const [hasLogosOnFile, setHasLogosOnFile] = useState(false);
   const [, setTick] = useState(0);
   const [dragOverAngle, setDragOverAngle] = useState<number | null>(null);
+  const [showBookmarkGuide, setShowBookmarkGuide] = useState(false);
+  const [codeCopied, setCodeCopied] = useState(false);
 
   const handleScreenshotDrop = useCallback((idx: number, e: React.DragEvent) => {
     e.preventDefault();
@@ -297,7 +305,14 @@ export default function NewOrder() {
               </h2>
               <div className="rounded-lg border bg-card p-4 space-y-3">
                 <p className="text-xs text-muted-foreground">
-                  Open your design link, run the <span className="font-medium text-foreground">MGB Screenshot</span> bookmarklet, then upload the composite image it saves.
+                  Open your design link, run the <span className="font-medium text-foreground">Glove Image</span> bookmarklet, then upload the image it saves.{" "}
+                  <button
+                    type="button"
+                    onClick={() => setShowBookmarkGuide(true)}
+                    className="inline-flex items-center gap-0.5 text-primary hover:underline font-medium"
+                  >
+                    <HelpCircle className="h-3 w-3" /> How to capture glove images
+                  </button>
                 </p>
                 {currentGloveImages[0] ? (
                   <div
@@ -490,6 +505,63 @@ export default function NewOrder() {
         onClose={() => setShowCheckout(false)}
         clientSecret={checkoutSecret}
       />
+
+      {/* Bookmark guide modal */}
+      <Dialog open={showBookmarkGuide} onOpenChange={setShowBookmarkGuide}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>How To Add The "Glove Image" Bookmark Tool</DialogTitle>
+          </DialogHeader>
+
+          <div className="space-y-4 text-sm">
+            {/* Step 1 — copy the code */}
+            <div className="space-y-2">
+              <p className="font-medium">Step 1 — Copy this code</p>
+              <div className="relative rounded-md border bg-muted/50 p-3 pr-10">
+                <code className="text-xs break-all text-muted-foreground select-all leading-relaxed">
+                  {`javascript:(async()=>{let c=[...document.querySelectorAll('canvas')].sort((a,b)=>b.width*b.height-a.width*a.height)[0];if(!c)return alert('no canvas');try{let a=document.createElement('a');a.href=c.toDataURL('image/png');a.download='grace-glove.png';a.click();alert('Done — saved 1 image!')}catch(e){alert('export blocked (CORS) — use OS screenshot.')}})();`}
+                </code>
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigator.clipboard.writeText(`javascript:(async()=>{let c=[...document.querySelectorAll('canvas')].sort((a,b)=>b.width*b.height-a.width*a.height)[0];if(!c)return alert('no canvas');try{let a=document.createElement('a');a.href=c.toDataURL('image/png');a.download='grace-glove.png';a.click();alert('Done — saved 1 image!')}catch(e){alert('export blocked (CORS) — use OS screenshot.')}})();`);
+                    setCodeCopied(true);
+                    setTimeout(() => setCodeCopied(false), 2000);
+                  }}
+                  className="absolute top-2.5 right-2.5 p-1 rounded hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+                  title="Copy code"
+                >
+                  {codeCopied ? <Check className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
+                </button>
+              </div>
+            </div>
+
+            {/* Steps 2–7 */}
+            <ol className="space-y-2 text-muted-foreground list-none">
+              {[
+                "Open a new tab in your browser.",
+                "Locate your bookmarks bar at the top of the browser window.",
+                "Right-click anywhere on the bookmarks bar.",
+                <>Click <span className="font-medium text-foreground">"Add Page…"</span></>,
+                <>In the <span className="font-medium text-foreground">Name</span> field, type: <span className="font-mono font-medium text-foreground">Glove Image</span></>,
+                <>In the <span className="font-medium text-foreground">URL</span> field, paste the copied code.</>,
+                <>Click <span className="font-medium text-foreground">Save</span>.</>,
+              ].map((step, i) => (
+                <li key={i} className="flex gap-3">
+                  <span className="flex-shrink-0 h-5 w-5 rounded-full bg-primary/10 text-primary text-xs font-semibold flex items-center justify-center mt-0.5">
+                    {i + 2}
+                  </span>
+                  <span>{step}</span>
+                </li>
+              ))}
+            </ol>
+
+            <p className="text-xs text-muted-foreground border-t pt-3">
+              Once saved, open your glove design link, click the <span className="font-medium text-foreground">Glove Image</span> bookmark, and it will automatically save the glove image to your Downloads folder.
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
