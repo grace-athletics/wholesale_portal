@@ -73,7 +73,7 @@ serve(async (req) => {
         notes: orderNotes,
         logo_change_requested: logoChangeRequested,
         logo_change_notes: logoChangeNotes,
-        new_logo_urls: newLogoUrls,
+        ...(newLogoUrls ? { new_logo_urls: newLogoUrls } : {}),
         status: "Pending Payment",
       })
       .select("id, order_number")
