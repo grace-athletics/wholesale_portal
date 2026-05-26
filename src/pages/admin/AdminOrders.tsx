@@ -22,6 +22,7 @@ export default function AdminOrders() {
       const { data, error } = await supabase
         .from("orders")
         .select("id, order_number, status, total_amount, created_at, user_id, notes")
+        .neq("status", "Pending Payment")
         .order("created_at", { ascending: false });
       if (error) throw error;
       return data;

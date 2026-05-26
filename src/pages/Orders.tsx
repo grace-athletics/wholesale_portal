@@ -40,6 +40,7 @@ export default function Orders() {
       const { data, error } = await supabase
         .from("orders")
         .select("id, order_number, status, total_amount, created_at, pdf_url")
+        .neq("status", "Pending Payment")
         .order("created_at", { ascending: false });
       if (error) throw error;
       return data;

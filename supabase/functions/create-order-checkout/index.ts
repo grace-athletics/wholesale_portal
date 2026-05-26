@@ -72,7 +72,7 @@ serve(async (req) => {
         notes: orderNotes,
         logo_change_requested: logoChangeRequested,
         logo_change_notes: logoChangeNotes,
-        status: "Order Placed",
+        status: "Pending Payment",
       })
       .select("id, order_number")
       .single();
@@ -106,9 +106,9 @@ serve(async (req) => {
     // 3. Insert initial status history
     await supabaseAdmin.from("order_status_history").insert({
       order_id: order.id,
-      new_status: "Order Placed",
+      new_status: "Pending Payment",
       changed_by: user.id,
-      note: "Order placed",
+      note: "Payment initiated — awaiting confirmation",
     });
 
     // 4. Create Stripe checkout session (embedded)
@@ -155,7 +155,7 @@ serve(async (req) => {
       mode: "payment",
       ...(discounts.length > 0 ? { discounts } : { allow_promotion_codes: true }),
       success_url: `${origin}/orders/${order.id}?payment=success`,
-      cancel_url: `${origin}/orders?payment=cancelled`,
+      cancel_url: `${origin}/new-order?payment=cancelled`,
       metadata: {
         order_id: order.id,
         order_number: order.order_number,
