@@ -4,16 +4,18 @@ import { formatCents } from "@/lib/pricing";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Trash2, ShoppingCart, Sparkles, Loader2, Tag, ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
+import { Trash2, ShoppingCart, Sparkles, Loader2, Tag, ChevronDown, ChevronUp, ExternalLink, Pencil } from "lucide-react";
+import { CartItem } from "@/lib/pricing";
 
 interface OrderCartProps {
   onCheckout: () => void;
   loading?: boolean;
   promoCode: string;
   onPromoCodeChange: (code: string) => void;
+  onEdit?: (item: CartItem) => void;
 }
 
-export function OrderCart({ onCheckout, loading = false, promoCode, onPromoCodeChange }: OrderCartProps) {
+export function OrderCart({ onCheckout, loading = false, promoCode, onPromoCodeChange, onEdit }: OrderCartProps) {
   const { items, removeItem, cartTotal, totalSavings } = useCart();
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
 
@@ -86,6 +88,15 @@ export function OrderCart({ onCheckout, loading = false, promoCode, onPromoCodeC
                   </div>
                 </div>
                 <div className="flex items-center gap-1.5 shrink-0 mt-0.5">
+                  {onEdit && (
+                    <button
+                      onClick={() => onEdit(item)}
+                      className="text-muted-foreground hover:text-primary transition-colors"
+                      title="Edit item"
+                    >
+                      <Pencil className="h-3.5 w-3.5" />
+                    </button>
+                  )}
                   <button
                     onClick={() => toggleExpanded(item.id)}
                     className="text-muted-foreground hover:text-foreground transition-colors"

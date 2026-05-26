@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Product, BATTING_MIN_TOTAL, formatCents } from "@/lib/pricing";
+import { Product, CartItem, CartItemConfig, BATTING_MIN_TOTAL, formatCents } from "@/lib/pricing";
 import { useCart } from "@/contexts/CartContext";
 import { ProductGrid } from "@/components/order/ProductGrid";
 import { ConfigPanel, ConfigPanelHandle } from "@/components/order/ConfigPanel";
@@ -49,7 +49,7 @@ function clearDraft() {
 }
 
 export default function NewOrder() {
-  const { items, clearCart } = useCart();
+  const { items, clearCart, removeItem } = useCart();
   const [draft] = useState(() => loadDraft());
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [logoChangeRequested, setLogoChangeRequested] = useState<boolean>(draft.logoChangeRequested ?? false);
@@ -69,6 +69,8 @@ export default function NewOrder() {
   const [dragOverAngle, setDragOverAngle] = useState<number | null>(null);
   const [showBookmarkGuide, setShowBookmarkGuide] = useState(false);
   const [codeCopied, setCodeCopied] = useState(false);
+  const [editingConfig, setEditingConfig] = useState<CartItemConfig | null>(null);
+  const [editingKey, setEditingKey] = useState(0);
 
   const handleScreenshotDrop = useCallback((idx: number, e: React.DragEvent) => {
     e.preventDefault();
@@ -152,6 +154,14 @@ export default function NewOrder() {
       }
     }
     if (uploaded > 0) toast.success(`${uploaded} glove screenshot(s) uploaded`);
+  };
+
+  const handleEdit = (item: CartItem) => {
+    removeItem(item.id);
+    setSelectedProduct(item.product);
+    setEditingConfig(item.config);
+    setEditingKey((k) => k + 1); // force ConfigPanel to remount with fresh state
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleCheckout = async () => {
@@ -274,11 +284,13 @@ export default function NewOrder() {
               transition={{ duration: 0.25 }}
             >
               <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
-                Step 2 — Configure
+                {editingConfig ? "Step 2 — Edit Item" : "Step 2 — Configure"}
               </h2>
               <ConfigPanel
+                key={editingKey}
                 ref={configRef}
                 product={selectedProduct}
+                initialConfig={editingConfig ?? undefined}
                 onAdded={(newItemId) => {
                   // Transfer current glove images to the newly added cart item using the known ID
                   if (Object.keys(currentGloveImages).length > 0) {
@@ -286,7 +298,8 @@ export default function NewOrder() {
                     setCurrentGloveImages({});
                   }
                   setTick((t) => t + 1);
-                  toast.success("Added to order");
+                  toast.success(editingConfig ? "Item updated" : "Added to order");
+                  setEditingConfig(null);
                   // Reset the form so the user can start a fresh item
                   setSelectedProduct(null);
                 }}
@@ -496,6 +509,7 @@ export default function NewOrder() {
                 loading={checkoutLoading}
                 promoCode={promoCode}
                 onPromoCodeChange={setPromoCode}
+                onEdit={handleEdit}
               />
             </div>
           </div>

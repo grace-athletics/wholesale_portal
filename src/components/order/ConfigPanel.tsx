@@ -46,6 +46,7 @@ interface ConfigPanelProps {
   product: Product;
   onAdded: (newItemId: string) => void;
   onConfigChange?: () => void;
+  initialConfig?: CartItemConfig;
 }
 
 function isBattingGlove(product: Product) {
@@ -72,11 +73,11 @@ function buildDefaultConfig(product: Product): CartItemConfig {
   };
 }
 
-export const ConfigPanel = forwardRef<ConfigPanelHandle, ConfigPanelProps>(function ConfigPanel({ product, onAdded, onConfigChange }, ref) {
+export const ConfigPanel = forwardRef<ConfigPanelHandle, ConfigPanelProps>(function ConfigPanel({ product, onAdded, onConfigChange, initialConfig }, ref) {
   const { items, addItem } = useCart();
   const batting = isBattingGlove(product);
 
-  const [config, setConfig] = useState<CartItemConfig>(() => buildDefaultConfig(product));
+  const [config, setConfig] = useState<CartItemConfig>(() => initialConfig ?? buildDefaultConfig(product));
   const [showGuide, setShowGuide] = useState(false);
   const [guideSlide, setGuideSlide] = useState(0);
 
