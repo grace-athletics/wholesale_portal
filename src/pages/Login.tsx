@@ -46,27 +46,26 @@ export default function Login() {
   };
 
   return (
-    <div className="flex min-h-screen bg-background">
-      {/* Left branding panel — hidden on mobile */}
-      <div className="hidden lg:flex lg:w-1/2 items-center justify-center bg-sidebar relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
+    <div className="flex min-h-screen">
+      {/* Left branding panel — white background, hidden on mobile */}
+      <div className="hidden lg:flex lg:w-1/2 items-center justify-center bg-white relative overflow-hidden border-r border-gray-100">
+        <div className="absolute inset-0 opacity-5">
           <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-primary blur-[100px]" />
           <div className="absolute bottom-1/3 right-1/4 w-48 h-48 rounded-full bg-primary blur-[80px]" />
         </div>
         <div className="relative z-10 px-12 max-w-md">
-            <img src={logo} alt="My Glove Brand" className="h-12 object-contain" />
-          <p className="text-sidebar-foreground text-lg font-light">
+          <img src={logo} alt="My Glove Brand" className="h-12 object-contain" />
+          <p className="text-gray-900 text-lg font-light mt-2">
             Wholesale Portal
           </p>
-          <div className="mt-8 space-y-4 text-sidebar-muted text-sm">
-            <p>Place custom orders with premium Korean & Japanese Kip leather.</p>
-            <p>Design gloves with our builder, track production, and manage your brand.</p>
+          <div className="mt-8 text-gray-500 text-sm leading-relaxed">
+            <p>Design gloves with our 3D builder, place orders, manage production, track orders in real-time, and scale your brand — all in one place.</p>
           </div>
         </div>
       </div>
 
-      {/* Right form panel */}
-      <div className="flex-1 flex items-center justify-center px-4 py-12">
+      {/* Right form panel — dark background */}
+      <div className="flex-1 flex items-center justify-center px-4 py-12 bg-sidebar">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -76,19 +75,19 @@ export default function Login() {
           {/* Mobile-only branding */}
           <div className="text-center lg:hidden">
             <img src={logo} alt="My Glove Brand" className="h-10 object-contain mx-auto" />
-            <p className="mt-1 text-sm text-muted-foreground">Wholesale Portal</p>
+            <p className="mt-1 text-sm text-zinc-400">Wholesale Portal</p>
           </div>
 
           <div className="hidden lg:block">
-            <h2 className="text-2xl font-semibold">Sign in</h2>
-            <p className="mt-1 text-sm text-muted-foreground">
+            <h2 className="text-2xl font-semibold text-white">Sign in</h2>
+            <p className="mt-1 text-sm text-zinc-400">
               Enter your credentials to access the portal
             </p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-zinc-300">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -97,11 +96,12 @@ export default function Login() {
                 placeholder="you@company.com"
                 required
                 autoComplete="email"
+                className="bg-zinc-900 border-zinc-700 text-white placeholder:text-zinc-500 focus-visible:ring-primary"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password" className="text-zinc-300">Password</Label>
               <div className="relative">
                 <Input
                   id="password"
@@ -110,12 +110,12 @@ export default function Login() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   autoComplete="current-password"
-                  className="pr-10"
+                  className="pr-10 bg-zinc-900 border-zinc-700 text-white placeholder:text-zinc-500 focus-visible:ring-primary"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white transition-colors"
                   tabIndex={-1}
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -131,7 +131,7 @@ export default function Login() {
               <button
                 type="button"
                 onClick={handleForgotPassword}
-                className="text-muted-foreground hover:text-foreground transition-colors"
+                className="text-zinc-400 hover:text-white transition-colors"
               >
                 Forgot password?
               </button>
