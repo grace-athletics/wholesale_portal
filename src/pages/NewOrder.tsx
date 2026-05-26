@@ -287,6 +287,8 @@ export default function NewOrder() {
                   }
                   setTick((t) => t + 1);
                   toast.success("Added to order");
+                  // Reset the form so the user can start a fresh item
+                  setSelectedProduct(null);
                 }}
                 onConfigChange={() => setTick((t) => t + 1)}
               />

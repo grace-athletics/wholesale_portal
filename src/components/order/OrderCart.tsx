@@ -1,9 +1,10 @@
+import { useState } from "react";
 import { useCart } from "@/contexts/CartContext";
 import { formatCents } from "@/lib/pricing";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Trash2, ShoppingCart, Sparkles, Loader2, Tag } from "lucide-react";
+import { Trash2, ShoppingCart, Sparkles, Loader2, Tag, ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
 
 interface OrderCartProps {
   onCheckout: () => void;
@@ -14,6 +15,14 @@ interface OrderCartProps {
 
 export function OrderCart({ onCheckout, loading = false, promoCode, onPromoCodeChange }: OrderCartProps) {
   const { items, removeItem, cartTotal, totalSavings } = useCart();
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
+
+  const toggleExpanded = (id: string) =>
+    setExpandedIds((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
 
   if (items.length === 0) {
     return (
@@ -39,60 +48,106 @@ export function OrderCart({ onCheckout, loading = false, promoCode, onPromoCodeC
         </h3>
       </div>
 
-      <div className="divide-y max-h-[400px] overflow-y-auto">
-        {items.map((item) => (
-          <div key={item.id} className="p-4 space-y-2">
-            <div className="flex items-start justify-between gap-2">
-              <div className="min-w-0">
-                <p className="text-sm font-medium truncate">{item.product.name}</p>
-                <div className="flex flex-wrap gap-1 mt-1">
-                  {item.config.leather_type && (
-                    <Badge variant="outline" className="text-[10px] px-1.5 py-0">
-                      {item.config.leather_type}
-                    </Badge>
-                  )}
-                  {item.config.hand && (
-                    <Badge variant="outline" className="text-[10px] px-1.5 py-0">
-                      {item.config.hand}
-                    </Badge>
-                  )}
-                  {item.config.position && (
-                    <Badge variant="outline" className="text-[10px] px-1.5 py-0">
-                      {item.config.position}
-                    </Badge>
-                  )}
-                  {item.config.size && (
-                    <Badge variant="outline" className="text-[10px] px-1.5 py-0">
-                      {item.config.size}
-                    </Badge>
-                  )}
-                  {item.config.has_flag && (
-                    <Badge variant="outline" className="text-[10px] px-1.5 py-0">
-                      🏴 Flag
-                    </Badge>
-                  )}
-                  {item.stockUnlocked && (
-                    <Badge className="text-[10px] px-1.5 py-0 bg-status-green/15 text-status-green border-0">
-                      Stock price
-                    </Badge>
-                  )}
+      <div className="divide-y max-h-[500px] overflow-y-auto">
+        {items.map((item) => {
+          const isExpanded = expandedIds.has(item.id);
+          return (
+            <div key={item.id} className="p-4 space-y-2">
+              {/* Header row */}
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-medium truncate">{item.product.name}</p>
+                  <div className="flex flex-wrap gap-1 mt-1">
+                    {item.config.leather_type && (
+                      <Badge variant="outline" className="text-[10px] px-1.5 py-0">
+                        {item.config.leather_type}
+                      </Badge>
+                    )}
+                    {item.config.hand && (
+                      <Badge variant="outline" className="text-[10px] px-1.5 py-0">
+                        {item.config.hand}
+                      </Badge>
+                    )}
+                    {item.config.position && (
+                      <Badge variant="outline" className="text-[10px] px-1.5 py-0">
+                        {item.config.position}
+                      </Badge>
+                    )}
+                    {item.config.has_flag && (
+                      <Badge variant="outline" className="text-[10px] px-1.5 py-0">
+                        🏴 Flag
+                      </Badge>
+                    )}
+                    {item.stockUnlocked && (
+                      <Badge className="text-[10px] px-1.5 py-0 bg-status-green/15 text-status-green border-0">
+                        Stock price
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+                <div className="flex items-center gap-1.5 shrink-0 mt-0.5">
+                  <button
+                    onClick={() => toggleExpanded(item.id)}
+                    className="text-muted-foreground hover:text-foreground transition-colors"
+                    title={isExpanded ? "Hide details" : "View details"}
+                  >
+                    {isExpanded
+                      ? <ChevronUp className="h-3.5 w-3.5" />
+                      : <ChevronDown className="h-3.5 w-3.5" />}
+                  </button>
+                  <button
+                    onClick={() => removeItem(item.id)}
+                    className="text-muted-foreground hover:text-destructive transition-colors"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </button>
                 </div>
               </div>
-              <button
-                onClick={() => removeItem(item.id)}
-                className="text-muted-foreground hover:text-destructive transition-colors shrink-0 mt-0.5"
-              >
-                <Trash2 className="h-3.5 w-3.5" />
-              </button>
+
+              {/* Price row */}
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-muted-foreground">
+                  {formatCents(item.unitPrice)} × {item.config.quantity}
+                </span>
+                <span className="font-semibold">{formatCents(item.lineTotal)}</span>
+              </div>
+
+              {/* Expandable details */}
+              {isExpanded && (
+                <div className="mt-2 pt-2 border-t space-y-1.5 text-xs text-muted-foreground">
+                  {[
+                    { label: "Leather", value: item.config.leather_type },
+                    { label: "Hand", value: item.config.hand },
+                    { label: "Position", value: item.config.position },
+                    { label: "Size", value: item.config.size },
+                    { label: "Quantity", value: String(item.config.quantity) },
+                    { label: "Flag", value: item.config.has_flag ? "Yes" : null },
+                  ]
+                    .filter((r) => r.value)
+                    .map((r) => (
+                      <div key={r.label} className="flex justify-between">
+                        <span>{r.label}</span>
+                        <span className="font-medium text-foreground">{r.value}</span>
+                      </div>
+                    ))}
+                  {item.config.builder_recipe_url && (
+                    <a
+                      href={item.config.builder_recipe_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1 text-primary hover:underline pt-0.5"
+                    >
+                      <ExternalLink className="h-3 w-3" /> View design
+                    </a>
+                  )}
+                  {item.config.notes && (
+                    <p className="italic pt-0.5">"{item.config.notes}"</p>
+                  )}
+                </div>
+              )}
             </div>
-            <div className="flex items-center justify-between text-xs">
-              <span className="text-muted-foreground">
-                {formatCents(item.unitPrice)} × {item.config.quantity}
-              </span>
-              <span className="font-semibold">{formatCents(item.lineTotal)}</span>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <div className="p-4 border-t space-y-3">
