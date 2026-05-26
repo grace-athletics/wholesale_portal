@@ -191,6 +191,24 @@ export default function NewOrder() {
 
     setCheckoutLoading(true);
     try {
+      // Upload any new logo files first so we can pass URLs to the edge function
+      const newLogoUrls: Record<string, string> = {};
+      if (logoChangeRequested) {
+        for (const [key, file] of Object.entries(newLogoFiles)) {
+          if (!file) continue;
+          const ext = file.name.split(".").pop() || "png";
+          const path = `pending-logos/${Date.now()}-${key}.${ext}`;
+          const { error: uploadErr } = await supabase.storage
+            .from("order-images")
+            .upload(path, file, { upsert: true });
+          if (uploadErr) throw uploadErr;
+          const { data: urlData } = supabase.storage
+            .from("order-images")
+            .getPublicUrl(path);
+          newLogoUrls[key] = urlData.publicUrl;
+        }
+      }
+
       const orderItems = items.map((item) => ({
         product_id: item.product.id,
         product_name: item.product.name,
@@ -217,6 +235,7 @@ export default function NewOrder() {
           notes: shippingNote || null,
           logo_change_requested: logoChangeRequested,
           logo_change_notes: logoChangeNotes || null,
+          new_logo_urls: Object.keys(newLogoUrls).length > 0 ? newLogoUrls : null,
           promo_code: promoCode.trim() || null,
         },
       });

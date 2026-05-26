@@ -55,6 +55,7 @@ serve(async (req) => {
     const orderNotes: string | null = body.notes || null;
     const logoChangeRequested: boolean = body.logo_change_requested || false;
     const logoChangeNotes: string | null = body.logo_change_notes || null;
+    const newLogoUrls: Record<string, string> | null = body.new_logo_urls || null;
     const promoCode: string | null = body.promo_code || null;
 
     if (!items || items.length === 0) throw new Error("No items provided");
@@ -72,6 +73,7 @@ serve(async (req) => {
         notes: orderNotes,
         logo_change_requested: logoChangeRequested,
         logo_change_notes: logoChangeNotes,
+        new_logo_urls: newLogoUrls,
         status: "Pending Payment",
       })
       .select("id, order_number")

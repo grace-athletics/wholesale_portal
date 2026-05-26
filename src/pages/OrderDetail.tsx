@@ -290,9 +290,9 @@ export default function OrderDetail() {
 
       {/* Logo status */}
       <div className="rounded-lg border bg-card p-5">
-        <h2 className="font-semibold mb-2">Logo Status</h2>
+        <h2 className="font-semibold mb-3">Logo Status</h2>
         {order.logo_change_requested ? (
-          <div className="space-y-2">
+          <div className="space-y-3">
             <Badge variant="destructive" className="text-xs">
               LOGO CHANGE REQUESTED
             </Badge>
@@ -300,6 +300,23 @@ export default function OrderDetail() {
               <p className="text-sm text-muted-foreground">
                 {order.logo_change_notes}
               </p>
+            )}
+            {order.new_logo_urls && Object.keys(order.new_logo_urls).length > 0 && (
+              <div className="space-y-2 pt-1">
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">New Logos Submitted</p>
+                <div className="flex flex-wrap gap-3">
+                  {Object.entries(order.new_logo_urls as Record<string, string>).map(([key, url]) => (
+                    <div key={key} className="text-center space-y-1">
+                      <a href={url} target="_blank" rel="noopener noreferrer">
+                        <div className="h-16 w-16 rounded border bg-muted/30 flex items-center justify-center overflow-hidden hover:opacity-80 transition-opacity">
+                          <img src={url} alt={key} className="max-h-full max-w-full object-contain" />
+                        </div>
+                      </a>
+                      <p className="text-[10px] text-muted-foreground capitalize">{key.replace(/_/g, " ")}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
             )}
           </div>
         ) : (

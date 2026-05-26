@@ -477,14 +477,31 @@ export default function AdminOrderDetail() {
         )}
 
         {order.logo_change_requested && (
-          <Card>
+          <Card className="border-destructive/40">
             <CardHeader>
-              <CardTitle className="text-base">Logo Change Requested</CardTitle>
+              <CardTitle className="text-base text-destructive">⚠ Logo Change Requested</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
               <p className="text-sm text-muted-foreground whitespace-pre-wrap">
                 {order.logo_change_notes || "No details provided"}
               </p>
+              {order.new_logo_urls && Object.keys(order.new_logo_urls).length > 0 && (
+                <div className="space-y-2">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">New Logos from Client</p>
+                  <div className="flex flex-wrap gap-4">
+                    {Object.entries(order.new_logo_urls as Record<string, string>).map(([key, url]) => (
+                      <div key={key} className="text-center space-y-1">
+                        <a href={url} target="_blank" rel="noopener noreferrer">
+                          <div className="h-20 w-20 rounded-lg border-2 border-dashed bg-muted/30 flex items-center justify-center overflow-hidden hover:opacity-80 transition-opacity">
+                            <img src={url} alt={key} className="max-h-full max-w-full object-contain p-1" />
+                          </div>
+                        </a>
+                        <p className="text-xs font-medium capitalize">{key.replace(/_/g, " ")}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
         )}
