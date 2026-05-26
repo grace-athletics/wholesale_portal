@@ -217,27 +217,6 @@ export const ConfigPanel = forwardRef<ConfigPanelHandle, ConfigPanelProps>(funct
         </div>
       )}
 
-      {/* Position */}
-      {showPosition && (
-        <div className="space-y-2">
-          <Label>Position</Label>
-          <Select
-            value={config.position || ""}
-            onValueChange={(v) => update("position", v)}
-          >
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {product.position_options!.map((pos) => (
-                <SelectItem key={pos} value={pos}>
-                  {pos}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      )}
 
       {/* Flag */}
       {showFlag && (
