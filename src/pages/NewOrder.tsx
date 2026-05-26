@@ -156,10 +156,19 @@ export default function NewOrder() {
   };
 
   const handleEdit = (item: CartItem) => {
+    // Restore screenshot back into the current upload slot if it was already captured
+    const itemImages = pendingImagesRef.current[item.id];
+    if (itemImages && Object.keys(itemImages).length > 0) {
+      setCurrentGloveImages({ ...itemImages });
+      delete pendingImagesRef.current[item.id];
+    } else {
+      setCurrentGloveImages({});
+    }
+
     removeItem(item.id);
     setSelectedProduct(item.product);
     setEditingConfig(item.config);
-    setEditingKey((k) => k + 1); // force ConfigPanel to remount with fresh state
+    setEditingKey((k) => k + 1);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
