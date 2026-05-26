@@ -1,5 +1,6 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { formatCents } from "@/lib/pricing";
 import { StatusBadge, StatusStepper } from "@/components/order/StatusBadge";
@@ -17,14 +18,17 @@ import { Button } from "@/components/ui/button";
 import {
   ArrowLeft,
   ExternalLink,
-  Image as ImageIcon,
   FileText,
+  CheckCircle2,
+  Image as ImageIcon,
 } from "lucide-react";
 
 export default function OrderDetail() {
   const { id } = useParams<{ id: string }>();
+  const [searchParams] = useSearchParams();
+  const paymentSuccess = searchParams.get("payment") === "success";
 
-  const { data: order, isLoading } = useQuery({
+  const { data: order, isLoading, refetch } = useQuery({
     queryKey: ["order", id],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -65,6 +69,21 @@ export default function OrderDetail() {
     enabled: !!id,
   });
 
+  // When returning from Stripe payment, poll until status leaves "Pending Payment"
+  useEffect(() => {
+    if (!paymentSuccess || !order) return;
+    if (order.status !== "Pending Payment") return;
+
+    const interval = setInterval(async () => {
+      const result = await refetch();
+      if (result.data?.status !== "Pending Payment") {
+        clearInterval(interval);
+      }
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [paymentSuccess, order?.status]);
+
   if (isLoading) {
     return (
       <div className="space-y-4">
@@ -85,8 +104,6 @@ export default function OrderDetail() {
       </div>
     );
   }
-
-  const angleLabels = ["Front", "Back", "Heel/Side", "Palm Side"];
 
   return (
     <div className="space-y-6 max-w-4xl">
@@ -117,12 +134,23 @@ export default function OrderDetail() {
         </div>
       </motion.div>
 
+      {/* Payment success banner */}
+      {paymentSuccess && order.status === "Pending Payment" && (
+        <div className="rounded-lg border border-status-green/30 bg-status-green/10 p-4 flex items-center gap-3">
+          <CheckCircle2 className="h-5 w-5 text-status-green shrink-0" />
+          <div>
+            <p className="font-medium text-status-green text-sm">Payment received — confirming your order…</p>
+            <p className="text-xs text-muted-foreground mt-0.5">This page will update automatically in a few seconds.</p>
+          </div>
+        </div>
+      )}
+
       {/* Status stepper */}
       <div className="rounded-lg border bg-card p-5">
         <StatusStepper currentStatus={order.status} />
       </div>
 
-      {/* Order Form PDF — visible once admin generates it */}
+      {/* Order Form PDF */}
       {order.pdf_url && (
         <div className="rounded-lg border bg-card p-5 flex items-center justify-between gap-4">
           <div>
@@ -131,36 +159,11 @@ export default function OrderDetail() {
               Your official order form is ready to view
             </p>
           </div>
-          <a
-            href={order.pdf_url}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a href={order.pdf_url} target="_blank" rel="noopener noreferrer">
             <Button variant="outline" className="flex items-center gap-2 shrink-0">
               <FileText className="h-4 w-4" /> View Order Form
             </Button>
           </a>
-        </div>
-      )}
-
-      {/* Glove preview — only render slots for images that exist */}
-      {images.length > 0 && (
-        <div className="rounded-lg border bg-card p-5">
-          <h2 className="font-semibold mb-3">Glove Preview</h2>
-          <div className={`grid gap-3 ${images.length === 1 ? "grid-cols-1 max-w-xs" : "grid-cols-2 sm:grid-cols-4"}`}>
-            {images.map((img) => (
-              <div
-                key={img.angle}
-                className="aspect-square rounded-md border bg-muted/30 flex items-center justify-center overflow-hidden"
-              >
-                <img
-                  src={img.image_url}
-                  alt={angleLabels[img.angle - 1] ?? "Glove"}
-                  className="max-h-full max-w-full object-contain"
-                />
-              </div>
-            ))}
-          </div>
         </div>
       )}
 
@@ -175,83 +178,105 @@ export default function OrderDetail() {
               <TableRow>
                 <TableHead>Product</TableHead>
                 <TableHead className="hidden sm:table-cell">Specs</TableHead>
+                <TableHead className="text-center hidden sm:table-cell">Preview</TableHead>
                 <TableHead className="text-right">Qty</TableHead>
                 <TableHead className="text-right">Unit Price</TableHead>
                 <TableHead className="text-right">Total</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {items.map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell>
-                    <p className="font-medium text-sm">{item.product_name}</p>
-                    {item.builder_recipe_url && (
-                      <a
-                        href={item.builder_recipe_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-xs text-primary hover:underline mt-0.5"
-                      >
-                        View design <ExternalLink className="h-3 w-3" />
-                      </a>
-                    )}
-                    {/* Mobile specs */}
-                    <div className="flex flex-wrap gap-1 mt-1 sm:hidden">
-                      {item.leather_type && (
-                        <Badge variant="outline" className="text-[10px] px-1.5 py-0">
-                          {item.leather_type}
-                        </Badge>
+              {items.map((item, i) => {
+                const itemImage = images[i];
+                return (
+                  <TableRow key={item.id}>
+                    <TableCell>
+                      <p className="font-medium text-sm">{item.product_name}</p>
+                      {item.builder_recipe_url && (
+                        <a
+                          href={item.builder_recipe_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-xs text-primary hover:underline mt-0.5"
+                        >
+                          View design <ExternalLink className="h-3 w-3" />
+                        </a>
                       )}
-                      {item.hand && (
-                        <Badge variant="outline" className="text-[10px] px-1.5 py-0">
-                          {item.hand}
-                        </Badge>
+                      {/* Mobile specs */}
+                      <div className="flex flex-wrap gap-1 mt-1 sm:hidden">
+                        {item.leather_type && (
+                          <Badge variant="outline" className="text-[10px] px-1.5 py-0">
+                            {item.leather_type}
+                          </Badge>
+                        )}
+                        {item.hand && (
+                          <Badge variant="outline" className="text-[10px] px-1.5 py-0">
+                            {item.hand}
+                          </Badge>
+                        )}
+                        {item.has_flag && (
+                          <Badge variant="outline" className="text-[10px] px-1.5 py-0">
+                            🏴 Flag
+                          </Badge>
+                        )}
+                        {itemImage && (
+                          <a
+                            href={itemImage.image_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
+                          >
+                            <ImageIcon className="h-3 w-3" /> Preview
+                          </a>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell className="hidden sm:table-cell">
+                      <div className="flex flex-wrap gap-1">
+                        {item.leather_type && (
+                          <Badge variant="outline" className="text-[10px] px-1.5 py-0">
+                            {item.leather_type}
+                          </Badge>
+                        )}
+                        {item.hand && (
+                          <Badge variant="outline" className="text-[10px] px-1.5 py-0">
+                            {item.hand}
+                          </Badge>
+                        )}
+                        {item.has_flag && (
+                          <Badge variant="outline" className="text-[10px] px-1.5 py-0">
+                            🏴 Flag
+                          </Badge>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-center hidden sm:table-cell">
+                      {itemImage ? (
+                        <a
+                          href={itemImage.image_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-block"
+                        >
+                          <img
+                            src={itemImage.image_url}
+                            alt="Glove preview"
+                            className="h-12 w-12 object-contain rounded border hover:opacity-80 transition-opacity mx-auto"
+                          />
+                        </a>
+                      ) : (
+                        <span className="text-muted-foreground text-xs">—</span>
                       )}
-                      {item.position && (
-                        <Badge variant="outline" className="text-[10px] px-1.5 py-0">
-                          {item.position}
-                        </Badge>
-                      )}
-                      {item.has_flag && (
-                        <Badge variant="outline" className="text-[10px] px-1.5 py-0">
-                          🏴 Flag
-                        </Badge>
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell className="hidden sm:table-cell">
-                    <div className="flex flex-wrap gap-1">
-                      {item.leather_type && (
-                        <Badge variant="outline" className="text-[10px] px-1.5 py-0">
-                          {item.leather_type}
-                        </Badge>
-                      )}
-                      {item.hand && (
-                        <Badge variant="outline" className="text-[10px] px-1.5 py-0">
-                          {item.hand}
-                        </Badge>
-                      )}
-                      {item.position && (
-                        <Badge variant="outline" className="text-[10px] px-1.5 py-0">
-                          {item.position}
-                        </Badge>
-                      )}
-                      {item.has_flag && (
-                        <Badge variant="outline" className="text-[10px] px-1.5 py-0">
-                          🏴 Flag
-                        </Badge>
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-right">{item.quantity}</TableCell>
-                  <TableCell className="text-right text-sm">
-                    {formatCents(item.unit_price)}
-                  </TableCell>
-                  <TableCell className="text-right font-medium">
-                    {formatCents(item.line_total)}
-                  </TableCell>
-                </TableRow>
-              ))}
+                    </TableCell>
+                    <TableCell className="text-right">{item.quantity}</TableCell>
+                    <TableCell className="text-right text-sm">
+                      {formatCents(item.unit_price)}
+                    </TableCell>
+                    <TableCell className="text-right font-medium">
+                      {formatCents(item.line_total)}
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </div>
