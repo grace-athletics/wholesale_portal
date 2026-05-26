@@ -26,7 +26,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Minus, AlertTriangle, CheckCircle2, ExternalLink } from "lucide-react";
+import { Plus, Minus, AlertTriangle, CheckCircle2, ExternalLink, HelpCircle, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export interface ConfigPanelHandle {
   getPriceResult: () => { unitPrice: number; lineTotal: number };
@@ -71,6 +77,8 @@ export const ConfigPanel = forwardRef<ConfigPanelHandle, ConfigPanelProps>(funct
   const batting = isBattingGlove(product);
 
   const [config, setConfig] = useState<CartItemConfig>(() => buildDefaultConfig(product));
+  const [showGuide, setShowGuide] = useState(false);
+  const [guideSlide, setGuideSlide] = useState(0);
 
   // Reset config when product changes
   useEffect(() => {
@@ -347,11 +355,85 @@ export const ConfigPanel = forwardRef<ConfigPanelHandle, ConfigPanelProps>(funct
             >
               myglovebuilder.com
             </a>
-            , copy your recipe link, paste it here.
+            , copy your design link, paste it here.{" "}
+            <button
+              type="button"
+              onClick={() => { setGuideSlide(0); setShowGuide(true); }}
+              className="inline-flex items-center gap-0.5 text-primary hover:underline font-medium"
+            >
+              <HelpCircle className="h-3 w-3" /> How to copy design link
+            </button>
           </p>
         </div>
       )}
 
+      {/* How-to guide modal */}
+      <Dialog open={showGuide} onOpenChange={setShowGuide}>
+        <DialogContent className="max-w-sm p-0 overflow-hidden">
+          <DialogHeader className="px-6 pt-6 pb-2">
+            <DialogTitle className="text-base">
+              {guideSlide === 0 ? "Step 1 of 2 — Click Share" : "Step 2 of 2 — Copy the Link"}
+            </DialogTitle>
+          </DialogHeader>
+
+          {/* Slide image */}
+          <div className="px-6">
+            <div className="rounded-lg overflow-hidden border bg-muted/30 flex items-center justify-center min-h-[220px]">
+              <img
+                src={guideSlide === 0 ? "/guide-step1.png" : "/guide-step2.png"}
+                alt={guideSlide === 0 ? "Click the Share button" : "Click the Copy button"}
+                className="w-full object-contain max-h-72"
+              />
+            </div>
+          </div>
+
+          {/* Slide text */}
+          <p className="px-6 pt-3 pb-2 text-sm text-muted-foreground">
+            {guideSlide === 0
+              ? "When you reach step 5 of 5 in the builder, click the SHARE button at the top right of the screen."
+              : "A popup will appear showing your design link. Click the COPY button to copy the link, then paste it into the field on your order form."}
+          </p>
+
+          {/* Navigation */}
+          <div className="flex items-center justify-between px-6 pb-5 pt-2">
+            <button
+              type="button"
+              onClick={() => setGuideSlide(0)}
+              disabled={guideSlide === 0}
+              className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground disabled:opacity-30 disabled:pointer-events-none transition-colors"
+            >
+              <ChevronLeft className="h-4 w-4" /> Previous
+            </button>
+            <div className="flex gap-1.5">
+              {[0, 1].map((i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => setGuideSlide(i)}
+                  className={`h-1.5 rounded-full transition-all ${guideSlide === i ? "w-4 bg-primary" : "w-1.5 bg-muted-foreground/30"}`}
+                />
+              ))}
+            </div>
+            {guideSlide === 0 ? (
+              <button
+                type="button"
+                onClick={() => setGuideSlide(1)}
+                className="inline-flex items-center gap-1 text-sm text-primary font-medium hover:underline transition-colors"
+              >
+                Next <ChevronRight className="h-4 w-4" />
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setShowGuide(false)}
+                className="text-sm text-primary font-medium hover:underline"
+              >
+                Got it
+              </button>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
 
     </div>
   );
