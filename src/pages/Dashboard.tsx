@@ -2,7 +2,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   ShoppingBag,
   DollarSign,
@@ -48,6 +48,7 @@ function formatCents(cents: number) {
 
 export default function Dashboard() {
   const { profile, user } = useAuth();
+  const navigate = useNavigate();
 
   const { data: orders = [] } = useQuery({
     queryKey: ["my-orders"],
@@ -291,7 +292,7 @@ export default function Dashboard() {
                     <TableRow
                       key={order.id}
                       className="cursor-pointer hover:bg-muted/50"
-                      onClick={() => (window.location.href = `/orders/${order.id}`)}
+                      onClick={() => navigate(`/orders/${order.id}`)}
                     >
                       <TableCell className="font-medium">{order.order_number}</TableCell>
                       <TableCell className="hidden sm:table-cell text-sm">
