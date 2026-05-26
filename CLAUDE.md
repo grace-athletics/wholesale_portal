@@ -64,13 +64,17 @@ Products have flexible pricing fields stored as JSONB: `leather_options`, `leath
 
 ### Environment Variables
 
-Required in `.env`:
+Required in `.env` (local) **and** in Vercel → Settings → Environment Variables (production):
 ```
 VITE_SUPABASE_URL
 VITE_SUPABASE_PUBLISHABLE_KEY
 VITE_SUPABASE_PROJECT_ID
 VITE_STRIPE_PUBLISHABLE_KEY
 ```
+
+`VITE_SUPABASE_PUBLISHABLE_KEY` must be the **legacy JWT key** (`eyJ...`) from Supabase → Settings → API → "Legacy anon, service_role API keys" tab. The new `sb_publishable_...` format is not yet supported by `@supabase/supabase-js@2.57.2`.
+
+Missing any of these vars causes silent failures (blank Stripe form, auth errors). The app validates all three VITE_ vars at startup and shows a clear error instead of a blank screen.
 
 ### Notes
 
