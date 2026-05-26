@@ -121,35 +121,23 @@ export default function OrderDetail() {
         <StatusStepper currentStatus={order.status} />
       </div>
 
-      {/* Glove angle images */}
+      {/* Glove preview — only render slots for images that exist */}
       {images.length > 0 && (
         <div className="rounded-lg border bg-card p-5">
           <h2 className="font-semibold mb-3">Glove Preview</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {[1, 2, 3, 4].map((angle) => {
-              const img = images.find((i) => i.angle === angle);
-              return (
-                <div
-                  key={angle}
-                  className="aspect-square rounded-md border bg-muted/30 flex items-center justify-center overflow-hidden"
-                >
-                  {img ? (
-                    <img
-                      src={img.image_url}
-                      alt={angleLabels[angle - 1]}
-                      className="max-h-full max-w-full object-contain"
-                    />
-                  ) : (
-                    <div className="text-center">
-                      <ImageIcon className="h-6 w-6 text-muted-foreground/30 mx-auto" />
-                      <p className="text-[10px] text-muted-foreground mt-1">
-                        {angleLabels[angle - 1]}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+          <div className={`grid gap-3 ${images.length === 1 ? "grid-cols-1 max-w-xs" : "grid-cols-2 sm:grid-cols-4"}`}>
+            {images.map((img) => (
+              <div
+                key={img.angle}
+                className="aspect-square rounded-md border bg-muted/30 flex items-center justify-center overflow-hidden"
+              >
+                <img
+                  src={img.image_url}
+                  alt={angleLabels[img.angle - 1] ?? "Glove"}
+                  className="max-h-full max-w-full object-contain"
+                />
+              </div>
+            ))}
           </div>
         </div>
       )}
