@@ -1,0 +1,13 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "graceglove",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "/Users/michaelcurry/MGB Portal/Grace Website/graceglove",
+      "port": 8081,
+      "autoPort": false
+    }
+  ]
+}
