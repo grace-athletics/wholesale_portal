@@ -46,9 +46,9 @@ export default function ShopifyOrders() {
 
   const formatStatusBadge = (status: string) => {
     const statusMap: Record<string, string> = {
-      unfulfilled: "🔵 Not Started",
-      partial: "🟡 In Progress",
-      fulfilled: "✅ Fulfilled",
+      unfulfilled: "🟠 In Production",
+      partial: "🟡 Partially Shipped",
+      fulfilled: "✅ Shipped",
       restocked: "🔄 Restocked",
       cancelled: "❌ Cancelled",
       scheduled: "📅 Scheduled",
