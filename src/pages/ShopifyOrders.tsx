@@ -107,70 +107,69 @@ export default function ShopifyOrders() {
           </TableHeader>
           <TableBody>
             {orders.map((order) => (
-              <TableRow
-                key={order.id}
-                className="hover:bg-muted/50 cursor-pointer transition-colors"
-                onClick={() => setSelectedOrder(selectedOrder === order.id ? null : order.id)}
-              >
-                <TableCell className="font-semibold">MGB{order.order_number}</TableCell>
-                <TableCell className="text-sm">{formatOrderDate(order.order_date)}</TableCell>
-                <TableCell className="text-sm">
-                  <div className="flex items-center gap-1.5">
-                    <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
-                    {calculateExpectedShipDate(order.order_date)}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Badge variant="outline" className="text-xs">
-                    {formatStatusBadge(order.fulfillment_status || "unfulfilled")}
-                  </Badge>
-                </TableCell>
-                <TableCell className="text-sm">{order.product_title}</TableCell>
-                <TableCell className="text-right">
-                  {order.traveler_pdf_url && (
-                    <a href={`${order.traveler_pdf_url}?download`} download>
-                      <Button size="sm" variant="outline" className="gap-2">
-                        <Download className="h-3.5 w-3.5" /> PDF
-                      </Button>
-                    </a>
-                  )}
-                </TableCell>
-              </TableRow>
+              <>
+                <TableRow
+                  key={order.id}
+                  className="hover:bg-muted/50 cursor-pointer transition-colors"
+                  onClick={() => setSelectedOrder(selectedOrder === order.id ? null : order.id)}
+                >
+                  <TableCell className="font-semibold">MGB{order.order_number}</TableCell>
+                  <TableCell className="text-sm">{formatOrderDate(order.order_date)}</TableCell>
+                  <TableCell className="text-sm">
+                    <div className="flex items-center gap-1.5">
+                      <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
+                      {calculateExpectedShipDate(order.order_date)}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant="outline" className="text-xs">
+                      {formatStatusBadge(order.fulfillment_status || "unfulfilled")}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="text-sm">{order.product_title}</TableCell>
+                  <TableCell className="text-right">
+                    {order.traveler_pdf_url && (
+                      <a href={`${order.traveler_pdf_url}?download`} download>
+                        <Button size="sm" variant="outline" className="gap-2">
+                          <Download className="h-3.5 w-3.5" /> PDF
+                        </Button>
+                      </a>
+                    )}
+                  </TableCell>
+                </TableRow>
+                {selectedOrder === order.id && (
+                  <TableRow className="bg-muted/30 hover:bg-muted/30">
+                    <TableCell colSpan={6} className="p-0">
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="px-6 py-4"
+                      >
+                        <h3 className="text-base font-semibold mb-3">Order Specifications</h3>
+                        {order.line_item_properties && (
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-2">
+                            {Object.entries(order.line_item_properties)
+                              .filter(([key]) => !key.startsWith("_") && key !== "thumbnail")
+                              .map(([key, value]) => (
+                                <div key={key} className="flex justify-between items-start gap-3 py-1">
+                                  <span className="text-xs text-muted-foreground capitalize whitespace-nowrap">
+                                    {key.replace(/_/g, " ")}
+                                  </span>
+                                  <span className="font-medium text-xs text-right">{String(value)}</span>
+                                </div>
+                              ))}
+                          </div>
+                        )}
+                      </motion.div>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </>
             ))}
           </TableBody>
         </Table>
       </div>
-
-      {/* Order detail when clicked */}
-      {selectedOrder && (
-        <motion.div
-          initial={{ opacity: 0, y: 4 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="border rounded-lg bg-card p-5"
-        >
-          {orders.find((o) => o.id === selectedOrder) && (
-            <>
-              <h2 className="text-base font-semibold mb-3">Order Specifications</h2>
-              {orders.find((o) => o.id === selectedOrder)?.line_item_properties && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2">
-                  {Object.entries(
-                    orders.find((o) => o.id === selectedOrder)?.line_item_properties || {}
-                  )
-                    .filter(([key]) => !key.startsWith("_") && key !== "thumbnail")
-                    .map(([key, value]) => (
-                      <div key={key} className="flex justify-between items-start gap-3 py-1">
-                        <span className="text-xs text-muted-foreground capitalize whitespace-nowrap">
-                          {key.replace(/_/g, " ")}
-                        </span>
-                        <span className="font-medium text-xs text-right">{String(value)}</span>
-                      </div>
-                    ))}
-                </div>
-              )}
-            </>
-          )}
-        </motion.div>
-      )}
     </motion.div>
   );
 }
