@@ -146,23 +146,25 @@ export default function ShopifyOrders() {
         <motion.div
           initial={{ opacity: 0, y: 4 }}
           animate={{ opacity: 1, y: 0 }}
-          className="border rounded-lg bg-card p-6 space-y-4"
+          className="border rounded-lg bg-card p-5"
         >
           {orders.find((o) => o.id === selectedOrder) && (
             <>
-              <h2 className="text-lg font-semibold">Order Specifications</h2>
+              <h2 className="text-base font-semibold mb-3">Order Specifications</h2>
               {orders.find((o) => o.id === selectedOrder)?.line_item_properties && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2">
                   {Object.entries(
                     orders.find((o) => o.id === selectedOrder)?.line_item_properties || {}
-                  ).map(([key, value]) => (
-                    <div key={key} className="flex justify-between items-center py-2 border-b">
-                      <span className="text-sm text-muted-foreground capitalize">
-                        {key.replace(/_/g, " ")}
-                      </span>
-                      <span className="font-medium text-sm">{String(value)}</span>
-                    </div>
-                  ))}
+                  )
+                    .filter(([key]) => !key.startsWith("_") && key !== "thumbnail")
+                    .map(([key, value]) => (
+                      <div key={key} className="flex justify-between items-start gap-3 py-1">
+                        <span className="text-xs text-muted-foreground capitalize whitespace-nowrap">
+                          {key.replace(/_/g, " ")}
+                        </span>
+                        <span className="font-medium text-xs text-right">{String(value)}</span>
+                      </div>
+                    ))}
                 </div>
               )}
             </>
