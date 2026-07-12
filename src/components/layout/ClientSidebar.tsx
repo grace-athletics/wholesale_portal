@@ -2,6 +2,7 @@ import {
   LayoutGrid,
   ShoppingBag,
   Clock,
+  Package,
   ExternalLink,
   Upload,
   User,
@@ -29,6 +30,7 @@ import {
 const mainNav = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutGrid },
   { title: "Shop Products", url: "/shop", icon: ShoppingBag },
+  { title: "My Orders", url: "/shopify-orders", icon: Package },
   { title: "Order Status", url: "/orders", icon: Clock },
 ];
 
