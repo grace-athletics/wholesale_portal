@@ -128,14 +128,11 @@ export default function ShopifyOrders() {
                 <TableCell className="text-sm">{order.product_title}</TableCell>
                 <TableCell className="text-right">
                   {order.traveler_pdf_url && (
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="gap-2"
-                      onClick={() => window.open(order.traveler_pdf_url, '_blank')}
-                    >
-                      <Download className="h-3.5 w-3.5" /> PDF
-                    </Button>
+                    <a href={`${order.traveler_pdf_url}?download`} download>
+                      <Button size="sm" variant="outline" className="gap-2">
+                        <Download className="h-3.5 w-3.5" /> PDF
+                      </Button>
+                    </a>
                   )}
                 </TableCell>
               </TableRow>
