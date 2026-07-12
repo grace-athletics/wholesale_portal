@@ -1,6 +1,5 @@
 import {
   LayoutGrid,
-  Package,
   ShoppingBag,
   Users,
   DollarSign,
@@ -25,7 +24,6 @@ import {
 const adminNav = [
   { title: "Dashboard", url: "/admin", icon: LayoutGrid },
   { title: "Orders", url: "/admin/orders", icon: ShoppingBag },
-  { title: "Products", url: "/admin/products", icon: Package },
   { title: "Clients", url: "/admin/clients", icon: Users },
   { title: "Revenue", url: "/admin/revenue", icon: DollarSign },
 ];

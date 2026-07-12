@@ -1,9 +1,9 @@
-import { LayoutGrid, PlusCircle, List, User } from "lucide-react";
+import { LayoutGrid, ShoppingBag, List, User } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 
 const tabs = [
   { title: "Home", url: "/dashboard", icon: LayoutGrid },
-  { title: "Order", url: "/order/new", icon: PlusCircle },
+  { title: "Shop", url: "/shop", icon: ShoppingBag },
   { title: "Orders", url: "/orders", icon: List },
   { title: "Account", url: "/account", icon: User },
 ];

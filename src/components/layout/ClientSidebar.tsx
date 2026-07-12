@@ -1,10 +1,8 @@
 import {
   LayoutGrid,
-  PlusCircle,
-  List,
+  ShoppingBag,
   Clock,
   ExternalLink,
-  Image,
   Upload,
   User,
   LogOut,
@@ -30,17 +28,8 @@ import {
 
 const mainNav = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutGrid },
-  { title: "Place Order", url: "/order/new", icon: PlusCircle },
+  { title: "Shop Products", url: "/shop", icon: ShoppingBag },
   { title: "Order Status", url: "/orders", icon: Clock },
-];
-
-const toolsNav = [
-  {
-    title: "Blank Glove Builder",
-    url: "https://www.myglovebuilder.com/",
-    icon: ExternalLink,
-    external: true,
-  },
 ];
 
 const accountNav = [
@@ -80,62 +69,18 @@ export function ClientSidebar({ onboardingStep }: ClientSidebarProps) {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {mainNav.map((item) => {
-                const isOrderItem = item.url === "/order/new";
-                const highlighted = isOrderItem && onboardingStep === "order";
-                return (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton
-                      asChild
-                      tooltip={item.title}
-                      data-onboarding={isOrderItem ? "order" : undefined}
-                      className={highlighted ? "ring-2 ring-primary ring-offset-1 ring-offset-sidebar rounded-md animate-pulse" : ""}
-                    >
-                      <NavLink
-                        to={item.url}
-                        end
-                        className="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                        activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-                      >
-                        <item.icon className="h-4 w-4 shrink-0" />
-                        {!collapsed && <span>{item.title}</span>}
-                      </NavLink>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                );
-              })}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        <SidebarSeparator />
-
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {toolsNav.map((item) => (
+              {mainNav.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={item.title}>
-                    {item.external ? (
-                      <a
-                        href={item.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                      >
-                        <item.icon className="h-4 w-4 shrink-0" />
-                        {!collapsed && <span>{item.title}</span>}
-                      </a>
-                    ) : (
-                      <NavLink
-                        to={item.url}
-                        className="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                        activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-                      >
-                        <item.icon className="h-4 w-4 shrink-0" />
-                        {!collapsed && <span>{item.title}</span>}
-                      </NavLink>
-                    )}
+                    <NavLink
+                      to={item.url}
+                      end
+                      className="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                      activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                    >
+                      <item.icon className="h-4 w-4 shrink-0" />
+                      {!collapsed && <span>{item.title}</span>}
+                    </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

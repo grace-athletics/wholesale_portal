@@ -21,10 +21,10 @@ import NotFound from "./pages/NotFound";
 
 // Client pages
 import Dashboard from "./pages/Dashboard";
-import NewOrder from "./pages/NewOrder";
+import Shop from "./pages/Shop";
 import Orders from "./pages/Orders";
 import OrderDetail from "./pages/OrderDetail";
-import Builders from "./pages/Builders";
+import ShopifyOrders from "./pages/ShopifyOrders";
 import Account from "./pages/Account";
 import LogoVault from "./pages/LogoVault";
 
@@ -32,7 +32,6 @@ import LogoVault from "./pages/LogoVault";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminOrders from "./pages/admin/AdminOrders";
 import AdminOrderDetail from "./pages/admin/AdminOrderDetail";
-import AdminProducts from "./pages/admin/AdminProducts";
 import AdminClients from "./pages/admin/AdminClients";
 import AdminRevenue from "./pages/admin/AdminRevenue";
 
@@ -59,18 +58,16 @@ const App = () => (
             <Route
               element={
                 <ProtectedRoute requireSubscription>
-                  <CartProvider>
-                    <AppLayout variant="client" />
-                  </CartProvider>
+                  <AppLayout variant="client" />
                 </ProtectedRoute>
               }
             >
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/order/new" element={<NewOrder />} />
+              <Route path="/shop" element={<Shop />} />
               <Route path="/orders" element={<Orders />} />
               <Route path="/orders/:id" element={<OrderDetail />} />
-              <Route path="/builders" element={<Builders />} />
-<Route path="/account" element={<Account />} />
+              <Route path="/shopify-orders" element={<ShopifyOrders />} />
+              <Route path="/account" element={<Account />} />
               <Route path="/account/logos" element={<LogoVault />} />
             </Route>
 
@@ -85,7 +82,6 @@ const App = () => (
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/admin/orders" element={<AdminOrders />} />
               <Route path="/admin/orders/:id" element={<AdminOrderDetail />} />
-              <Route path="/admin/products" element={<AdminProducts />} />
               <Route path="/admin/clients" element={<AdminClients />} />
               <Route path="/admin/revenue" element={<AdminRevenue />} />
             </Route>
