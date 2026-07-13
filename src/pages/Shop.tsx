@@ -1,19 +1,27 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { fetchWooProducts, type WooProduct } from "@/integrations/woocommerce/client";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ExternalLink, CheckCircle2, AlertCircle, Image as ImageIcon } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { CheckCircle2, AlertCircle, Image as ImageIcon, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
+import { CustomizerModal } from "@/components/CustomizerModal";
 
 export default function Shop() {
   const { user } = useAuth();
   const [hasLogos, setHasLogos] = useState(false);
+  const [products, setProducts] = useState<WooProduct[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedProduct, setSelectedProduct] = useState<WooProduct | null>(null);
+  const [customizerOpen, setCustomizerOpen] = useState(false);
+  const [customizerProduct, setCustomizerProduct] = useState<WooProduct | null>(null);
 
   useEffect(() => {
-    async function checkLogos() {
+    async function loadData() {
       if (!user) return;
+
+      // Check logos
       const { data } = await supabase
         .from("client_logos")
         .select("wrist_logo_url, thumb_logo_url, palm_logo_url")
@@ -22,15 +30,39 @@ export default function Shop() {
         .limit(1)
         .single();
 
-      const allUploaded = data?.wrist_logo_url && data?.thumb_logo_url && data?.palm_logo_url;
-      setHasLogos(!!allUploaded);
+      setHasLogos(!!(data?.wrist_logo_url && data?.thumb_logo_url && data?.palm_logo_url));
+
+      // Fetch products
+      const wooProducts = await fetchWooProducts();
+      setProducts(wooProducts);
       setLoading(false);
     }
-    checkLogos();
+    loadData();
   }, [user]);
 
+  const handleCustomize = (product: WooProduct) => {
+    setCustomizerProduct(product);
+    setCustomizerOpen(true);
+  };
+
+  const handleRecipeGenerated = (recipeId: string, quantity: number) => {
+    if (!customizerProduct) return;
+
+    // TODO: Add to cart with recipe ID
+    console.log(`Recipe ${recipeId} with quantity ${quantity} for product ${customizerProduct.id}`);
+    toast.success("Added to cart! (Cart coming soon)");
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-8 max-w-3xl mx-auto">
+    <div className="space-y-8">
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
@@ -38,11 +70,11 @@ export default function Shop() {
       >
         <h1 className="text-3xl font-semibold">Shop Custom Gloves</h1>
         <p className="text-muted-foreground mt-2">
-          Build your custom gloves on our main site — your logos will be automatically applied to every order.
+          Build and customize your wholesale gloves. Your logos will be automatically applied to every order.
         </p>
       </motion.div>
 
-      {/* Logo Status Card */}
+      {/* Logo Status */}
       {!loading && (
         <motion.div
           initial={{ opacity: 0, y: 8 }}
@@ -70,8 +102,8 @@ export default function Shop() {
               </h3>
               <p className="text-sm text-muted-foreground mt-1">
                 {hasLogos
-                  ? "All orders placed on myglovebuilder.com will automatically include your uploaded logos (wrist, thumb, and palm)."
-                  : "Before placing orders, upload your logos to the Logo Vault so they can be applied to every glove you order."}
+                  ? "All orders will automatically include your uploaded logos (wrist, thumb, and palm)."
+                  : "Upload your logos so they can be applied to every glove you order."}
               </p>
               {!hasLogos && (
                 <Button asChild variant="outline" size="sm" className="mt-3">
@@ -86,63 +118,59 @@ export default function Shop() {
         </motion.div>
       )}
 
-      {/* Shop CTA */}
+      {/* Products Grid */}
       <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         transition={{ duration: 0.3, delay: 0.2 }}
-        className="rounded-lg border bg-card p-8 text-center space-y-4"
+        className="grid grid-cols-1 md:grid-cols-3 gap-6"
       >
-        <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-medium">
-          <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-          Wholesale Pricing Active
-        </div>
-        <h2 className="text-2xl font-semibold">Ready to Order?</h2>
-        <p className="text-muted-foreground max-w-md mx-auto">
-          Visit our custom glove builder to design and order your gloves. Your subscription unlocks exclusive wholesale pricing.
-        </p>
-        <Button asChild size="lg" className="mt-4">
-          <a href="https://www.myglovebuilder.com/" target="_blank" rel="noopener noreferrer">
-            Open Glove Builder <ExternalLink className="ml-2 h-4 w-4" />
-          </a>
-        </Button>
+        {products.map((product) => (
+          <motion.div
+            key={product.id}
+            whileHover={{ y: -4 }}
+          >
+            <Card className="overflow-hidden h-full flex flex-col hover:shadow-lg transition-shadow">
+              {product.images?.[0]?.src && (
+                <div className="w-full h-48 bg-muted overflow-hidden">
+                  <img
+                    src={product.images[0].src}
+                    alt={product.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+              <div className="p-4 flex-1 flex flex-col">
+                <h3 className="font-semibold mb-2">{product.name}</h3>
+                <p className="text-sm text-muted-foreground mb-4 flex-1">
+                  SKU: <code className="bg-muted px-2 py-1 rounded text-xs">{product.sku}</code>
+                </p>
+                <div className="pt-4 border-t">
+                  <div className="flex justify-between items-center mb-3">
+                    <span className="text-sm text-muted-foreground">Wholesale from:</span>
+                    <span className="font-bold text-lg">$145</span>
+                  </div>
+                  <Button className="w-full" onClick={() => handleCustomize(product)}>
+                    Customize
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          </motion.div>
+        ))}
       </motion.div>
 
-      {/* How It Works */}
-      <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, delay: 0.3 }}
-        className="rounded-lg border bg-card/50 p-6"
-      >
-        <h3 className="font-semibold mb-4">How It Works</h3>
-        <ol className="space-y-3 text-sm">
-          <li className="flex gap-3">
-            <Badge variant="outline" className="h-6 w-6 flex items-center justify-center rounded-full flex-shrink-0">
-              1
-            </Badge>
-            <span className="text-muted-foreground">
-              Build your custom glove on <strong>myglovebuilder.com</strong>
-            </span>
-          </li>
-          <li className="flex gap-3">
-            <Badge variant="outline" className="h-6 w-6 flex items-center justify-center rounded-full flex-shrink-0">
-              2
-            </Badge>
-            <span className="text-muted-foreground">
-              Complete checkout — your logos are automatically applied
-            </span>
-          </li>
-          <li className="flex gap-3">
-            <Badge variant="outline" className="h-6 w-6 flex items-center justify-center rounded-full flex-shrink-0">
-              3
-            </Badge>
-            <span className="text-muted-foreground">
-              Track your order status right here in the portal
-            </span>
-          </li>
-        </ol>
-      </motion.div>
+      {/* Customizer Modal */}
+      {customizerProduct && (
+        <CustomizerModal
+          open={customizerOpen}
+          onOpenChange={setCustomizerOpen}
+          productId={customizerProduct.id}
+          productName={customizerProduct.name}
+          sku={customizerProduct.sku}
+          onRecipeGenerated={handleRecipeGenerated}
+        />
+      )}
     </div>
   );
 }

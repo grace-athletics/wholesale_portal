@@ -25,6 +25,7 @@ import Shop from "./pages/Shop";
 import Orders from "./pages/Orders";
 import OrderDetail from "./pages/OrderDetail";
 import ShopifyOrders from "./pages/ShopifyOrders";
+import PlaceOrder from "./pages/PlaceOrder";
 import Account from "./pages/Account";
 import LogoVault from "./pages/LogoVault";
 
@@ -67,6 +68,7 @@ const App = () => (
               <Route path="/orders" element={<Orders />} />
               <Route path="/orders/:id" element={<OrderDetail />} />
               <Route path="/shopify-orders" element={<ShopifyOrders />} />
+              <Route path="/place-order" element={<PlaceOrder />} />
               <Route path="/account" element={<Account />} />
               <Route path="/account/logos" element={<LogoVault />} />
             </Route>

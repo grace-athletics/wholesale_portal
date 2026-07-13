@@ -30,6 +30,7 @@ import {
 const mainNav = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutGrid },
   { title: "Shop Products", url: "/shop", icon: ShoppingBag },
+  { title: "Place Order", url: "/place-order", icon: Clock },
   { title: "My Orders", url: "/shopify-orders", icon: Package },
   { title: "Order Status", url: "/orders", icon: Clock },
 ];
