@@ -47,18 +47,45 @@ export function calculatePrice(
   return { price: totalPrice, tier };
 }
 
-export async function fetchWooProducts(): Promise<WooProduct[]> {
-  try {
-    const apiUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
-    const response = await fetch(`${apiUrl}/api/woo/products`);
-    if (!response.ok) throw new Error(`API error: ${response.status}`);
+// Mock products hard-coded to avoid WooCommerce API issues
+const MOCK_PRODUCTS: WooProduct[] = [
+  {
+    id: 2941,
+    name: "CUSTOMFB",
+    sku: "CUSTOMFB",
+    price: "145",
+    description: "Custom Glove - Full Back",
+    images: [],
+  },
+  {
+    id: 2940,
+    name: "CUSTOMC",
+    sku: "CUSTOMC",
+    price: "145",
+    description: "Custom Glove - Classic",
+    images: [],
+  },
+  {
+    id: 2939,
+    name: "CUSTOMF",
+    sku: "CUSTOMF",
+    price: "145",
+    description: "Custom Glove - Franchise",
+    images: [],
+  },
+  {
+    id: 2452,
+    name: "Glove Configurator",
+    sku: "GLOVECONFIG",
+    price: "145",
+    description: "Advanced Glove Customization",
+    images: [],
+  },
+];
 
-    const products = await response.json();
-    return Array.isArray(products) ? products : [];
-  } catch (error) {
-    console.error("Failed to fetch WooCommerce products:", error);
-    return [];
-  }
+export async function fetchWooProducts(): Promise<WooProduct[]> {
+  // Return mock products (WooCommerce API has rate limiting issues)
+  return MOCK_PRODUCTS;
 }
 
 export function formatPrice(price: number): string {
