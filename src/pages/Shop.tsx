@@ -34,7 +34,8 @@ export default function Shop() {
 
       // Fetch products
       const wooProducts = await fetchWooProducts();
-      setProducts(wooProducts);
+      const productArray = Array.isArray(wooProducts) ? wooProducts : [];
+      setProducts(productArray);
       setLoading(false);
     }
     loadData();
