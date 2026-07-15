@@ -49,12 +49,16 @@ export function calculatePrice(
 
 export async function fetchWooProducts(): Promise<WooProduct[]> {
   try {
-    const apiUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
-    const response = await fetch(`${apiUrl}/api/woo/products`);
-    if (!response.ok) throw new Error(`API error: ${response.status}`);
+    const url = new URL(`${WOOCOMMERCE_URL}/wp-json/wc/v3/products`);
+    url.searchParams.append("consumer_key", CONSUMER_KEY);
+    url.searchParams.append("consumer_secret", CONSUMER_SECRET);
+    url.searchParams.append("per_page", "100");
+
+    const response = await fetch(url.toString());
+    if (!response.ok) throw new Error(`WooCommerce API error: ${response.status}`);
 
     const products = await response.json();
-    return products;
+    return Array.isArray(products) ? products : [];
   } catch (error) {
     console.error("Failed to fetch WooCommerce products:", error);
     return [];
