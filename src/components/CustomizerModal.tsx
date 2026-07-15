@@ -102,8 +102,14 @@ export function CustomizerModal({
         </DialogHeader>
 
         <div className="space-y-6">
-          {/* Customizer will be injected here by VU script */}
-          <div id="vu-customizer-container" className="min-h-96 bg-muted rounded-lg p-4">
+          {/* VU Customizer container */}
+          <div
+            id="vu-customizer-container"
+            className="min-h-96 bg-muted rounded-lg p-4"
+            data-variant={productId}
+            data-store-key="068b86c3"
+            data-environment="production"
+          >
             {loading && (
               <div className="flex items-center justify-center h-96">
                 <div className="text-center space-y-3">
