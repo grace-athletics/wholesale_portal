@@ -1,8 +1,8 @@
 import { createClient } from "@supabase/supabase-js";
 
-const WOOCOMMERCE_URL = "https://myglovebrand.com";
-const CONSUMER_KEY = "ck_7f738a9e3f806bf660ab22f074116bcacd31531b";
-const CONSUMER_SECRET = "cs_fdfd97fc40e26adb1c4432a4e16f1a31e68e888a";
+const WOOCOMMERCE_URL = "http://myglovebrand.com";
+const CONSUMER_KEY = "ck_2e6336c61c95daa21b45f328a11b41f1a83730a1";
+const CONSUMER_SECRET = "cs_80780a3c18bf3e0e0a3138757c315e36d65c827c";
 
 export interface WooProduct {
   id: number;
@@ -49,13 +49,9 @@ export function calculatePrice(
 
 export async function fetchWooProducts(): Promise<WooProduct[]> {
   try {
-    const url = new URL(`${WOOCOMMERCE_URL}/wp-json/wc/v3/products`);
-    url.searchParams.append("consumer_key", CONSUMER_KEY);
-    url.searchParams.append("consumer_secret", CONSUMER_SECRET);
-    url.searchParams.append("per_page", "100");
-
-    const response = await fetch(url.toString());
-    if (!response.ok) throw new Error(`WooCommerce API error: ${response.status}`);
+    const apiUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+    const response = await fetch(`${apiUrl}/api/woo/products`);
+    if (!response.ok) throw new Error(`API error: ${response.status}`);
 
     const products = await response.json();
     return products;
