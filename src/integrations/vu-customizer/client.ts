@@ -3,7 +3,7 @@
  * Handles embedding and communicating with VU's customizer
  */
 
-const VU_STORE_KEY = "92d61a81";
+const VU_STORE_KEY = "ba440c2e";
 const VU_CUSTOMIZER_URL = "https://vu-customizer.s3.amazonaws.com/production/main.js";
 const VU_ENVIRONMENT = "production";
 
