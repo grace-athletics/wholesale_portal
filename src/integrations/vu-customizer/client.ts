@@ -31,13 +31,28 @@ export async function initializeCustomizer(config: CustomizerConfig): Promise<vo
   return new Promise((resolve) => {
     console.log("[VU] Initializing customizer for product:", config.productId);
 
-    // Verify container exists
-    const container = document.getElementById("vu-customizer-container");
-    if (!container) {
-      console.error("[VU] Container element not found");
-      resolve();
-      return;
-    }
+    // Wait for container to exist (with timeout)
+    let attempts = 0;
+    const maxAttempts = 20; // 2 seconds with 100ms intervals
+
+    const waitForContainer = () => {
+      const container = document.getElementById("vu-customizer-container");
+      if (container) {
+        console.log("[VU] Container found after", attempts * 100, "ms");
+        initializeScript();
+        return;
+      }
+
+      attempts++;
+      if (attempts < maxAttempts) {
+        setTimeout(waitForContainer, 100);
+      } else {
+        console.error("[VU] Container element not found after waiting");
+        resolve();
+      }
+    };
+
+    const initializeScript = () => {
 
     console.log("[VU] Container found, loading script from:", VU_CUSTOMIZER_URL);
 
@@ -84,6 +99,10 @@ export async function initializeCustomizer(config: CustomizerConfig): Promise<vo
 
     console.log("[VU] Appending script to document body");
     document.body.appendChild(script);
+    };
+
+    // Start waiting for container
+    waitForContainer();
   });
 }
 
