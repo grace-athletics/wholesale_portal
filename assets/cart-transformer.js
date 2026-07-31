@@ -30,6 +30,7 @@ class CartTransformer {
     });
 
     // Fallback: Poll for cart changes every 1 second
+    const self = this;
     setInterval(async () => {
       try {
         const res = await fetch('/cart.json');
@@ -37,12 +38,12 @@ class CartTransformer {
         const currentState = JSON.stringify(cart.items.map(i => ({ id: i.id, qty: i.quantity })));
 
         if (lastCartState && currentState !== lastCartState) {
-          console.log('CartTransformer: cart change detected via polling');
-          this.transform();
+          console.log('CartTransformer: cart change detected via polling', { old: lastCartState, new: currentState });
+          self.transform();
         }
         lastCartState = currentState;
       } catch (e) {
-        // Polling error, ignore
+        console.error('CartTransformer: polling error', e);
       }
     }, 1000);
   }
