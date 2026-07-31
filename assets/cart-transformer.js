@@ -88,6 +88,11 @@ class CartTransformer {
     // Compare quantities and apply changes
     const updates = [];
 
+    console.log('CartTransformer: comparing carts', {
+      original: originalCart.items.map(i => ({ title: i.title, qty: i.quantity })),
+      transformed: transformedCart.lines.map(i => ({ title: i.title, qty: i.quantity }))
+    });
+
     transformedCart.lines.forEach((transformedLine, idx) => {
       const originalLine = originalCart.items[idx];
       if (originalLine && transformedLine.quantity !== originalLine.quantity) {
