@@ -31,14 +31,20 @@ app.post('/cart/transform', (req, res) => {
   try {
     const { cart } = req.body;
 
-    if (!cart || !cart.lines) {
+    if (!cart) {
       return res.status(400).json({ error: 'Invalid cart data' });
     }
 
-    console.log(`[Cart Transform] Processing cart with ${cart.lines.length} items`);
+    // Handle both Shopify formats: items (storefront) and lines (admin API)
+    const items = cart.items || cart.lines;
+    if (!items || items.length === 0) {
+      return res.status(400).json({ error: 'Cart has no items' });
+    }
+
+    console.log(`[Cart Transform] Processing cart with ${items.length} items`);
 
     // Process cart
-    const transformedCart = transformCart(cart);
+    const transformedCart = transformCart({ ...cart, lines: items });
 
     res.json({ cart: transformedCart });
   } catch (error) {
