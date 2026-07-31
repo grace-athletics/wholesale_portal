@@ -86,8 +86,7 @@ function groupByAssociation(lines) {
   const groups = {};
 
   lines.forEach((line, idx) => {
-    const assocKey = line.attributes?.find(a => a.key === '_AssociationKey')?.value;
-
+    const assocKey = line.properties?._AssociationKey;
     if (assocKey) {
       if (!groups[assocKey]) {
         groups[assocKey] = { main: null, uplifts: [] };
@@ -98,7 +97,7 @@ function groupByAssociation(lines) {
 
   // Find uplifts by _ParentKey
   lines.forEach((line, idx) => {
-    const parentKey = line.attributes?.find(a => a.key === '_ParentKey')?.value;
+    const parentKey = line.properties?._ParentKey;
     if (parentKey && groups[parentKey]) {
       groups[parentKey].uplifts.push({ ...line, idx });
     }
