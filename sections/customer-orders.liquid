@@ -1,0 +1,373 @@
+<style>
+  .customer-orders {
+    padding: 60px 40px;
+    background-color: #ffffff;
+  }
+
+  .customer-orders__container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .customer-orders__header {
+    margin-bottom: 40px;
+  }
+
+  .customer-orders__title {
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #000;
+  }
+
+  .customer-orders__subtitle {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 24px;
+  }
+
+  .customer-orders__search-container {
+    margin-bottom: 24px;
+  }
+
+  .customer-orders__search {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px 16px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+
+  .customer-orders__search::placeholder {
+    color: #999;
+  }
+
+  .customer-orders__table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 24px;
+  }
+
+  .customer-orders__table thead {
+    background-color: #f9f9f9;
+  }
+
+  .customer-orders__table th {
+    padding: 16px;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid #ddd;
+    color: #000;
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+  }
+
+  .customer-orders__table th:hover {
+    background-color: #f0f0f0;
+  }
+
+  .customer-orders__table th.sortable::after {
+    content: ' ⇅';
+    opacity: 0.5;
+    font-size: 12px;
+  }
+
+  .customer-orders__table th.sorted-asc::after {
+    content: ' ↑';
+    opacity: 1;
+  }
+
+  .customer-orders__table th.sorted-desc::after {
+    content: ' ↓';
+    opacity: 1;
+  }
+
+  .customer-orders__table td {
+    padding: 16px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .customer-orders__table tr.hidden {
+    display: none;
+  }
+
+  .customer-orders__status {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .customer-orders__status--unshipped {
+    background-color: #ff980030;
+    color: #ff9800;
+  }
+
+  .customer-orders__status--partial {
+    background-color: #2196f330;
+    color: #2196f3;
+  }
+
+  .customer-orders__status--shipped {
+    background-color: #4caf5030;
+    color: #2e7d32;
+  }
+
+  .customer-orders__status--fulfilled {
+    background-color: #4caf5030;
+    color: #2e7d32;
+  }
+
+  .customer-orders__link {
+    color: #baad8c;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .customer-orders__link:hover {
+    text-decoration: underline;
+  }
+
+  .customer-orders__pdf-button {
+    padding: 8px 16px;
+    background-color: #baad8c;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .customer-orders__pdf-button:hover {
+    background-color: #9d9273;
+  }
+
+  .customer-orders__pdf-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+
+  .customer-orders__empty {
+    padding: 40px;
+    text-align: center;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    color: #666;
+  }
+
+  @media (max-width: 768px) {
+    .customer-orders {
+      padding: 40px 20px;
+    }
+
+    .customer-orders__title {
+      font-size: 36px;
+    }
+
+    .customer-orders__table {
+      font-size: 13px;
+    }
+
+    .customer-orders__table th,
+    .customer-orders__table td {
+      padding: 10px;
+    }
+  }
+</style>
+<div class="customer-orders">
+  <div class="customer-orders__container">
+    <div class="customer-orders__header">
+      <h1 class="customer-orders__title">Your Orders</h1>
+      <p class="customer-orders__subtitle">View your glove orders and download travelers</p>
+    </div>
+
+    {%- if customer.orders.size > 0 -%}
+      <div class="customer-orders__search-container">
+        <input type="text" class="customer-orders__search" id="orderSearch" placeholder="Search orders by order number...">
+      </div>
+      <div style="overflow-x: auto;">
+        <table class="customer-orders__table">
+          <thead>
+            <tr>
+              <th class="sortable" data-sort="order_number">Order Number</th>
+              <th class="sortable" data-sort="date">Date Placed</th>
+              <th class="sortable" data-sort="expected_ship">Expected Ship</th>
+              <th class="sortable" data-sort="status">Status</th>
+              <th>PDF Download</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%- for order in customer.orders -%}
+              <tr data-order-number="{{ order.order_number }}">
+                <td>#{{ order.order_number }}</td>
+                <td>{{ order.created_at | date: "%b %d, %Y" }}</td>
+                <td>{{ order.created_at | date: "%s" | plus: 3628800 | date: "%b %d, %Y" }}</td>
+                <td>
+                  <span class="customer-orders__status customer-orders__status--{{ order.fulfillment_status | default: 'unshipped' }}">
+                    {%- if order.fulfillment_status == 'shipped' or order.fulfillment_status == 'fulfilled' -%}
+                      Shipped
+                    {%- elsif order.fulfillment_status == 'partial' -%}
+                      Partial
+                    {%- else -%}
+                      In Process
+                    {%- endif -%}
+                  </span>
+                </td>
+                <td><button class="customer-orders__pdf-button" data-order-id="{{ order.id }}" data-order-number="{{ order.order_number }}" data-customer-name="{{ customer.first_name }} {{ customer.last_name }}" data-order-date="{{ order.created_at }}">📥 Download PDF</button></td>
+              </tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+      </div>
+    {%- else -%}
+      <div class="customer-orders__empty">
+        <p style="font-size: 16px; margin-bottom: 16px;">No orders yet</p>
+        <p style="font-size: 14px; margin-bottom: 24px;">Start by creating your first custom glove order</p>
+        <a href="/pages/member-builder" style="display: inline-block; padding: 12px 32px; background-color: #baad8c; color: #fff; text-decoration: none; border-radius: 4px; font-weight: 600;">Launch Builder</a>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+<script>
+  const SUPABASE_URL = 'https://geqsjoshoiqftdfmbbuu.supabase.co';
+  const PDF_FUNCTION_URL = SUPABASE_URL + '/functions/v1/generate-order-pdf-public';
+
+  // Search functionality
+  const searchInput = document.getElementById('orderSearch');
+  const tableRows = document.querySelectorAll('.customer-orders__table tbody tr');
+
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      const searchTerm = e.target.value.toLowerCase();
+      tableRows.forEach(row => {
+        const orderNumber = row.dataset.orderNumber.toLowerCase();
+        if (orderNumber.includes(searchTerm)) {
+          row.classList.remove('hidden');
+        } else {
+          row.classList.add('hidden');
+        }
+      });
+    });
+  }
+
+  // Sorting functionality
+  const headers = document.querySelectorAll('.customer-orders__table th.sortable');
+  let currentSort = null;
+  let sortDirection = 'asc';
+
+  headers.forEach(header => {
+    header.addEventListener('click', () => {
+      const sortKey = header.dataset.sort;
+      const table = document.querySelector('.customer-orders__table tbody');
+      const rows = Array.from(table.querySelectorAll('tr:not(.hidden)'));
+
+      if (currentSort === sortKey) {
+        sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+      } else {
+        sortDirection = 'asc';
+        document.querySelectorAll('.customer-orders__table th').forEach(h => {
+          h.classList.remove('sorted-asc', 'sorted-desc');
+        });
+      }
+
+      currentSort = sortKey;
+      header.classList.remove('sorted-asc', 'sorted-desc');
+      header.classList.add(sortDirection === 'asc' ? 'sorted-asc' : 'sorted-desc');
+
+      rows.sort((a, b) => {
+        let aVal, bVal;
+
+        if (sortKey === 'order_number') {
+          aVal = parseInt(a.dataset.orderNumber);
+          bVal = parseInt(b.dataset.orderNumber);
+        } else if (sortKey === 'date' || sortKey === 'expected_ship') {
+          const cellIndex = sortKey === 'date' ? 1 : 2;
+          aVal = new Date(a.cells[cellIndex].textContent);
+          bVal = new Date(b.cells[cellIndex].textContent);
+        } else if (sortKey === 'status') {
+          aVal = a.cells[3].textContent.trim();
+          bVal = b.cells[3].textContent.trim();
+        }
+
+        if (sortDirection === 'asc') {
+          return aVal > bVal ? 1 : -1;
+        } else {
+          return aVal < bVal ? 1 : -1;
+        }
+      });
+
+      rows.forEach(row => table.appendChild(row));
+    });
+  });
+
+  // PDF download functionality
+  document.querySelectorAll('.customer-orders__pdf-button').forEach(button => {
+    button.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const orderId = button.dataset.orderId;
+      const orderNumber = button.dataset.orderNumber;
+      const customerName = button.dataset.customerName || '{{ customer.first_name }} {{ customer.last_name }}';
+      const orderDate = button.dataset.orderDate;
+
+      button.disabled = true;
+      button.textContent = '⏳ Generating...';
+
+      try {
+        const response = await fetch(PDF_FUNCTION_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            order_number: orderNumber,
+            customer_name: customerName,
+            order_date: orderDate
+          })
+        });
+
+        const data = await response.json();
+        console.log('PDF function response:', { status: response.status, data });
+
+        if (!response.ok) {
+          throw new Error(data.error || `HTTP ${response.status}: Failed to generate PDF`);
+        }
+
+        if (data.pdf_url) {
+          const pdfResponse = await fetch(data.pdf_url);
+          const blob = await pdfResponse.blob();
+          const blobUrl = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = blobUrl;
+          link.download = `order-${orderNumber}-traveler.pdf`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(blobUrl);
+          button.textContent = '📥 Download PDF';
+        } else {
+          throw new Error('No PDF URL returned');
+        }
+      } catch (error) {
+        console.error('PDF generation error:', error);
+        alert('Failed to generate PDF: ' + error.message);
+        button.textContent = '📥 Download PDF';
+      } finally {
+        button.disabled = false;
+      }
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Customer Orders",
+  "settings": []
+}
+{% endschema %}

@@ -43,7 +43,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
+      <BrowserRouter basename="/app">
         <AuthProvider>
           <Routes>
             {/* Public-only routes — redirect logged-in users */}

@@ -1,0 +1,246 @@
+{%- style -%}
+  .founders {
+    background-color: {{ section.settings.background_color }};
+    color: {{ section.settings.text_color }};
+    padding: {{ section.settings.padding_top }}px 40px {{ section.settings.padding_bottom }}px 40px;
+  }
+
+  .founders__container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .founders__headline {
+    font-size: 48px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 60px;
+    position: relative;
+    padding-bottom: 30px;
+  }
+
+  .founders__headline:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 2px;
+    background: #baad8c;
+  }
+
+  .founders__cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 40px;
+    margin-bottom: 60px;
+  }
+
+  .founders__card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 40px;
+    border-radius: 12px;
+  }
+
+  .founders__card:nth-child(2) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .founders__card:nth-child(2) .founders__image {
+    order: 2;
+  }
+
+  .founders__card:nth-child(2) .founders__content {
+    order: 1;
+  }
+
+  .founders__image {
+    display: flex;
+    justify-content: center;
+  }
+
+  .founders__image img {
+    width: 280px;
+    height: 280px;
+    border-radius: 12px;
+    object-fit: cover;
+  }
+
+  .founders__content h3 {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #fff;
+  }
+
+  .founders__title {
+    color: #baad8c;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #baad8c;
+    display: inline-block;
+  }
+
+  .founders__bio {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #e0e0e0;
+    margin-bottom: 20px;
+  }
+
+  .founders__highlights {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .founders__highlights li {
+    font-size: 15px;
+    color: #ccc;
+    margin-bottom: 10px;
+    padding-left: 20px;
+    position: relative;
+    line-height: 1.5;
+  }
+
+  .founders__highlights li:before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #baad8c;
+    font-weight: bold;
+  }
+
+  @media (max-width: 768px) {
+    .founders__card {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+
+    .founders__card:nth-child(2) .founders__image {
+      order: unset;
+    }
+
+    .founders__card:nth-child(2) .founders__content {
+      order: unset;
+    }
+
+    .founders__image img {
+      width: 100%;
+      height: auto;
+      max-width: 280px;
+    }
+
+    .founders__headline {
+      font-size: 36px;
+    }
+
+    .founders__content h3 {
+      font-size: 24px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="founders" id="about-us">
+  <div class="founders__container">
+    <h2 class="founders__headline">Meet Our Founders</h2>
+
+    <div class="founders__cards">
+      <div class="founders__card">
+        <div class="founders__content">
+          <h3>Michael Curry</h3>
+          <div class="founders__title">Co-Founder And CMO</div>
+          <p class="founders__bio">Michael is a former professional baseball player and experienced digital marketing expert.</p>
+          <ul class="founders__highlights">
+            <li>Played four years of minor league baseball in the San Diego Padres organization</li>
+            <li>University of Georgia alumni – Bachelor Of Business Administration</li>
+            <li>5+ years of experience in digital marketing and paid advertising</li>
+            <li>Manages over $180,000 in monthly ad spend for top brands in diamond sports</li>
+          </ul>
+        </div>
+        <div class="founders__image">
+          {% if section.settings.founder1_image %}
+            <img src="{{ section.settings.founder1_image | image_url: width: 300 }}" alt="Michael Curry">
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="founders__card">
+        <div class="founders__content">
+          <h3>Kevin Czachow</h3>
+          <div class="founders__title">Co-Founder And CEO</div>
+          <p class="founders__bio">Kevin combines his baseball background with extensive experience in the business world.</p>
+          <ul class="founders__highlights">
+            <li>Account Executive at Dell Technologies</li>
+            <li>Bachelor of Business/ Finance – Cal State University Northridge</li>
+            <li>Founder of the emerging Grace Glove Company</li>
+            <li>7+ years of experience growing his own glove brand – Grace Glove Company</li>
+            <li>Equipped with the expertise to help you successfully launch your glove brand</li>
+          </ul>
+        </div>
+        <div class="founders__image">
+          {% if section.settings.founder2_image %}
+            <img src="{{ section.settings.founder2_image | image_url: width: 300 }}" alt="Kevin Czachow">
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Founders",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "founder1_image",
+      "label": "Michael Curry Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "founder2_image",
+      "label": "Kevin Czachow Image"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#2a2a2a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 20,
+      "max": 150,
+      "step": 10,
+      "default": 80,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 20,
+      "max": 150,
+      "step": 10,
+      "default": 80,
+      "unit": "px"
+    }
+  ]
+}
+{% endschema %}

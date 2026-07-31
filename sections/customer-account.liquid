@@ -1,0 +1,278 @@
+<style>
+  .customer-account {
+    padding: 60px 40px;
+    background-color: #ffffff;
+  }
+
+  .customer-account__container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .customer-account__header {
+    margin-bottom: 60px;
+    text-align: center;
+  }
+
+  .customer-account__title {
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #000;
+  }
+
+  .customer-account__subtitle {
+    font-size: 16px;
+    color: #666;
+  }
+
+  .customer-account__section {
+    margin-bottom: 40px;
+    padding: 32px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+  }
+
+  .customer-account__section-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    color: #000;
+  }
+
+  .customer-account__form-group {
+    margin-bottom: 20px;
+  }
+
+  .customer-account__label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #000;
+  }
+
+  .customer-account__input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+  }
+
+  .customer-account__input:focus {
+    outline: none;
+    border-color: #baad8c;
+    box-shadow: 0 0 0 3px rgba(186, 173, 140, 0.1);
+  }
+
+  .customer-account__button {
+    display: inline-block;
+    padding: 12px 32px;
+    background-color: #baad8c;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .customer-account__button:hover {
+    background-color: #9d9273;
+  }
+
+  .customer-account__info-box {
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    margin-bottom: 16px;
+  }
+
+  .customer-account__info-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #666;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .customer-account__info-value {
+    font-size: 16px;
+    font-weight: 600;
+    color: #000;
+  }
+
+  .customer-account__subscription-card {
+    background-color: #baad8c;
+    color: #fff;
+    padding: 32px;
+    border-radius: 8px;
+    margin-bottom: 40px;
+  }
+
+  .customer-account__subscription-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    opacity: 0.9;
+    margin-bottom: 8px;
+  }
+
+  .customer-account__subscription-status {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .customer-account__subscription-details {
+    font-size: 14px;
+    opacity: 0.9;
+    margin-bottom: 24px;
+  }
+
+  .customer-account__subscription-button {
+    background-color: #fff;
+    color: #baad8c;
+  }
+
+  .customer-account__subscription-button:hover {
+    background-color: #f5f5f5;
+  }
+
+  .customer-account__quick-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-top: 32px;
+    padding-top: 32px;
+    border-top: 1px solid #ddd;
+  }
+
+  .customer-account__quick-link {
+    display: block;
+    padding: 16px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #baad8c;
+    font-weight: 600;
+    font-size: 13px;
+    transition: all 0.3s;
+  }
+
+  .customer-account__quick-link:hover {
+    background-color: #f5f5f5;
+    border-color: #baad8c;
+  }
+
+  .customer-account__danger-zone {
+    background-color: #ffebee;
+    border: 1px solid #f48fb1;
+  }
+
+  .customer-account__danger-text {
+    color: #c2185b;
+    margin-bottom: 20px;
+    font-size: 14px;
+  }
+
+  .customer-account__danger-button {
+    background-color: #dc3545;
+  }
+
+  .customer-account__danger-button:hover {
+    background-color: #c82333;
+  }
+
+  @media (max-width: 768px) {
+    .customer-account {
+      padding: 40px 20px;
+    }
+
+    .customer-account__title {
+      font-size: 36px;
+    }
+
+    .customer-account__section {
+      padding: 24px;
+    }
+
+    .customer-account__quick-links {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<div class="customer-account">
+  <div class="customer-account__container">
+    <div class="customer-account__header">
+      <h1 class="customer-account__title">Account Settings</h1>
+      <p class="customer-account__subtitle">Manage your account and preferences</p>
+    </div>
+
+    <div class="customer-account__subscription-card">
+      <div class="customer-account__subscription-label">Current Plan</div>
+      <div class="customer-account__subscription-status">Wholesale Member</div>
+      <div class="customer-account__subscription-details">$49/month • Renews on {{ "now" | date: "%B %d, %Y" }}</div>
+      <button class="customer-account__button customer-account__subscription-button">Manage Subscription</button>
+    </div>
+
+    <div class="customer-account__section">
+      <h2 class="customer-account__section-title">Update Password</h2>
+      <form>
+        <div class="customer-account__form-group">
+          <label class="customer-account__label" for="current-password">Current Password</label>
+          <input type="password" id="current-password" class="customer-account__input" placeholder="Enter your current password">
+        </div>
+        <div class="customer-account__form-group">
+          <label class="customer-account__label" for="new-password">New Password</label>
+          <input type="password" id="new-password" class="customer-account__input" placeholder="Enter your new password">
+        </div>
+        <div class="customer-account__form-group">
+          <label class="customer-account__label" for="confirm-password">Confirm Password</label>
+          <input type="password" id="confirm-password" class="customer-account__input" placeholder="Confirm your new password">
+        </div>
+        <button type="submit" class="customer-account__button">Update Password</button>
+      </form>
+    </div>
+
+    <div class="customer-account__section">
+      <h2 class="customer-account__section-title">Account Information</h2>
+      <div class="customer-account__info-box">
+        <div class="customer-account__info-label">Account Email</div>
+        <div class="customer-account__info-value">{{ customer.email }}</div>
+      </div>
+      <div class="customer-account__info-box">
+        <div class="customer-account__info-label">Account Created</div>
+        <div class="customer-account__info-value">{{ customer.created_at | date: "%B %d, %Y" }}</div>
+      </div>
+      <div class="customer-account__info-box">
+        <div class="customer-account__info-label">Total Orders</div>
+        <div class="customer-account__info-value">{{ customer.orders | size }}</div>
+      </div>
+
+      <div class="customer-account__quick-links">
+        <a href="/pages/member-dashboard" class="customer-account__quick-link">→ Dashboard</a>
+        <a href="/pages/custom-gloves" class="customer-account__quick-link">→ Builder</a>
+        <a href="/pages/member-logos" class="customer-account__quick-link">→ My Logos</a>
+        <a href="/pages/member-orders" class="customer-account__quick-link">→ Your Orders</a>
+      </div>
+    </div>
+
+    <div class="customer-account__section customer-account__danger-zone">
+      <h2 class="customer-account__section-title">Danger Zone</h2>
+      <p class="customer-account__danger-text">Permanently delete your account and all associated data. This action cannot be undone.</p>
+      <button class="customer-account__button customer-account__danger-button">Delete Account</button>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Customer Account",
+  "settings": []
+}
+{% endschema %}

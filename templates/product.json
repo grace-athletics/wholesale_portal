@@ -1,0 +1,377 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "{{ product.vendor }}",
+            "text_style": "body"
+          }
+        },
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "picker_type": "button",
+            "swatch_shape": "circle"
+          }
+        },
+        "quantity_selector": {
+          "type": "quantity_selector",
+          "settings": {}
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": true,
+            "show_gift_card_recipient": true
+          }
+        },
+        "description": {
+          "type": "description",
+          "settings": {}
+        },
+        "share": {
+          "type": "share",
+          "settings": {
+            "share_label": "Share"
+          }
+        }
+      },
+      "block_order": [
+        "text",
+        "title",
+        "price",
+        "variant_picker",
+        "quantity_selector",
+        "buy_buttons",
+        "description",
+        "share"
+      ],
+      "settings": {
+        "enable_sticky_info": true,
+        "color_scheme": "scheme-1",
+        "media_size": "medium",
+        "constrain_to_viewport": true,
+        "media_fit": "contain",
+        "gallery_layout": "stacked",
+        "mobile_thumbnails": "hide",
+        "media_position": "left",
+        "image_zoom": "lightbox",
+        "hide_variants": false,
+        "enable_video_looping": false,
+        "padding_top": 36,
+        "padding_bottom": 44
+      }
+    },
+    "related-products": {
+      "type": "related-products",
+      "settings": {
+        "heading": "You may also like",
+        "heading_size": "h2",
+        "products_to_show": 4,
+        "columns_desktop": 4,
+        "columns_mobile": "2",
+        "color_scheme": "scheme-1",
+        "image_ratio": "square",
+        "image_shape": "default",
+        "show_secondary_image": false,
+        "show_vendor": false,
+        "show_rating": false,
+        "padding_top": 36,
+        "padding_bottom": 68
+      }
+    },
+    "rich_text_TJ3eQk": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_9fCVWU": {
+          "type": "heading",
+          "settings": {
+            "heading": "Ready To Launch Your Glove Brand?",
+            "heading_size": "h2"
+          }
+        },
+        "text_RiaziF": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Want your very own gloves line with <em>your</em> logo on the palm, wrist, and thumb? We’ve made it easier than ever. Join My Glove Brand’s Wholesale Portal to access our 3D Custom Glove Builder, direct manufacturer access, on-demand ordering, a private chat with the founders, and exclusive wholesale resources.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "heading_9fCVWU",
+        "text_RiaziF"
+      ],
+      "name": "t:sections.rich-text.presets.name",
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
+    },
+    "slideshow_NpRtmk": {
+      "type": "slideshow",
+      "blocks": {
+        "slide_7DYnRp": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/DSC07998.jpg",
+            "image_overlay_opacity": 0,
+            "heading": "",
+            "heading_size": "h1",
+            "subheading": "",
+            "button_label": "",
+            "link": "",
+            "button_style_secondary": false,
+            "show_text_box": false,
+            "box_align": "middle-center",
+            "text_alignment": "center",
+            "text_alignment_mobile": "center",
+            "color_scheme": ""
+          }
+        },
+        "slide_xTmFxa": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/IMG_8936_2.jpg",
+            "image_overlay_opacity": 0,
+            "heading": "",
+            "heading_size": "h1",
+            "subheading": "",
+            "button_label": "",
+            "link": "",
+            "button_style_secondary": false,
+            "show_text_box": false,
+            "box_align": "middle-center",
+            "text_alignment": "center",
+            "text_alignment_mobile": "center",
+            "color_scheme": ""
+          }
+        },
+        "slide_a9qqWy": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/DSC07687.jpg",
+            "image_overlay_opacity": 0,
+            "heading": "",
+            "heading_size": "h1",
+            "subheading": "",
+            "button_label": "",
+            "link": "",
+            "button_style_secondary": false,
+            "show_text_box": false,
+            "box_align": "middle-center",
+            "text_alignment": "center",
+            "text_alignment_mobile": "center",
+            "color_scheme": ""
+          }
+        },
+        "slide_iRPzVt": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/DSC07671.jpg",
+            "image_overlay_opacity": 0,
+            "heading": "",
+            "heading_size": "h1",
+            "subheading": "",
+            "button_label": "",
+            "link": "",
+            "button_style_secondary": false,
+            "show_text_box": false,
+            "box_align": "middle-center",
+            "text_alignment": "center",
+            "text_alignment_mobile": "center",
+            "color_scheme": ""
+          }
+        },
+        "slide_cWgjP3": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/DSC07215.jpg",
+            "image_overlay_opacity": 0,
+            "heading": "",
+            "heading_size": "h1",
+            "subheading": "",
+            "button_label": "",
+            "link": "",
+            "button_style_secondary": false,
+            "show_text_box": false,
+            "box_align": "middle-center",
+            "text_alignment": "center",
+            "text_alignment_mobile": "center",
+            "color_scheme": ""
+          }
+        }
+      },
+      "block_order": [
+        "slide_7DYnRp",
+        "slide_xTmFxa",
+        "slide_a9qqWy",
+        "slide_iRPzVt",
+        "slide_cWgjP3"
+      ],
+      "name": "t:sections.slideshow.presets.name",
+      "settings": {
+        "layout": "grid",
+        "slide_height": "adapt_image",
+        "slider_visual": "counter",
+        "auto_rotate": true,
+        "change_slides_speed": 3,
+        "image_behavior": "none",
+        "show_text_below": true,
+        "accessibility_info": "Brands we work with"
+      }
+    },
+    "collapsible_content_4aGWga": {
+      "type": "collapsible-content",
+      "blocks": {
+        "collapsible_row_c3hza6": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "What happens after I pay?",
+            "icon": "none",
+            "row_content": "<p>You will receive an email with your login credentials for our wholesale portal. You can access your portal at any time by visiting the site and clicking the account icon.</p>",
+            "page": ""
+          }
+        },
+        "collapsible_row_xz3idd": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "What all do I get once I become a member?",
+            "icon": "none",
+            "row_content": "<ul><li>Unlock wholesale pricing</li><li>Place orders through our Blank Builder </li><li>Gain access to a private Slack channel with Kevin and Michael, the founders of My Glove Brand, for 24/7 support. </li><li>You’ll also receive exclusive marketing resources and consulting to help you sell your gloves.</li></ul>",
+            "page": ""
+          }
+        },
+        "collapsible_row_gXhGgi": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Will I be able to send people to the blank builders to design their gloves?",
+            "icon": "none",
+            "row_content": "<p>Yes—you can send potential customers to this Blank Builder instead of a competitor’s builder, allowing them to design their glove directly with you. Orders must still be placed through your wholesale account. Once they finish designing their glove (Step 4 of 4 in the builder), they simply share their design link with you.</p>",
+            "page": ""
+          }
+        },
+        "collapsible_row_gzbWi9": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "I don't want a blank builder. I want this builder on my website with my logo on the palm, wrist and thumb. Is that possible?",
+            "icon": "none",
+            "row_content": "<p>Absolutely. There are two ways to partner with My Glove Brand.</p><p><strong>Option 1: Builder on Site Route</strong><br/><br/>We implement your very own 3D custom glove builder directly on your website, fully branded with your logo on the palm, wrist and thumb.</p><p><strong>Option 2: Wholesale Route</strong></p><p>You won’t have a custom 3D builder on your site, but you’ll get access to our wholesale portal with a blank builder where you can manage designs and place orders.<br/><br/><a href=\"https://myglovebrand.com/\">https://myglovebrand.com/</a></p>",
+            "page": ""
+          }
+        },
+        "collapsible_row_Ldk3fr": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Can I cancel my membership at any time?",
+            "icon": "none",
+            "row_content": "<p>Yes. </p>",
+            "page": ""
+          }
+        },
+        "collapsible_row_UQVbnL": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Can I do Softball gloves?",
+            "icon": "none",
+            "row_content": "<p>Yes.</p>",
+            "page": ""
+          }
+        },
+        "collapsible_row_8nAjnM": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Do you offer infielder training gloves or pancake gloves?",
+            "icon": "none",
+            "row_content": "<p>Yes. <br/><br/>We offer 9.5\" infield trainers, 28.5\" catchers trainers and pancake trainers. </p>",
+            "page": ""
+          }
+        },
+        "collapsible_row_yFgbQ7": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "What type of leather are your gloves?",
+            "icon": "none",
+            "row_content": "<p>We offer Korean and Japanese Kip leather. We manufacture our gloves out of the Philippines. </p>",
+            "page": ""
+          }
+        },
+        "collapsible_row_VXwbNg": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "So the portal is $49/month. What is the cost of the actual gloves?",
+            "icon": "none",
+            "row_content": "<p>You can view the pricing sheet here:<br/><a href=\"https://myglovebrand.com/pricing-sheet/\" target=\"_blank\" title=\"https://myglovebrand.com/pricing-sheet/\">https://myglovebrand.com/pricing-sheet/ </a></p>",
+            "page": ""
+          }
+        },
+        "collapsible_row_949CAK": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Once I order a glove, how long will it take to get it?",
+            "icon": "none",
+            "row_content": "<p>5-7 weeks</p>",
+            "page": ""
+          }
+        }
+      },
+      "block_order": [
+        "collapsible_row_c3hza6",
+        "collapsible_row_xz3idd",
+        "collapsible_row_gXhGgi",
+        "collapsible_row_gzbWi9",
+        "collapsible_row_Ldk3fr",
+        "collapsible_row_UQVbnL",
+        "collapsible_row_8nAjnM",
+        "collapsible_row_yFgbQ7",
+        "collapsible_row_VXwbNg",
+        "collapsible_row_949CAK"
+      ],
+      "name": "t:sections.collapsible_content.presets.name",
+      "settings": {
+        "caption": "",
+        "heading": "FAQs",
+        "heading_size": "h1",
+        "heading_alignment": "center",
+        "layout": "none",
+        "container_color_scheme": "",
+        "color_scheme": "",
+        "open_first_collapsible_row": false,
+        "image_ratio": "adapt",
+        "desktop_layout": "image_second",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    }
+  },
+  "order": [
+    "main",
+    "related-products",
+    "rich_text_TJ3eQk",
+    "slideshow_NpRtmk",
+    "collapsible_content_4aGWga"
+  ]
+}

@@ -1,0 +1,123 @@
+{%- style -%}
+  .gohighlevel-form {
+    padding: {{ section.settings.padding_top }}px 40px {{ section.settings.padding_bottom }}px 40px;
+    background-color: {{ section.settings.background_color }};
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .gohighlevel-form__container {
+    max-width: 600px;
+    width: 100%;
+  }
+
+  .gohighlevel-form__heading {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 48px;
+    font-weight: 700;
+    color: {{ section.settings.heading_color }};
+  }
+
+  .gohighlevel-form__wrapper {
+    width: 100%;
+    min-height: 1400px;
+  }
+
+  @media (max-width: 768px) {
+    .gohighlevel-form {
+      padding: {{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px 20px;
+    }
+
+    .gohighlevel-form__heading {
+      font-size: 36px;
+    }
+
+    .gohighlevel-form__wrapper {
+      min-height: auto;
+    }
+  }
+{%- endstyle -%}
+
+<div class="gohighlevel-form">
+  <div class="gohighlevel-form__container">
+    {% if section.settings.show_heading %}
+      <h1 class="gohighlevel-form__heading">{{ section.settings.heading }}</h1>
+    {% endif %}
+    <div class="gohighlevel-form__wrapper">
+      <iframe
+        src="https://api.leadconnectorhq.com/widget/form/no4UQTAkVaaPEMG03oo6"
+        style="width:100%;height:100%;border:none;border-radius:3px"
+        id="inline-no4UQTAkVaaPEMG03oo6"
+        data-layout="{'id':'INLINE'}"
+        data-trigger-type="alwaysShow"
+        data-trigger-value=""
+        data-activation-type="alwaysActivated"
+        data-activation-value=""
+        data-deactivation-type="neverDeactivate"
+        data-deactivation-value=""
+        data-form-name="MGB Demo Call Form"
+        data-height="1312"
+        data-layout-iframe-id="inline-no4UQTAkVaaPEMG03oo6"
+        data-form-id="no4UQTAkVaaPEMG03oo6"
+        title="MGB Demo Call Form">
+      </iframe>
+    </div>
+  </div>
+</div>
+
+<script src="https://link.msgsndr.com/js/form_embed.js"></script>
+
+{% schema %}
+{
+  "name": "GoHighLevel Form",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_heading",
+      "label": "Show Heading",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Get Started or Book a Demo Call"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 150,
+      "step": 10,
+      "default": 40,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 150,
+      "step": 10,
+      "default": 40,
+      "unit": "px"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,2238 @@
+<style>
+  .customizer-tab,
+  #customizer-perspectives {
+      display: none;
+  }
+.customizer-tab-summary-items {
+    display: flex;
+    gap: 20px;
+}
+
+
+  .customizer-input-font-selector-container {
+      display: none;
+  }
+  #overlay-popup{
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1001;
+  }
+
+  .image-upload-uploaded-images-container {
+      display: none;
+  }
+
+  #image-upload-modal {
+      display: none;
+  }
+
+  .customizer-modal-content {
+      height: 100%;
+  }
+
+  #image-upload-placement-modal,
+  #image-upload-modal {
+      height: 100%;
+      position: fixed;
+      height: 100%;
+      max-height: 500px;
+      width: 100%;
+      max-width: 800px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      overflow: auto;
+      border: solid 1px lightgrey;
+      border-radius: 10px;
+      z-index: 1;
+      padding: 30px;
+  }
+
+  button.customizer-close-button {
+      z-index: 1000;
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      text-decoration: underline;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+  }
+
+  .customizer-image-upload-element-button {
+      border: solid 1px;
+      border-radius: var(--font-heading-family);
+      padding: 5px 20px;
+      text-transform: uppercase;
+      cursor: pointer;
+      line-height: 1;
+      border-radius: var(--buttons-radius);
+      height: 40px;
+      align-items: center;
+      display: flex;
+  }
+
+  .customizer-image-clear-element-button {
+      text-decoration: underline;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: var(--brand-color);
+      font-size: 14px;
+      font-weight: 400;
+  }
+
+  .customizer-modal-content hr {
+      margin: 15px 0;
+  }
+
+  .customizer-image-upload-modal-body>div:last-child {
+      margin: 0 !important;
+  }
+
+  .customizer-tab-summary-item,
+  .customizer-tab.customizer-tab-selected {
+      display: flex;
+      justify-content: center;
+  }
+
+  .customizer-list-element-html-item.customizer-list-element-item-selected {
+      font-weight: bold;
+  }
+
+  .customizer-image-manipulation-tools button {
+      padding: 10px 20px;
+      border-radius: 50px;
+      border: solid 1px;
+      background: transparent;
+      cursor: pointer;
+      border-radius: var(--buttons-radius);
+  }
+
+  .customizer-tab-body .customizer-tab-body-summary,
+  .customizer-tab-summary,
+  .customizer-tab-summary-item-quantity,
+  .customizer-tab-summary-item-element-name,
+  .customizer-tab-icon,
+  .customizer-tab.customizer-tab-selected .customizer-tab-summary {
+      display: none;
+  }
+
+  .customizer-tab.customizer-tab-selected .customizer-tab-summary,
+  .customizer-tab.customizer-tab-selected .customizer-tab-name {
+      display: flex;
+      justify-content: center;
+  }
+
+  .customizer-list-element-html-item-name {
+      cursor: pointer;
+      color: rgba(0, 0, 0, 0.75);
+  }
+
+  .customizer-list-element-html-item-name:hover {
+      color: rgba(0, 0, 0, 1);
+  }
+
+  .customizer-list-element-html.customizer-element {
+      display: flex;
+      gap: 10px;
+  }
+
+  .customizer-list-element.customizer-element {
+      display: flex;
+      gap: 25px;
+      justify-content: flex-start;
+      align-items: center;
+      background-color: #F6F6F6;
+      padding: 12px;
+      flex-wrap: nowrap;
+      flex-shrink: 0;
+  }
+  .input-element-colors-container{
+    display: flex;
+  }
+
+  .customizer-image-clear-element-button,
+  .customizer-element-title {
+      font-weight: bold;
+      width: max-content;
+      min-width: fit-content;
+      font-weight: bold;
+      font-family: var(--font-heading-family);
+  }
+
+  .customizer-tab.customizer-tab-selected {
+      font-weight: bold;
+      font-size: 20px;
+      text-transform: uppercase;
+  }
+
+  .customizer-tab-summary-item {
+      font-weight: 400;
+      font-size: 16px;
+      text-transform: uppercase;
+  }
+
+  /* }
+      #customizer-main-perspective {
+          background-color: #a36666;
+          height: 100%;
+          top: 0;
+          width: 100%;
+          left: 0;
+          position: relative;
+      } */
+  #customizer-main-perspective {
+      background-image: ""
+      background-position: center;
+      background-size: cover;
+      width: 100%;
+      position: relative;
+      margin: 0;
+  }
+
+  canvas {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      height: 100% !important;
+  }
+
+  #customizer-main-perspective {
+      transition: height 0.3s;
+      height: 72dvh;
+  }
+
+  .customizer-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+
+  .customizer-hidden {
+      display: none!important;
+  }
+
+  .option-hide {
+      display: none !important;
+  }
+
+  .customizer-modal-wrapper {
+      background-color: white;
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      max-height: 100%;
+      overflow-y: hidden;
+      position: relative;
+  }
+
+  .customizer-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      border-bottom: 1px solid #e5e5e5;
+  }
+
+  .customizer-modal-title {
+      font-weight: bold;
+      font-size: 1.2rem;
+  }
+
+  .customizer-modal-close {
+      cursor: pointer;
+  }
+
+  .wrapper-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 300px;
+  }
+
+  #customizer-reset-button:after,
+  #customizer-save-button:after,
+  #customizer-share-button:after {
+      content: '';
+      background-size: 50px 50px;
+      width: 50px;
+      height: 50px;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 6px;
+  }
+
+  #customizer-save-button:after {
+      background-image: url(https://cdn.shopify.com/s/files/1/0713/3957/3557/files/Icon_Star_2.png?v=1694126418);
+  }
+
+  #customizer-share-button:after {
+      background-image: url(https://cdn.shopify.com/s/files/1/0713/3957/3557/files/Icon_Share.png?v=1691697117);
+  }
+
+  #customizer-reset-button:after {
+      background-image: url(https://cdn.shopify.com/s/files/1/0713/3957/3557/files/Icon_Trash.png?v=1691697121);
+  }
+
+  #customizer-reset-button,
+  #customizer-save-button,
+  #customizer-share-button {
+      background: transparent;
+      border: none;
+      color: transparent;
+      cursor: pointer;
+      position: relative;
+      height: 55px;
+      width: 40px;
+  }
+
+  .top-right-buttons {
+      display: flex;
+      position: absolute;
+      top: 35px;
+      right: 65px;
+      gap: 20px;
+      z-index: 1;
+      align-items: center;
+      z-index: 111;
+  }
+
+  div#customizer-saved-item-count:before {
+      content: ' ';
+      background-color: var(--brand-color);
+      width: 20px;
+      height: 20px;
+      border-radius: 50px;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: -1;
+      cursor: pointer;
+  }
+
+  div#customizer-saved-item-count {
+      position: absolute;
+      left: 36px;
+      z-index: 1;
+      font-size: 12px;
+      color: white;
+      top: -6px;
+      cursor: pointer;
+  }
+
+  #share-link {
+      text-align: center;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100%;
+      height: 100%;
+      max-width: 580px;
+      max-height: 270px;
+      background: white;
+      padding: 30px;
+      color: #1A4560;
+      text-transform: uppercase;
+      transform: translate(-50%, -50%);
+      z-index: 11111;
+      justify-content: center;
+      flex-direction: column;
+      display: none;
+  }
+
+  p#customizer-share-link {
+      color: grey;
+      border: solid 1px lightgrey;
+      padding: 5px;
+      overflow: auto;
+      border-radius: 50px;
+      text-transform: lowercase;
+  }
+
+  .shareable-link {
+      max-width: 70%;
+      overflow: auto;
+      white-space: nowrap;
+  }
+
+  #copy-button {
+      background-color: #1A4560;
+      border-radius: var(--buttons-radius);
+      padding: 10px 15px;
+      color: #ffffff;
+  }
+
+  .top-left-buttons {
+      display: flex;
+      position: absolute;
+      top: 30px;
+      left: 50px;
+      flex-direction: column;
+      z-index: 1;
+      color: white;
+  }
+
+  .top-left-buttons .customizer-product-name {
+      color: white;
+  }
+
+  .wrapper-for-mob {
+      display: flex;
+      max-width: 220px;
+      flex-direction: column;
+  }
+
+  .customizer-price {
+      font-size: 25px;
+      font-weight: 700;
+      letter-spacing: 1px;
+  }
+
+  #customizer-add-to-cart-button-duplicate,
+  .customizer-add-to-cart-button {
+      color: white;
+      background-color: var(--brand-color);
+      color: white;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 1;
+      border-radius: var(--buttons-radius);
+      padding: 5px 20px;
+      font-weight: 100;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border: none;
+      line-height: 1.9;
+      font-family: var(--font-body-family);
+      font-weight: bold;
+  }
+
+  #customizer-add-to-cart-button-duplicate:hover,
+  .customizer-add-to-cart-button:hover {
+      color: black;
+  }
+
+  .bottom-left-items {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      bottom: 50px;
+      left: 50px;
+      gap: 30px;
+  }
+
+  .hide-options {
+      cursor: pointer;
+      position: absolute;
+      bottom: -60px;
+      left: 40px;
+  }
+
+  .hide-options svg {
+      transition: transform 0.3s ease;
+  }
+
+  .hide-options.rotated svg {
+      transform: rotate(180deg);
+  }
+
+  .viewspecs {
+      font-family: var(--font-body-family);
+      color: black;
+      position: absolute;
+      bottom: -60px;
+      right: 40px;
+      font-size: 14px;
+      font-weight: bold;
+      padding: 10px 20px;
+      cursor: pointer;
+      z-index: 1;
+      border: solid 1px #E2E1E1;
+      border-radius: var(--buttons-radius);
+      font-weight: 400;
+      letter-spacing: 1px;
+      color: #191919;
+  }
+  .customizer-list-element-buttons-item{
+      font-family: var(--font-body-family);
+      color: black;
+      font-size: 14px;
+      font-weight: bold;
+      padding: 10px 20px;
+      cursor: pointer;
+      z-index: 1;
+      border: solid 1px #E2E1E1;
+      border-radius: var(--buttons-radius);
+      font-weight: 400;
+      letter-spacing: 1px;
+      color: #191919;
+  }
+
+  #close {
+      color: var(--text-secondary-color);
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 1;
+      border: solid 1px white;
+      border-radius: var(--buttons-radius);
+      padding: 5px 20px;
+      font-weight: 100;
+      letter-spacing: 1px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 48px;
+  }
+
+  #customizer-summary {
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+      left: 0;
+      z-index: 1111;
+      display: none;
+      /* Initially hidden */
+      opacity: 0;
+      transition: opacity 0.3s;
+      background-color: white;
+  }
+
+  #customizer-summary .close-submodel {
+      cursor: pointer;
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      z-index: 11;
+  }
+
+  #customizer-summary-items {
+      overflow: auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      max-width: 100%;
+      margin: auto;
+      padding: 15px 30px;
+      height: 30%;
+      max-height: 250px;
+      min-height: 200px;
+      row-gap: 20px;
+  }
+
+  .atc-div .customizer-add-to-cart-button {
+      align-items: center;
+      display: flex;
+      justify-content: center;
+  }
+
+  .atc-div .customizer-price {
+      font-size: 24px;
+      color: #191919;
+      font-weight: bold;
+  }
+
+  div#customizer-summary h3 {
+      grid-column: 1 / 5;
+      text-align: center;
+      margin-bottom: 0;
+      font-size: 25px;
+  }
+
+  #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+      opacity: 0;
+      display: none;
+      background-color: white;
+      z-index: -1;
+  }
+
+  .atc-div {
+      display: flex;
+      align-items: center;
+      justify-content: end;
+      padding: 15px 0;
+      max-width: fit-content;
+      gap: 15px;
+      margin-left: auto;
+      padding-right: 30px;
+  }
+
+  .atc-div p {
+      font-weight: bold;
+      margin: 0;
+  }
+
+
+  .wrapper-saved {
+      display: none;
+      position: absolute;
+      top: 90px;
+      right: 80px;
+      width: 300px;
+      overflow: visible;
+      z-index: 1;
+      background-color: white;
+  }
+
+  .headers-items {
+      display: flex;
+      padding: 10px 20px;
+      justify-content: space-between;
+  }
+
+  div#customizer-saved-items {
+      display: block;
+      width: 100%;
+      max-width: 350px;
+      background: white;
+      z-index: 1;
+      top: 0;
+      max-height: 300px;
+      overflow: auto;
+  }
+
+  .wrapper-saved:after {
+      content: "";
+      position: absolute;
+      top: -28px;
+      left: 32px;
+      margin-left: -15px;
+      border-width: 15px;
+      border-style: solid;
+      border-color: transparent transparent white transparent;
+  }
+
+  div.customizer-saved-item {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      padding: 8px 15px;
+      align-items: center;
+  }
+
+  .customizer-saved-item-date {
+      font-weight: bold;
+      position: relative;
+  }
+
+  a.customizer-saved-item-remove {
+      grid-column: 2 / 3;
+      margin-top: -10px;
+      cursor: pointer;
+      text-decoration: underline;
+      color: #C8102E;
+      font-size: 14px;
+      text-transform: uppercase;
+      font-weight: 600;
+      width: fit-content;
+      font-family: var(--font-body-family);
+  }
+
+  .customizer-saved-item-image {
+      object-fit: cover;
+      grid-row: 1 / 4;
+      width: 85px;
+      height: 85px;
+      padding-left: 0;
+      margin-right: 30px;
+  }
+
+  svg.customizer-saved-item-loader {
+      display: none;
+  }
+
+  #share-closed {
+      padding: 2px 3px;
+  }
+
+  .share-items {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      justify-content: center;
+      margin: auto;
+      margin-top: 30px;
+      width: 100%;
+  }
+
+  #share-closed,
+  #reset-closed {
+      font-size: 10px;
+      padding: 5px;
+      width: 20px;
+      height: 20px;
+      border-radius: var(--buttons-radius);
+      cursor: pointer;
+      line-height: 1;
+      border: solid 1px;
+      margin-left: auto;
+  }
+
+  div#customizer-loader-bodies svg {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+  }
+
+  div#customizer-loader-bodies {
+      height: 72dvh;
+      top: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+  }
+
+  #customizer-tab-container #customizer-loader-tabs {
+      display: none !important;
+  }
+
+  .customizer-product-name {
+      font-size: var(--font-title-size);
+      line-height: 1;
+      margin: 0;
+      margin-top: 15px;
+      letter-spacing: 0;
+  }
+
+  #customizer-root {
+      position: relative;
+  }
+
+  div#customizer-disclaimer {
+      text-align: center;
+      margin-top: 5px;
+  }
+
+  input.customizer-input-element-input,
+  .selected-font-display {
+      font-size: 16px;
+      font-family: var(--font-body-family);
+      color: black;
+  }
+
+  .wrapper-nav {
+      display: flex;
+      align-items: center;
+      width: 250px;
+      gap: 10px;
+      justify-content: center;
+      margin: auto;
+      margin-top: 10px;
+      position: relative;
+  }
+
+  .wrapper-nav div#customizer-tab-prev {
+      position: absolute;
+      left: -50px;
+  }
+
+  div#customizer-tab-next {
+      position: absolute;
+      right: -50px;
+  }
+
+  div#customizer-tab-prev {
+      transform: scaleX(-1);
+  }
+
+  div#customizer-tab-prev,
+  div#customizer-tab-next {
+      cursor: pointer;
+      height: 20px;
+      width: 20px;
+  }
+
+  div#customizer-tab-prev svg,
+  div#customizer-tab-next svg {
+      width: 20px;
+      height: 20px;
+  }
+
+  button.input-element-color-picker-button.customizer-selected {
+      outline: solid 2px grey;
+  }
+
+  .input-element-color-picker-button:hover {
+      cursor: pointer;
+  }
+
+  .input-element-font-selector-container {
+      padding: 0 10px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      position: relative;
+      width: 200px;
+      text-align: start;
+      border: solid 1px var(--text-color);
+      border-radius: var(--other-radius);
+  }
+
+  .customizer-input-element-input.selected-font-display {
+      font-family: var(--font-body-family);
+      font-size: 15px;
+  }
+
+  .color-selector-type-container {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      padding: 12px;
+      background-color: #F6F6F6;
+  }
+
+  .selected-font-display:after {
+      content: '';
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+      z-index: 111;
+      cursor: pointer;
+  }
+
+
+  .input-element-font-selector-container:after {
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40"><path d="m15.5 0.932-4.3 4.38 14.5 14.6-14.5 14.5 4.3 4.4 14.6-14.6 4.4-4.3-4.4-4.4-14.6-14.6z"></path></svg>');
+      position: absolute;
+      top: 12px;
+      right: 10px;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      fill: #66d9ff;
+      content: '';
+      background-repeat: no-repeat;
+      background-size: 14px 14px;
+      transform: rotate(90deg);
+      border-radius: var(--other-radius);
+  }
+
+  input.customizer-input-element-input {
+      height: 38px;
+      border-radius: 0;
+      border: solid 1px;
+      padding-left: 5px;
+  }
+
+  div#customizer-tab-next:hover svg,
+  div#customizer-tab-prev:hover svg {
+      fill: #66d9ff;
+  }
+
+  .customizer-input-element-container {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px;
+  }
+
+  .customizer-tab-body {
+      max-width: 1440px;
+      margin: auto;
+  }
+
+  .customizer-tab-body-elements {
+      display: flex;
+      width: 100%;
+      margin-top: 20px;
+      transition: opacity 0.3s ease-in-out;
+      animation: fadeInOut 0.6s ease-in-out;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      padding-left: 60px;
+      padding-right: 60px;
+  }
+
+  .customizer-tab.customizer-tab-selected .customizer-tab-name {
+      display: none;
+  }
+
+  .customizer-body-stepper-btn {
+      cursor: pointer;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+      width: 30px;
+      height: 30px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s ease;
+  }
+
+  .customizer-body-stepper-btn:hover {
+      background: rgba(255, 255, 255, 1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  .customizer-body-stepper-btn svg {
+      width: 16px;
+      height: 16px;
+      fill: #333;
+  }
+
+  .customizer-body-stepper-prev {
+      left: 10px;
+      z-index: 1000;
+      transform: translateY(-50%) scaleX(-1);
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      top: 40%;
+  }
+
+  .customizer-body-stepper-next {
+      right: 10px;
+      z-index: 1000;
+      top: 40%;
+      transform: translateY(-50%);
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+  }
+
+  .customizer-body-stepper-next:after {
+      position: absolute;
+      content: '';
+      background: transparent;
+      width: 60px;
+      height: 63px;
+      top: -16px;
+      right: -20px;
+      z-index: -1;
+  }
+
+  .customizer-tab-body-elements.has-horizontal-overflow {
+      gap: 100px;
+      padding-bottom: 15px;
+  }
+
+  .customizer-tab-body-elements .customizer-element {
+      position: relative;
+  }
+
+  .customizer-tab-body-elements.show-separators .customizer-element:after {
+      content: '';
+      background: lightgrey;
+      height: 100%;
+      width: 1px;
+      position: absolute;
+      right: -50px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+  }
+
+  .customizer-tab-body-elements.show-separators .customizer-element:after {
+      opacity: 1;
+  }
+
+  .customizer-tab-body-elements.has-horizontal-overflow .customizer-element:last-child:after {
+      display: none;
+  }
+
+  .customizer-body-stepper-prev:after {
+      position: absolute;
+      content: '';
+      background: transparent;
+      width: 60px;
+      height: 63px;
+      top: -16px;
+      left: 0px;
+      z-index: -1;
+  }
+
+  #customizer-tab-current-name .customizer-tab-name {
+      font-size: 15px;
+      text-transform: uppercase;
+      letter-spacing: 0;
+      font-family: var(--font-heading-family);
+      font-weight: bold;
+      transition: opacity 0.3s ease-in-out;
+      animation: fadeInOut 0.6s ease-in-out;
+  }
+  .customizer-list-element-images-item{
+    width: 60px;
+  }
+
+  @keyframes fadeInOut {
+      0% {
+          opacity: 0;
+      }
+
+      50% {
+          opacity: 1;
+      }
+
+      100% {
+          opacity: 1;
+      }
+  }
+
+  div#customizer-tab-counter {
+      color: #808080;
+      letter-spacing: -1px;
+      font-size: 15px;
+      transition: opacity 0.3s ease-in-out;
+  }
+
+  .wrapper-div {
+      width: calc(100% - 150px);
+      margin: auto;
+  }
+
+  .customizer-tab-body .customizer-tab-body-elements .customizer-element {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      transition: opacity 0.3s ease-in-out;
+      animation: fadeInOut 0.6s ease-in-out;
+      margin: auto;
+      background-color: var(--background-seconday-color);
+      padding: 5px 15px;
+      margin: 0 auto;
+      border-radius: var(--other-radius);
+  }
+
+  .swatches-container button {
+      width: 20px;
+      height: 20px;
+      border-radius: 50px;
+      border: none;
+  }
+
+  .swatches-container {
+      display: flex;
+      gap: 5px;
+  }
+
+  .swatches-container button[data-color="#ffffff"] {
+      border: solid .5px grey;
+  }
+  li.font-dropdown-item{
+    color: var(--text-color);
+  }
+  li.font-dropdown-item img {
+      max-width: 150px;
+      background: white;
+      list-style: none;
+  }
+
+  ul.font-dropdown-menu {
+      position: absolute;
+      bottom: 100%;
+      left: 0;
+      max-width: 300px;
+      background: white;
+      list-style: none;
+      padding: 0;
+      z-index: 9999;
+      border: solid 1px #ccc;
+      border-radius: 4px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      max-height: 200px;
+      overflow-y: auto;
+      height: 100%;
+      min-width: 200px;
+  }
+
+  li.font-dropdown-item {
+      padding: 10px;
+      border-bottom: solid 1px #eee;
+      cursor: pointer;
+  }
+
+  li.font-dropdown-item:last-child {
+      border-bottom: none;
+  }
+
+  li.font-dropdown-item:hover {
+      background-color: #f5f5f5;
+  }
+
+  .customizer-image-upload-modal-body-container {
+      width: 100% !important;
+      height: 100% !important;
+      overflow: auto;
+      position: relative;
+  }
+
+  .customizer-upload-element-image {
+      transform-origin: unset !important;
+      width: 100%;
+  }
+
+  .customizer-image-manipulation-buttons {
+      margin-top: 15px;
+      gap: 10px;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+  }
+
+  .customizer-image-upload-modal-body-container-overlay {
+      height: unset !important;
+  }
+
+  .customizer-summary-item-element-name {
+      font-weight: bold;
+      text-transform: uppercase;
+      font-size: 18px;
+      text-decoration: underline;
+      color: black;
+  }
+
+  @media screen and (max-width: 749px) {
+      .customizer-product-name {
+          font-size: calc(var(--font-title-size) * 0.67);
+      }
+      div#customizer-tab-next {
+          right: -10px
+      }
+
+      .customizer-modal-close {
+          display: block;
+          position: fixed;
+          right: 15px;
+          top: 35px;
+      }
+
+      .wrapper-nav div#customizer-tab-prev {
+          left: -10px
+      }
+
+      #customizer-add-to-cart-button-duplicate,
+      .customizer-add-to-cart-button {
+          font-weight: bold;
+          font-size: 17px;
+          width: 100%;
+          max-width: 200px;
+      }
+
+      .atc-div {
+          margin-left: unset;
+          margin: auto;
+          padding-right: 0
+      }
+
+      #customizer-summary-items {
+          ;
+          grid-template-columns: 1fr 1fr;
+          overflow: auto;
+      }
+
+      .customizer-tab-body-elements {
+          padding-left: 30px;
+          padding-right: 30px;
+      }
+
+      .wrapper-div {
+          width: calc(100% - 30px);
+      }
+
+      .customizer-body-stepper-prev {
+          left: -10px;
+      }
+
+      .customizer-body-stepper-next {
+          right: -10px;
+      }
+
+      .wrapper-for-mob {
+          position: fixed;
+          bottom: 0;
+          display: flex;
+          border-top: solid .5px grey;
+          align-items: center;
+          width: 100%;
+          max-width: 100%;
+          left: 0;
+          flex-direction: row;
+          justify-content: space-between;
+          padding: 10px;
+          background-color: white;
+          color: black;
+      }
+
+      .top-right-buttons {
+          right: unset;
+          left: 15px;
+          gap: 10px;
+      }
+
+      .top-left-buttons {
+          display: flex;
+          position: absolute;
+          bottom: 45px;
+          left: 10px;
+          flex-direction: column;
+          z-index: 1;
+          color: white;
+          height: 100%;
+          justify-content: end;
+          top: unset;
+          height: fit-content
+      }
+
+      .bottom-left-items {
+          display: none;
+      }
+
+      #hide-options {
+          display: none;
+      }
+
+      .wrapper-nav {
+          margin-top: 30px;
+      }
+
+      .viewspecs {
+          bottom: -35px;
+          left: 50%;
+          transform: translateX(-50%);
+          border: none;
+          color: transparent;
+          border-top: solid 4px grey;
+          border-radius: 0;
+          opacity: 0.5;
+          max-width: 30px;
+          margin: auto;
+          height: 5px;
+          right: unset;
+          z-index: 1000;
+      }
+
+      #customizer-main-perspective {
+          height: 57vh;
+      }
+
+  }
+  div#customizer-element-select_images {
+      display: flex;
+      gap: 10px;
+  }
+  #customizer-element-select_images{
+      display: flex;
+      gap: 10px;
+  }
+
+  div#customizer-element-select_images img{
+      width: var(--image-size);
+      height: var(--image-size);
+      border: solid 1px #E2E1E1;
+      border-radius: var(--other-radius);
+  }
+  .list-element-spinner-container,
+  .customizer-element-value-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+  }
+  .list-element-spinner-container{
+      gap: 100px;
+      margin-bottom: -12px;
+  }
+  .customizer-element-value-container img.customizer-list-element-images-item.customizer-selected{
+      border: solid 2px var(--brand-color)!important;
+  }
+
+  select#list-element-select-select_single {
+      min-width: 100px;
+      border-radius: var(--other-radius);
+  }
+  .customizer-list-element-radio-item {
+      display: flex;
+      align-items: center;
+      line-height: 1;
+      gap: 5px;
+      flex-direction: column;
+  }
+  .list-element-spinner-item{
+      position: relative;
+  }
+
+  .list-element-spinner-item:after {
+      content: "";
+      width: 133px;
+      height: 2px;
+      position: absolute;
+      left: 0;
+      background: #000;
+      top: -5px;
+      transition: all .3s ease-in-out;
+  }
+  .list-element-spinner-container{
+      transform: unset!important;
+  }
+  .list-element-spinner-item.customizer-selected{
+      font-weight: bold;
+  }
+  .list-element-spinner-item.customizer-selected:before {
+      content: "";
+      width: 15px;
+      height: 15px;
+      border-radius: 50px;
+      position: absolute;
+      top: -12px;
+      background: #000;
+      left: calc(0px + var(--drag-offset, 0px));
+      transition: left 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.1s ease-out;
+      animation: pulse 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      cursor: grab;
+      will-change: left, transform;
+  }
+
+  .list-element-spinner-item.customizer-selected:active:before {
+      cursor: grabbing;
+  }
+
+  .list-element-spinner-item.customizer-selected:hover:before {
+      transform: scale(1.1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      transition: transform 0.1s ease-out, box-shadow 0.1s ease-out;
+  }
+
+  .list-element-spinner-item {
+      cursor: pointer;
+      transition: opacity 0.1s ease-out;
+  }
+
+  .list-element-spinner-item:hover:not(.customizer-selected) {
+      opacity: 0.75;
+  }
+
+  .list-element-spinner-item.customizer-selected {
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+  }
+
+  .list-element-spinner-item:last-child:after {
+      display: none;
+  }
+  #list-element-spinner-right,
+  #list-element-spinner-left{
+      cursor: pointer;
+      font-size: 30px;
+      color: black;
+  }
+
+  @keyframes pulse {
+      0% {
+          transform: scale(0.9);
+          opacity: 0.8;
+      }
+      40% {
+          transform: scale(1.15);
+          opacity: 1;
+      }
+      100% {
+          transform: scale(1);
+          opacity: 1;
+      }
+  }
+
+  input[type="radio"]:checked,
+  .list-element-spinner-item.customizer-selected,
+  button.customizer-list-element-buttons-item.customizer-list-element-item-selected,
+  .customizer-list-element-item-selected .customizer-list-element-html-item-name {
+      font-weight: bold;
+      color: var(--brand-color);
+  }
+  .customizer-list-element-images-item{
+      cursor: pointer;
+  }
+  #list-element-select-select_multiple{
+      padding: 0 10px;
+      height: 55px;
+      display: flex;
+      align-items: center;
+      position: relative;
+      width: 200px;
+      text-align: start;
+      border: solid 1px;
+      border-radius: var(--other-radius);
+  }
+  .customizer-list-element-radio-item label,
+  .customizer-input-element-counter,
+  .list-element-spinner-item,
+  .color-selector-label,
+  .customizer-element-title,
+  #customizer-modal p,
+  #customizer-modal h1,
+  #customizer-modal h2,
+  #customizer-modal h3,
+  #customizer-modal h4,
+  #customizer-modal h5,
+  #customizer-modal h6{
+  color: var(--text-color);
+  }
+  #customizer-modal  .div#customizer-saved-item-count,
+  #customizer-modal  .customizer-add-to-cart-button,
+  #customizer-modal  .customizer-price,
+  #customizer-modal .top-left-buttons .customizer-product-name{
+    color: var(--text-secondary-color);
+  }
+  .customizer-tab-body-elements .customizer-hidden {
+    display: none !important;
+}
+
+#customizer-share-link,
+#share-link h2,
+  .start-over-confirm h3, .start-over-confirm p{
+    color: black!important;
+    letter-spacing:0;
+  }
+  #customizer-share-link {
+  overflow: auto; /* or overflow-y: scroll; */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+#customizer-share-link::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+#customizer-summary-items .customizer-summary-item-quantity{
+    display: none;
+}
+
+.customizer-element-value-container img {
+    height: 50px;
+}
+
+</style>
+
+<style>
+  #customizer-modal {
+    font-family: var(--font-body-family);
+    --text-color: {{section.settings.text_color}};
+    --text-secondary-color: {{section.settings.secondary_text_color}};
+    --image-size:{{ section.settings.image_size | default: 'var(--image-size)' }}px;
+    --buttons-radius: {{ section.settings.buttons_radius | default: 'var(--buttons-radius)' }}px;
+    --other-radius: {{ section.settings.other_radius | default: 'var(--other-radius)' }}px;
+    --background-seconday-color: {{ section.settings.background_seconday_color | default: 'var(--background-seconday-color)' }};
+    {% if section.settings.font_heading_family %}
+    --font-heading-family: {{ section.settings.font_heading_family.family }}, {{ section.settings.font_heading_family.fallback_families }};
+    {% endif %}
+    {% if section.settings.font_body_family %}
+    --font-body-family: {{ section.settings.font_body_family.family }}, {{ section.settings.font_body_family.fallback_families }};
+    {% endif %}
+    {% if section.settings.brand_color %}
+    --brand-color: {{ section.settings.brand_color }};
+    {% endif %}
+    {% if section.settings.title_size %}
+    --font-title-size: {{ section.settings.title_size }}px;
+    {%endif%}
+    
+  }
+  #customizer-main-perspective {
+    {% if section.settings.background_image %}
+      background-image: url({{ section.settings.background_image | image_url }});
+    {% else %}
+      box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    {% endif %}
+  }
+  {% if section.settings.font_heading_family %}
+    {{ section.settings.font_heading_family | font_face }}
+  {% endif %}
+  {% if section.settings.font_body_family %}
+    {{ section.settings.font_body_family | font_face }}
+  {% endif %}
+  {% if section.settings.hide_header_tabs %}
+    {% assign hide_tabs = section.settings.hide_header_tabs | split: ',' %}
+    {% for tab_num in hide_tabs %}
+      {% assign clean_tab_num = tab_num | strip %}
+      .customizer-tab-{{ clean_tab_num }} {
+        display: none !important;
+        visibility: hidden;
+      }
+      @media screen and (max-width: 375px){
+        .customizer-tab-header{
+          display: none;
+        }
+      }
+    {% endfor %}
+  {% endif %}
+
+</style>
+<div id="customizer-modal" class="customizer-modal customizer-hidden {{ request.params.product }}">
+  <div class="customizer-modal-wrapper">
+    <div class="customizer-modal-body">
+      <div id="customizer-root">
+        <div id="overlay-popup">
+        </div>
+        <div id="customizer-main-perspective">
+          <div class="top-right-buttons">
+            
+            {% if section.settings.show_saved_items %}
+            <button title="Save Wishlist" id="customizer-save-button"></button>
+            <div title="Saved Items" class="customizer-saved-item-count cursor" id="customizer-saved-item-count"></div>
+            {% endif %}
+            {% if section.settings.show_share_button %}
+            <button title="Share Link" id="customizer-share-button"></button>
+            {% endif %}
+            {% if section.settings.show_reset_button %}
+            <button title="Reset" id="customizer-reset-button"></button>
+            {% endif %}
+            <div id="close" class="customizer-modal-close">CLOSE</div>
+          </div>
+          <div class="top-left-buttons">
+            <div class="top-logos">
+              {% if section.settings.logo != blank %}
+              <img src="{{ section.settings.logo | image_url: width: 119 }}"
+                alt="{{ section.settings.logo.alt | default: 'Logo' }}" width="119" height="11"
+                style="max-width: 119px; height: auto;">
+              {% endif %}
+            </div>
+            <h2 class="customizer-product-name"></h2>
+            <div class="wrapper-for-mob">
+              <div class="customizer-price"></div>
+              <button class="customizer-add-to-cart-button"></button>
+            </div>
+          </div>
+          <div class="bottom-left-items">
+            {% if section.settings.drag %}
+              <svg width="127" height="38" viewBox="0 0 127 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M36.2041 6.1748C35.8577 6.1748 35.5592 6.27507 35.3086 6.47559C35.0579 6.67155 34.8506 6.94727 34.6865 7.30273C34.527 7.65365 34.4085 8.06152 34.3311 8.52637C34.2536 8.99121 34.2148 9.48796 34.2148 10.0166C34.2148 10.8141 34.2969 11.4977 34.4609 12.0674C34.625 12.6325 34.862 13.0654 35.1719 13.3662C35.4818 13.6624 35.8532 13.8105 36.2861 13.8105C36.5824 13.8105 36.8626 13.7673 37.127 13.6807C37.3913 13.5895 37.6442 13.4824 37.8857 13.3594V14.7061C37.6305 14.8473 37.3525 14.9544 37.0518 15.0273C36.7555 15.1003 36.432 15.1367 36.0811 15.1367C35.3656 15.1367 34.7526 14.9339 34.2422 14.5283C33.7318 14.1227 33.3398 13.5371 33.0664 12.7715C32.793 12.0059 32.6562 11.083 32.6562 10.0029C32.6562 9.27376 32.7292 8.59928 32.875 7.97949C33.0208 7.35514 33.2373 6.80827 33.5244 6.33887C33.8161 5.86947 34.1784 5.50488 34.6113 5.24512C35.0443 4.98535 35.5456 4.85547 36.1152 4.85547C36.4798 4.85547 36.8307 4.90104 37.168 4.99219C37.5052 5.08333 37.8311 5.22233 38.1455 5.40918L37.6738 6.66016C37.446 6.50977 37.2113 6.39128 36.9697 6.30469C36.7282 6.2181 36.473 6.1748 36.2041 6.1748ZM39.4443 15V5.00586H40.9482V13.667H43.6758V15H39.4443ZM44.8584 15V5.00586H46.3623V15H44.8584ZM51.5303 6.1748C51.1839 6.1748 50.8854 6.27507 50.6348 6.47559C50.3841 6.67155 50.1768 6.94727 50.0127 7.30273C49.8532 7.65365 49.7347 8.06152 49.6572 8.52637C49.5798 8.99121 49.541 9.48796 49.541 10.0166C49.541 10.8141 49.623 11.4977 49.7871 12.0674C49.9512 12.6325 50.1882 13.0654 50.498 13.3662C50.8079 13.6624 51.1794 13.8105 51.6123 13.8105C51.9085 13.8105 52.1888 13.7673 52.4531 13.6807C52.7174 13.5895 52.9704 13.4824 53.2119 13.3594V14.7061C52.9567 14.8473 52.6787 14.9544 52.3779 15.0273C52.0817 15.1003 51.7581 15.1367 51.4072 15.1367C50.6917 15.1367 50.0788 14.9339 49.5684 14.5283C49.0579 14.1227 48.666 13.5371 48.3926 12.7715C48.1191 12.0059 47.9824 11.083 47.9824 10.0029C47.9824 9.27376 48.0553 8.59928 48.2012 7.97949C48.347 7.35514 48.5635 6.80827 48.8506 6.33887C49.1423 5.86947 49.5046 5.50488 49.9375 5.24512C50.3704 4.98535 50.8717 4.85547 51.4414 4.85547C51.806 4.85547 52.1569 4.90104 52.4941 4.99219C52.8314 5.08333 53.1572 5.22233 53.4717 5.40918L53 6.66016C52.7721 6.50977 52.5374 6.39128 52.2959 6.30469C52.0544 6.2181 51.7992 6.1748 51.5303 6.1748ZM60.54 15H58.8652L56.9443 10.6182L56.2744 11.3428V15H54.7705V5.00586H56.2744V9.8457C56.3245 9.69076 56.4066 9.49935 56.5205 9.27148C56.639 9.03906 56.7848 8.76562 56.958 8.45117L58.8379 5.00586H60.458L57.9902 9.43555L60.54 15ZM68.2031 15L67.5674 12.1904H65.2705L64.6348 15H63.0215L65.4414 5.00586H67.3418L69.8027 15H68.2031ZM67.3145 10.8506L66.665 7.83594C66.6286 7.63997 66.5944 7.45085 66.5625 7.26855C66.5306 7.08171 66.501 6.90169 66.4736 6.72852C66.4463 6.55534 66.4212 6.389 66.3984 6.22949C66.3848 6.38444 66.3643 6.5485 66.3369 6.72168C66.3141 6.89486 66.2845 7.07259 66.248 7.25488C66.2161 7.43717 66.1797 7.62402 66.1387 7.81543L65.5029 10.8506H67.3145ZM77.1377 15H75.3467L72.1406 7.37793H72.0859C72.1087 7.66048 72.127 7.92936 72.1406 8.18457C72.1543 8.43978 72.1634 8.67904 72.168 8.90234C72.1771 9.12565 72.1816 9.33529 72.1816 9.53125V15H70.7666V5.00586H72.5439L75.75 12.4844H75.7979C75.7796 12.1927 75.7637 11.9215 75.75 11.6709C75.7409 11.4157 75.7318 11.1787 75.7227 10.96C75.7181 10.7367 75.7158 10.5339 75.7158 10.3516V5.00586H77.1377V15ZM84.9307 9.8457C84.9307 10.9668 84.7894 11.9102 84.5068 12.6758C84.2243 13.4414 83.8073 14.0202 83.2559 14.4121C82.7044 14.804 82.0231 15 81.2119 15H79.0518V5.00586H81.3213C82.1051 5.00586 82.7637 5.19043 83.2969 5.55957C83.8346 5.92871 84.2402 6.47331 84.5137 7.19336C84.7917 7.91341 84.9307 8.79753 84.9307 9.8457ZM83.3789 9.9209C83.3789 9.1097 83.3014 8.4375 83.1465 7.9043C82.9915 7.37109 82.7591 6.97461 82.4492 6.71484C82.1393 6.45052 81.752 6.31836 81.2871 6.31836H80.5557V13.667H81.1846C81.9411 13.667 82.4948 13.3571 82.8457 12.7373C83.2012 12.113 83.3789 11.1742 83.3789 9.9209ZM94.9795 9.8457C94.9795 10.9668 94.8382 11.9102 94.5557 12.6758C94.2731 13.4414 93.8561 14.0202 93.3047 14.4121C92.7533 14.804 92.0719 15 91.2607 15H89.1006V5.00586H91.3701C92.154 5.00586 92.8125 5.19043 93.3457 5.55957C93.8835 5.92871 94.2891 6.47331 94.5625 7.19336C94.8405 7.91341 94.9795 8.79753 94.9795 9.8457ZM93.4277 9.9209C93.4277 9.1097 93.3503 8.4375 93.1953 7.9043C93.0404 7.37109 92.8079 6.97461 92.498 6.71484C92.1882 6.45052 91.8008 6.31836 91.3359 6.31836H90.6045V13.667H91.2334C91.9899 13.667 92.5436 13.3571 92.8945 12.7373C93.25 12.113 93.4277 11.1742 93.4277 9.9209ZM98.6094 5.00586C99.3158 5.00586 99.8991 5.11068 100.359 5.32031C100.824 5.52539 101.171 5.83984 101.398 6.26367C101.626 6.68294 101.74 7.21159 101.74 7.84961C101.74 8.27799 101.688 8.66309 101.583 9.00488C101.478 9.34668 101.314 9.64746 101.091 9.90723C100.872 10.1624 100.59 10.3789 100.243 10.5566L102.287 15H100.626L98.9102 10.9326H98.0967V15H96.5928V5.00586H98.6094ZM98.6094 6.30469H98.0967V9.71582H98.7051C99.1882 9.71582 99.5573 9.56771 99.8125 9.27148C100.072 8.9707 100.202 8.52181 100.202 7.9248C100.202 7.3597 100.072 6.94954 99.8125 6.69434C99.5573 6.43457 99.1562 6.30469 98.6094 6.30469ZM107.578 15L106.942 12.1904H104.646L104.01 15H102.396L104.816 5.00586H106.717L109.178 15H107.578ZM106.689 10.8506L106.04 7.83594C106.004 7.63997 105.969 7.45085 105.938 7.26855C105.906 7.08171 105.876 6.90169 105.849 6.72852C105.821 6.55534 105.796 6.389 105.773 6.22949C105.76 6.38444 105.739 6.5485 105.712 6.72168C105.689 6.89486 105.66 7.07259 105.623 7.25488C105.591 7.43717 105.555 7.62402 105.514 7.81543L104.878 10.8506H106.689ZM113.43 9.56543H116.26V14.6172C115.818 14.7904 115.364 14.9202 114.899 15.0068C114.435 15.0934 113.963 15.1367 113.484 15.1367C112.664 15.1367 111.983 14.9202 111.44 14.4873C110.903 14.0498 110.499 13.4437 110.23 12.6689C109.966 11.8942 109.834 10.9964 109.834 9.97559C109.834 8.95475 109.982 8.06152 110.278 7.2959C110.575 6.53027 111.014 5.93327 111.598 5.50488C112.181 5.0765 112.903 4.8623 113.765 4.8623C114.211 4.8623 114.633 4.91927 115.029 5.0332C115.43 5.14258 115.797 5.29753 116.13 5.49805L115.658 6.74902C115.357 6.55762 115.054 6.41406 114.749 6.31836C114.444 6.22266 114.132 6.1748 113.812 6.1748C113.284 6.1748 112.84 6.3252 112.479 6.62598C112.124 6.9222 111.855 7.35514 111.673 7.9248C111.491 8.49447 111.399 9.19173 111.399 10.0166C111.399 10.7594 111.475 11.418 111.625 11.9922C111.78 12.5618 112.017 13.0085 112.336 13.332C112.66 13.651 113.076 13.8105 113.587 13.8105C113.81 13.8105 114.022 13.7946 114.223 13.7627C114.428 13.7308 114.617 13.6829 114.79 13.6191V10.8643H113.43V9.56543ZM34.4678 34H32.9639V24.0059H37.1611V25.3047H34.4678V28.5312H36.9971V29.8438H34.4678V34ZM44.8584 28.9893C44.8584 29.7412 44.7923 30.4316 44.6602 31.0605C44.5326 31.6895 44.3343 32.234 44.0654 32.6943C43.8011 33.1546 43.457 33.5101 43.0332 33.7607C42.6139 34.0114 42.1149 34.1367 41.5361 34.1367C40.9482 34.1367 40.4424 34.0091 40.0186 33.7539C39.5947 33.4987 39.2484 33.141 38.9795 32.6807C38.7106 32.2158 38.5124 31.6689 38.3848 31.04C38.2572 30.4111 38.1934 29.723 38.1934 28.9756C38.1934 27.8454 38.3187 26.902 38.5693 26.1455C38.82 25.3844 39.1937 24.8125 39.6904 24.4297C40.1872 24.0469 40.8024 23.8555 41.5361 23.8555C42.3109 23.8555 42.9421 24.0719 43.4297 24.5049C43.9219 24.9378 44.2819 25.5417 44.5098 26.3164C44.7422 27.0866 44.8584 27.9775 44.8584 28.9893ZM39.752 28.9893C39.752 29.8232 39.818 30.5228 39.9502 31.0879C40.0869 31.653 40.2874 32.0791 40.5518 32.3662C40.8161 32.6533 41.1419 32.7969 41.5293 32.7969C41.9212 32.7969 42.2471 32.6579 42.5068 32.3799C42.7666 32.0973 42.9626 31.6758 43.0947 31.1152C43.2269 30.5501 43.293 29.8415 43.293 28.9893C43.293 27.7178 43.1449 26.7653 42.8486 26.1318C42.557 25.4984 42.1195 25.1816 41.5361 25.1816C41.1396 25.1816 40.8092 25.3252 40.5449 25.6123C40.2806 25.8994 40.0824 26.3255 39.9502 26.8906C39.818 27.4512 39.752 28.1507 39.752 28.9893ZM48.4883 24.0059C49.1947 24.0059 49.778 24.1107 50.2383 24.3203C50.7031 24.5254 51.0495 24.8398 51.2773 25.2637C51.5052 25.6829 51.6191 26.2116 51.6191 26.8496C51.6191 27.278 51.5667 27.6631 51.4619 28.0049C51.3571 28.3467 51.193 28.6475 50.9697 28.9072C50.751 29.1624 50.4684 29.3789 50.1221 29.5566L52.166 34H50.5049L48.7891 29.9326H47.9756V34H46.4717V24.0059H48.4883ZM48.4883 25.3047H47.9756V28.7158H48.584C49.0671 28.7158 49.4362 28.5677 49.6914 28.2715C49.9512 27.9707 50.0811 27.5218 50.0811 26.9248C50.0811 26.3597 49.9512 25.9495 49.6914 25.6943C49.4362 25.4346 49.0352 25.3047 48.4883 25.3047ZM60.2666 26.3438C60.2666 26.7266 60.2028 27.0752 60.0752 27.3896C59.9476 27.7041 59.7585 27.9775 59.5078 28.21C59.2617 28.4378 58.9587 28.6178 58.5986 28.75V28.7979C59.2002 28.9255 59.6582 29.1989 59.9727 29.6182C60.2871 30.0329 60.4443 30.5706 60.4443 31.2314C60.4443 31.8148 60.3281 32.3252 60.0957 32.7627C59.8633 33.1956 59.5283 33.5329 59.0908 33.7744C58.6533 34.016 58.1247 34.1367 57.5049 34.1367C57.0856 34.1367 56.7051 34.1025 56.3633 34.0342C56.026 33.9704 55.6842 33.8587 55.3379 33.6992V32.2773C55.6523 32.4642 55.9782 32.6077 56.3154 32.708C56.6527 32.8037 56.9854 32.8516 57.3135 32.8516C57.8558 32.8516 58.2546 32.6989 58.5098 32.3936C58.7695 32.0882 58.8994 31.6781 58.8994 31.1631C58.8994 30.7848 58.8265 30.4727 58.6807 30.2266C58.5394 29.9759 58.3229 29.7891 58.0312 29.666C57.7441 29.543 57.3796 29.4814 56.9375 29.4814H56.4316V28.2236H56.9648C57.3522 28.2236 57.6826 28.153 57.9561 28.0117C58.234 27.8704 58.4437 27.6722 58.585 27.417C58.7308 27.1572 58.8037 26.8542 58.8037 26.5078C58.8037 26.0703 58.6966 25.7354 58.4824 25.5029C58.2682 25.266 57.9583 25.1475 57.5527 25.1475C57.3522 25.1475 57.1631 25.1748 56.9854 25.2295C56.8076 25.2796 56.6344 25.3571 56.4658 25.4619C56.2972 25.5622 56.124 25.6875 55.9463 25.8379L55.3105 24.7783C55.6934 24.4456 56.0807 24.2109 56.4727 24.0742C56.8646 23.9329 57.3089 23.8623 57.8057 23.8623C58.5667 23.8623 59.166 24.0811 59.6035 24.5186C60.0456 24.9515 60.2666 25.5599 60.2666 26.3438ZM61.668 29.748C61.668 29.0417 61.7067 28.3877 61.7842 27.7861C61.8617 27.18 61.9824 26.6354 62.1465 26.1523C62.3151 25.6693 62.5361 25.2568 62.8096 24.915C63.083 24.5732 63.4134 24.3135 63.8008 24.1357C64.1927 23.9535 64.6484 23.8623 65.168 23.8623C65.3776 23.8623 65.5804 23.8737 65.7764 23.8965C65.9723 23.9193 66.1569 23.9557 66.3301 24.0059V25.291C66.1706 25.2454 66.002 25.2113 65.8242 25.1885C65.6465 25.1611 65.4596 25.1475 65.2637 25.1475C64.8034 25.1475 64.4137 25.2796 64.0947 25.5439C63.7757 25.8037 63.5296 26.2002 63.3564 26.7334C63.1878 27.262 63.0921 27.9274 63.0693 28.7295H63.124C63.2243 28.4925 63.3496 28.2897 63.5 28.1211C63.6504 27.9479 63.8258 27.8158 64.0264 27.7246C64.2314 27.6289 64.457 27.5811 64.7031 27.5811C65.1725 27.5811 65.5622 27.7178 65.8721 27.9912C66.1865 28.2646 66.4235 28.6406 66.583 29.1191C66.7471 29.5977 66.8291 30.1468 66.8291 30.7666C66.8291 31.4229 66.7334 32.0062 66.542 32.5166C66.3506 33.0225 66.068 33.4189 65.6943 33.7061C65.3252 33.9932 64.8695 34.1367 64.3271 34.1367C63.9033 34.1367 63.5251 34.041 63.1924 33.8496C62.8643 33.6536 62.5863 33.3688 62.3584 32.9951C62.1305 32.6214 61.9574 32.1634 61.8389 31.6211C61.7249 31.0742 61.668 30.4499 61.668 29.748ZM64.293 32.8379C64.6257 32.8379 64.8854 32.6693 65.0723 32.332C65.2591 31.9948 65.3525 31.4821 65.3525 30.7939C65.3525 30.1605 65.266 29.682 65.0928 29.3584C64.9196 29.0303 64.6576 28.8662 64.3066 28.8662C64.0651 28.8662 63.8577 28.9391 63.6846 29.085C63.516 29.2308 63.3883 29.4245 63.3018 29.666C63.2152 29.903 63.1719 30.1673 63.1719 30.459C63.1719 30.7279 63.1924 31.0013 63.2334 31.2793C63.2744 31.5573 63.3382 31.8148 63.4248 32.0518C63.516 32.2842 63.6322 32.4733 63.7734 32.6191C63.9193 32.765 64.0924 32.8379 64.293 32.8379ZM73.0566 29.0029C73.0566 29.7822 73.0111 30.4863 72.9199 31.1152C72.8333 31.7441 72.6898 32.2842 72.4893 32.7354C72.2887 33.1865 72.0221 33.5329 71.6895 33.7744C71.3613 34.0114 70.958 34.1299 70.4795 34.1299C69.9281 34.1299 69.4609 33.9658 69.0781 33.6377C68.6953 33.305 68.4036 32.765 68.2031 32.0176C68.0072 31.2656 67.9092 30.2607 67.9092 29.0029C67.9092 27.8454 68.0026 26.8883 68.1895 26.1318C68.3763 25.3708 68.6589 24.8034 69.0371 24.4297C69.4199 24.0514 69.9007 23.8623 70.4795 23.8623C71.0628 23.8623 71.5436 24.0537 71.9219 24.4365C72.3001 24.8193 72.5827 25.3913 72.7695 26.1523C72.9609 26.9134 73.0566 27.8636 73.0566 29.0029ZM69.3994 29.0029C69.3994 29.8551 69.4336 30.5638 69.502 31.1289C69.5749 31.6895 69.6888 32.111 69.8438 32.3936C70.0033 32.6715 70.2152 32.8105 70.4795 32.8105C70.7484 32.8105 70.9603 32.6715 71.1152 32.3936C71.2747 32.111 71.3887 31.6872 71.457 31.1221C71.5299 30.557 71.5664 29.8506 71.5664 29.0029C71.5664 28.1644 71.5299 27.4626 71.457 26.8975C71.3887 26.3324 71.2747 25.9062 71.1152 25.6191C70.9603 25.332 70.7484 25.1885 70.4795 25.1885C70.2197 25.1885 70.0101 25.3298 69.8506 25.6123C69.6911 25.8949 69.5749 26.3187 69.502 26.8838C69.4336 27.4489 69.3994 28.1553 69.3994 29.0029ZM77.7256 26.3096C77.7256 27.0752 77.5661 27.6745 77.2471 28.1074C76.9281 28.5358 76.4723 28.75 75.8799 28.75C75.2829 28.75 74.8203 28.5335 74.4922 28.1006C74.1686 27.6631 74.0068 27.0661 74.0068 26.3096C74.0068 25.5485 74.1732 24.9561 74.5059 24.5322C74.8431 24.1038 75.3011 23.8896 75.8799 23.8896C76.2581 23.8896 76.584 23.9831 76.8574 24.1699C77.1354 24.3522 77.3496 24.6234 77.5 24.9834C77.6504 25.3434 77.7256 25.7855 77.7256 26.3096ZM75.0938 26.3164C75.0938 26.8405 75.1576 27.2301 75.2852 27.4854C75.4128 27.736 75.6087 27.8613 75.873 27.8613C76.151 27.8613 76.3516 27.736 76.4746 27.4854C76.5977 27.2301 76.6592 26.8405 76.6592 26.3164C76.6592 25.7969 76.5977 25.4118 76.4746 25.1611C76.3516 24.9059 76.151 24.7783 75.873 24.7783C75.6224 24.7783 75.4287 24.9036 75.292 25.1543C75.1598 25.4049 75.0938 25.7923 75.0938 26.3164ZM87.2959 24.0059L84.8418 34H83.1055L80.6719 24.0059H82.2441L83.6182 30.2744C83.6637 30.4749 83.7093 30.6982 83.7549 30.9443C83.8005 31.1904 83.8415 31.4365 83.8779 31.6826C83.9144 31.9242 83.9463 32.1452 83.9736 32.3457C84.001 32.1452 84.0329 31.9242 84.0693 31.6826C84.1104 31.4411 84.1536 31.1973 84.1992 30.9512C84.2493 30.7051 84.2972 30.4772 84.3428 30.2676L85.7305 24.0059H87.2959ZM88.2666 34V24.0059H89.7705V34H88.2666ZM95.9092 34H91.6982V24.0059H95.9092V25.3047H93.2021V28.1416H95.7383V29.4473H93.2021V32.667H95.9092V34ZM106.881 24.0059L104.871 34H103.128L102.014 28.3535C101.991 28.2259 101.966 28.0846 101.938 27.9297C101.916 27.7747 101.891 27.6084 101.863 27.4307C101.84 27.2484 101.815 27.0547 101.788 26.8496C101.765 26.64 101.743 26.4167 101.72 26.1797C101.701 26.3483 101.681 26.5238 101.658 26.7061C101.64 26.8838 101.617 27.0661 101.59 27.2529C101.567 27.4352 101.54 27.6198 101.508 27.8066C101.48 27.9889 101.451 28.1667 101.419 28.3398L100.312 34H98.582L96.5518 24.0059H98.042L99.1289 29.6934C99.1699 29.9167 99.2087 30.1423 99.2451 30.3701C99.2816 30.598 99.3158 30.8258 99.3477 31.0537C99.3841 31.277 99.416 31.4912 99.4434 31.6963C99.4707 31.8968 99.4935 32.0837 99.5117 32.2568C99.5391 32.0426 99.5687 31.8216 99.6006 31.5938C99.6325 31.3659 99.6667 31.1426 99.7031 30.9238C99.7396 30.7005 99.776 30.4863 99.8125 30.2812C99.849 30.0762 99.8831 29.8893 99.915 29.7207L101.063 24.0059H102.383L103.49 29.707C103.527 29.8848 103.563 30.0762 103.6 30.2812C103.636 30.4818 103.67 30.6914 103.702 30.9102C103.734 31.1243 103.766 31.3454 103.798 31.5732C103.83 31.7965 103.859 32.0244 103.887 32.2568C103.919 31.9743 103.955 31.6849 103.996 31.3887C104.037 31.0924 104.08 30.8008 104.126 30.5137C104.176 30.222 104.224 29.9486 104.27 29.6934L105.377 24.0059H106.881Z"
+                  fill="white"></path>
+                <path d="M14 18L10 22L14 26" stroke="white"></path>
+                <path
+                  d="M4.20577 19.75C3.19027 18.8706 2.79955 17.8452 3.09712 16.8407C3.3947 15.8361 4.36307 14.9115 5.84482 14.2169C7.32657 13.5224 9.23457 13.0989 11.2587 13.0153C13.2828 12.9316 15.3039 13.1928 16.9936 13.7562C18.6833 14.3197 19.9422 15.1523 20.5656 16.1188C21.189 17.0853 21.1402 18.1288 20.4273 19.0796C19.7143 20.0305 18.3791 20.8329 16.6387 21.3563C14.8982 21.8797 12.8548 22.0933 10.8408 21.9625"
+                  stroke="white" stroke-linecap="round"></path>
+              </svg>
+            {% endif %}
+            {% if section.settings.zoom %}
+              <svg width="105" height="38" viewBox="0 0 105 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M36.5459 15L34.3447 7.06348H34.29C34.3128 7.36882 34.3288 7.65137 34.3379 7.91113C34.3516 8.16634 34.3607 8.39648 34.3652 8.60156C34.3743 8.80208 34.3789 8.97526 34.3789 9.12109V15H32.9639V5.00586H35.0557L37.1748 12.5801H37.2158L39.335 5.00586H41.4336V15H39.9844V9.12793C39.9844 8.96387 39.9867 8.78158 39.9912 8.58105C39.9958 8.37598 40.0026 8.14811 40.0117 7.89746C40.0254 7.64681 40.0391 7.37109 40.0527 7.07031H40.0049L37.7969 15H36.5459ZM49.6982 9.98926C49.6982 10.7412 49.6322 11.4316 49.5 12.0605C49.3724 12.6895 49.1742 13.234 48.9053 13.6943C48.641 14.1546 48.2969 14.5101 47.873 14.7607C47.4538 15.0114 46.9548 15.1367 46.376 15.1367C45.7881 15.1367 45.2822 15.0091 44.8584 14.7539C44.4346 14.4987 44.0882 14.141 43.8193 13.6807C43.5505 13.2158 43.3522 12.6689 43.2246 12.04C43.097 11.4111 43.0332 10.723 43.0332 9.97559C43.0332 8.84538 43.1585 7.90202 43.4092 7.14551C43.6598 6.38444 44.0335 5.8125 44.5303 5.42969C45.027 5.04688 45.6423 4.85547 46.376 4.85547C47.1507 4.85547 47.7819 5.07194 48.2695 5.50488C48.7617 5.93783 49.1217 6.54167 49.3496 7.31641C49.582 8.08659 49.6982 8.97754 49.6982 9.98926ZM44.5918 9.98926C44.5918 10.8232 44.6579 11.5228 44.79 12.0879C44.9268 12.653 45.1273 13.0791 45.3916 13.3662C45.6559 13.6533 45.9818 13.7969 46.3691 13.7969C46.7611 13.7969 47.0869 13.6579 47.3467 13.3799C47.6064 13.0973 47.8024 12.6758 47.9346 12.1152C48.0667 11.5501 48.1328 10.8415 48.1328 9.98926C48.1328 8.71777 47.9847 7.7653 47.6885 7.13184C47.3968 6.49837 46.9593 6.18164 46.376 6.18164C45.9795 6.18164 45.6491 6.3252 45.3848 6.6123C45.1204 6.89941 44.9222 7.32552 44.79 7.89062C44.6579 8.45117 44.5918 9.15072 44.5918 9.98926ZM57.0195 5.00586V11.7939C57.0195 12.555 56.9079 13.1839 56.6846 13.6807C56.4658 14.1729 56.1423 14.5397 55.7139 14.7812C55.2855 15.0182 54.7568 15.1367 54.1279 15.1367C53.1937 15.1367 52.4782 14.8656 51.9814 14.3232C51.4893 13.7764 51.2432 12.9401 51.2432 11.8145V5.00586H52.7402V11.7871C52.7402 12.5026 52.861 13.0176 53.1025 13.332C53.3441 13.6419 53.6882 13.7969 54.1348 13.7969C54.4401 13.7969 54.6953 13.7308 54.9004 13.5986C55.1055 13.4619 55.2581 13.2454 55.3584 12.9492C55.4632 12.653 55.5156 12.2611 55.5156 11.7734V5.00586H57.0195ZM63.3701 12.1699C63.3701 12.7533 63.2562 13.2682 63.0283 13.7148C62.8005 14.1615 62.4792 14.5101 62.0645 14.7607C61.6497 15.0114 61.1598 15.1367 60.5947 15.1367C60.3258 15.1367 60.0661 15.1208 59.8154 15.0889C59.5648 15.057 59.3232 15.0046 59.0908 14.9316C58.8584 14.8587 58.6305 14.7653 58.4072 14.6514V13.1064C58.7445 13.3115 59.0999 13.4688 59.4736 13.5781C59.8519 13.6829 60.2028 13.7354 60.5264 13.7354C60.8135 13.7354 61.055 13.6738 61.251 13.5508C61.4469 13.4232 61.5951 13.2523 61.6953 13.0381C61.7956 12.8239 61.8457 12.5846 61.8457 12.3203C61.8457 12.0423 61.8024 11.8053 61.7158 11.6094C61.6338 11.4089 61.4857 11.222 61.2715 11.0488C61.0618 10.8711 60.7679 10.6774 60.3896 10.4678C60.098 10.2992 59.8337 10.1283 59.5967 9.95508C59.3597 9.77734 59.1569 9.58138 58.9883 9.36719C58.8242 9.14844 58.6966 8.89551 58.6055 8.6084C58.5189 8.31673 58.4756 7.97266 58.4756 7.57617C58.4665 7.03385 58.5713 6.55762 58.79 6.14746C59.0133 5.7373 59.3278 5.42057 59.7334 5.19727C60.139 4.9694 60.6152 4.85775 61.1621 4.8623C61.554 4.8623 61.9323 4.91243 62.2969 5.0127C62.666 5.11296 63.0033 5.2474 63.3086 5.41602L62.8711 6.7627C62.5703 6.58952 62.2786 6.46191 61.9961 6.37988C61.7181 6.29329 61.4561 6.25 61.21 6.25C60.9456 6.25 60.7223 6.30469 60.54 6.41406C60.3577 6.51888 60.2188 6.66699 60.123 6.8584C60.0273 7.04525 59.9795 7.26172 59.9795 7.50781C59.9795 7.79948 60.0228 8.04329 60.1094 8.23926C60.2005 8.43522 60.3532 8.61751 60.5674 8.78613C60.7861 8.95475 61.0846 9.14388 61.4629 9.35352C61.8867 9.59049 62.2399 9.84342 62.5225 10.1123C62.805 10.3766 63.0169 10.6751 63.1582 11.0078C63.2995 11.3405 63.3701 11.7279 63.3701 12.1699ZM69.0303 15H64.8193V5.00586H69.0303V6.30469H66.3232V9.1416H68.8594V10.4473H66.3232V13.667H69.0303V15ZM79.5166 9.98926C79.5166 10.7412 79.4505 11.4316 79.3184 12.0605C79.1908 12.6895 78.9925 13.234 78.7236 13.6943C78.4593 14.1546 78.1152 14.5101 77.6914 14.7607C77.2721 15.0114 76.7731 15.1367 76.1943 15.1367C75.6064 15.1367 75.1006 15.0091 74.6768 14.7539C74.2529 14.4987 73.9066 14.141 73.6377 13.6807C73.3688 13.2158 73.1706 12.6689 73.043 12.04C72.9154 11.4111 72.8516 10.723 72.8516 9.97559C72.8516 8.84538 72.9769 7.90202 73.2275 7.14551C73.4782 6.38444 73.8519 5.8125 74.3486 5.42969C74.8454 5.04688 75.4606 4.85547 76.1943 4.85547C76.9691 4.85547 77.6003 5.07194 78.0879 5.50488C78.5801 5.93783 78.9401 6.54167 79.168 7.31641C79.4004 8.08659 79.5166 8.97754 79.5166 9.98926ZM74.4102 9.98926C74.4102 10.8232 74.4762 11.5228 74.6084 12.0879C74.7451 12.653 74.9456 13.0791 75.21 13.3662C75.4743 13.6533 75.8001 13.7969 76.1875 13.7969C76.5794 13.7969 76.9053 13.6579 77.165 13.3799C77.4248 13.0973 77.6208 12.6758 77.7529 12.1152C77.8851 11.5501 77.9512 10.8415 77.9512 9.98926C77.9512 8.71777 77.8031 7.7653 77.5068 7.13184C77.2152 6.49837 76.7777 6.18164 76.1943 6.18164C75.7979 6.18164 75.4674 6.3252 75.2031 6.6123C74.9388 6.89941 74.7406 7.32552 74.6084 7.89062C74.4762 8.45117 74.4102 9.15072 74.4102 9.98926ZM86.79 5.00586L84.3359 15H82.5996L80.166 5.00586H81.7383L83.1123 11.2744C83.1579 11.4749 83.2035 11.6982 83.249 11.9443C83.2946 12.1904 83.3356 12.4365 83.3721 12.6826C83.4085 12.9242 83.4404 13.1452 83.4678 13.3457C83.4951 13.1452 83.527 12.9242 83.5635 12.6826C83.6045 12.4411 83.6478 12.1973 83.6934 11.9512C83.7435 11.7051 83.7913 11.4772 83.8369 11.2676L85.2246 5.00586H86.79ZM91.9717 15H87.7607V5.00586H91.9717V6.30469H89.2646V9.1416H91.8008V10.4473H89.2646V13.667H91.9717V15ZM95.5605 5.00586C96.2669 5.00586 96.8503 5.11068 97.3105 5.32031C97.7754 5.52539 98.1217 5.83984 98.3496 6.26367C98.5775 6.68294 98.6914 7.21159 98.6914 7.84961C98.6914 8.27799 98.639 8.66309 98.5342 9.00488C98.4294 9.34668 98.2653 9.64746 98.042 9.90723C97.8232 10.1624 97.5407 10.3789 97.1943 10.5566L99.2383 15H97.5771L95.8613 10.9326H95.0479V15H93.5439V5.00586H95.5605ZM95.5605 6.30469H95.0479V9.71582H95.6562C96.1393 9.71582 96.5085 9.56771 96.7637 9.27148C97.0234 8.9707 97.1533 8.52181 97.1533 7.9248C97.1533 7.3597 97.0234 6.94954 96.7637 6.69434C96.5085 6.43457 96.1074 6.30469 95.5605 6.30469ZM35.5615 34H34.0713V25.3252H32.1641V24.0059H37.4619V25.3252H35.5615V34ZM44.9678 28.9893C44.9678 29.7412 44.9017 30.4316 44.7695 31.0605C44.6419 31.6895 44.4437 32.234 44.1748 32.6943C43.9105 33.1546 43.5664 33.5101 43.1426 33.7607C42.7233 34.0114 42.2243 34.1367 41.6455 34.1367C41.0576 34.1367 40.5518 34.0091 40.1279 33.7539C39.7041 33.4987 39.3577 33.141 39.0889 32.6807C38.82 32.2158 38.6217 31.6689 38.4941 31.04C38.3665 30.4111 38.3027 29.723 38.3027 28.9756C38.3027 27.8454 38.4281 26.902 38.6787 26.1455C38.9294 25.3844 39.3031 24.8125 39.7998 24.4297C40.2965 24.0469 40.9118 23.8555 41.6455 23.8555C42.4202 23.8555 43.0514 24.0719 43.5391 24.5049C44.0312 24.9378 44.3913 25.5417 44.6191 26.3164C44.8516 27.0866 44.9678 27.9775 44.9678 28.9893ZM39.8613 28.9893C39.8613 29.8232 39.9274 30.5228 40.0596 31.0879C40.1963 31.653 40.3968 32.0791 40.6611 32.3662C40.9255 32.6533 41.2513 32.7969 41.6387 32.7969C42.0306 32.7969 42.3564 32.6579 42.6162 32.3799C42.876 32.0973 43.0719 31.6758 43.2041 31.1152C43.3363 30.5501 43.4023 29.8415 43.4023 28.9893C43.4023 27.7178 43.2542 26.7653 42.958 26.1318C42.6663 25.4984 42.2288 25.1816 41.6455 25.1816C41.249 25.1816 40.9186 25.3252 40.6543 25.6123C40.39 25.8994 40.1917 26.3255 40.0596 26.8906C39.9274 27.4512 39.8613 28.1507 39.8613 28.9893ZM53.3828 34H48.5156V32.8857L51.6807 25.3184H48.5771V24.0059H53.2939V25.1201L50.1289 32.667H53.3828V34ZM60.9912 28.9893C60.9912 29.7412 60.9251 30.4316 60.793 31.0605C60.6654 31.6895 60.4671 32.234 60.1982 32.6943C59.9339 33.1546 59.5898 33.5101 59.166 33.7607C58.7467 34.0114 58.2477 34.1367 57.6689 34.1367C57.0811 34.1367 56.5752 34.0091 56.1514 33.7539C55.7275 33.4987 55.3812 33.141 55.1123 32.6807C54.8434 32.2158 54.6452 31.6689 54.5176 31.04C54.39 30.4111 54.3262 29.723 54.3262 28.9756C54.3262 27.8454 54.4515 26.902 54.7021 26.1455C54.9528 25.3844 55.3265 24.8125 55.8232 24.4297C56.32 24.0469 56.9352 23.8555 57.6689 23.8555C58.4437 23.8555 59.0749 24.0719 59.5625 24.5049C60.0547 24.9378 60.4147 25.5417 60.6426 26.3164C60.875 27.0866 60.9912 27.9775 60.9912 28.9893ZM55.8848 28.9893C55.8848 29.8232 55.9508 30.5228 56.083 31.0879C56.2197 31.653 56.4202 32.0791 56.6846 32.3662C56.9489 32.6533 57.2747 32.7969 57.6621 32.7969C58.054 32.7969 58.3799 32.6579 58.6396 32.3799C58.8994 32.0973 59.0954 31.6758 59.2275 31.1152C59.3597 30.5501 59.4258 29.8415 59.4258 28.9893C59.4258 27.7178 59.2777 26.7653 58.9814 26.1318C58.6898 25.4984 58.2523 25.1816 57.6689 25.1816C57.2725 25.1816 56.9421 25.3252 56.6777 25.6123C56.4134 25.8994 56.2152 26.3255 56.083 26.8906C55.9508 27.4512 55.8848 28.1507 55.8848 28.9893ZM68.9619 28.9893C68.9619 29.7412 68.8958 30.4316 68.7637 31.0605C68.6361 31.6895 68.4378 32.234 68.1689 32.6943C67.9046 33.1546 67.5605 33.5101 67.1367 33.7607C66.7174 34.0114 66.2184 34.1367 65.6396 34.1367C65.0518 34.1367 64.5459 34.0091 64.1221 33.7539C63.6982 33.4987 63.3519 33.141 63.083 32.6807C62.8141 32.2158 62.6159 31.6689 62.4883 31.04C62.3607 30.4111 62.2969 29.723 62.2969 28.9756C62.2969 27.8454 62.4222 26.902 62.6729 26.1455C62.9235 25.3844 63.2972 24.8125 63.7939 24.4297C64.2907 24.0469 64.9059 23.8555 65.6396 23.8555C66.4144 23.8555 67.0456 24.0719 67.5332 24.5049C68.0254 24.9378 68.3854 25.5417 68.6133 26.3164C68.8457 27.0866 68.9619 27.9775 68.9619 28.9893ZM63.8555 28.9893C63.8555 29.8232 63.9215 30.5228 64.0537 31.0879C64.1904 31.653 64.391 32.0791 64.6553 32.3662C64.9196 32.6533 65.2454 32.7969 65.6328 32.7969C66.0247 32.7969 66.3506 32.6579 66.6104 32.3799C66.8701 32.0973 67.0661 31.6758 67.1982 31.1152C67.3304 30.5501 67.3965 29.8415 67.3965 28.9893C67.3965 27.7178 67.2484 26.7653 66.9521 26.1318C66.6605 25.4984 66.223 25.1816 65.6396 25.1816C65.2432 25.1816 64.9128 25.3252 64.6484 25.6123C64.3841 25.8994 64.1859 26.3255 64.0537 26.8906C63.9215 27.4512 63.8555 28.1507 63.8555 28.9893ZM74.1572 34L71.9561 26.0635H71.9014C71.9242 26.3688 71.9401 26.6514 71.9492 26.9111C71.9629 27.1663 71.972 27.3965 71.9766 27.6016C71.9857 27.8021 71.9902 27.9753 71.9902 28.1211V34H70.5752V24.0059H72.667L74.7861 31.5801H74.8271L76.9463 24.0059H79.0449V34H77.5957V28.1279C77.5957 27.9639 77.598 27.7816 77.6025 27.5811C77.6071 27.376 77.6139 27.1481 77.623 26.8975C77.6367 26.6468 77.6504 26.3711 77.6641 26.0703H77.6162L75.4082 34H74.1572Z"
+                  fill="white"></path>
+                <path
+                  d="M20 25L15.8033 20.8033M18 15.5C18 11.3579 14.6421 8 10.5 8C6.35786 8 3 11.3579 3 15.5C3 19.6421 6.35786 23 10.5 23C14.6421 23 18 19.6421 18 15.5Z"
+                  stroke="white" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            {% endif %}
+          </div>
+          <div id="viewspecs" class="viewspecs">SEE ALL SPECS</div>
+          <div id="hide-options" class="hide-options">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="0.5" y="0.5" width="39" height="39" rx="19.5" stroke="#E2E1E1"></rect>
+              <path d="M13 17.25L19.5 23.75L26 17.25" stroke="#191919" stroke-linecap="round"></path>
+            </svg>
+          </div>
+        </div>
+        <div class="wrapper-div">
+          <div class="customizer-tab-tip-body"></div>
+          <div style="position: relative;" class="splide">
+            <div class="splide__track">
+              <div id="customizer-tab-container" class="splide__list">
+                <div class="wrapper-nav">
+                  <div id="customizer-tab-prev"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40"
+                      height="40">
+                      <path d="m15.5 0.932-4.3 4.38 14.5 14.6-14.5 14.5 4.3 4.4 14.6-14.6 4.4-4.3-4.4-4.4-14.6-14.6z">
+                      </path>
+                    </svg></div>
+                  <div id="customizer-tab-current-name"></div>
+                  <div id="customizer-tab-counter"></div>
+                  <div id="customizer-tab-next"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40"
+                      height="40">
+                      <path d="m15.5 0.932-4.3 4.38 14.5 14.6-14.5 14.5 4.3 4.4 14.6-14.6 4.4-4.3-4.4-4.4-14.6-14.6z">
+                      </path>
+                    </svg></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="customizer-perspectives"></div>
+          <div id="customizer-tab-body-container"></div>
+
+          <div id="customizer-disclaimer"></div>
+          <div id="customizer-summary">
+            <div id="overlay"></div>
+            <h3>YOUR CUSTOM GLOVE</h3>
+            <div id="close-submodel" class="close-submodel">
+              <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="0.5" y="0.5" width="39" height="39" rx="19.5" stroke="#E2E1E1" />
+                <path d="M15 15L26 26" stroke="#222222" stroke-linecap="round" />
+                <path d="M26 15L15 26" stroke="#222222" stroke-linecap="round" />
+              </svg>
+            </div>
+            <div id="customizer-summary-items"></div>
+            <hr style="background-color: lightgrey;margin:0;">
+            <div class="atc-div">
+              <p>TOTAL:</p>
+              <span class="customizer-price"></span> <span class="customizer-add-to-cart-button"></span>
+            </div>
+          </div>
+
+          <!-- <div id="customizer-saved-items"></div> -->
+        </div>        
+        <div class="start-over-confirm"
+          style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border-radius: 10px; z-index: 1001; width: 300px; text-align: center;">
+          <div id="reset-closed" style="position: absolute; top: 10px; right: 10px; cursor: pointer;">✕</div>
+          <h3>Start Over?</h3>
+          <p>Are you sure you want to reset your customization?</p>
+          <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+            <button id="close-confirm"
+              style="padding: 10px 20px; background-color: #e0e0e0; border: none; border-radius: 5px; cursor: pointer;">
+              Cancel
+            </button>
+            <button id="start-confirm"
+              style="padding: 10px 20px; background-color: var(--brand-color); color: white; border: none; border-radius: 5px; cursor: pointer;">
+              Reset
+            </button>
+          </div>
+        </div>
+
+        <div id="share-link" style="display: none;">
+          <div id="share-closed">✕</div>
+          <h2>share your customization</h2>
+
+          <div class="share-items">
+            <div class="shareable-link">
+              <p id="customizer-share-link"></p>
+            </div>
+            <div id="copy-button" class="button">COPY</div>
+          </div>
+        </div>
+        <!--
+          These items are used to position items within the customizer. All items with class = "customizer*" are core pieces of functionality
+        -->
+
+        <div class="wrapper-saved">
+          <div class="headers-items">
+            <h3>YOUR SAVED DESIGNS</h3>
+            <div class="saved-info-closed">✕</div>
+          </div>
+          <div id="customizer-saved-items"></div>
+        </div>
+
+        <div id="customizer-tab-container"></div>
+        <div id="customizer-tab-body-container"></div>
+        {% comment %} <div id="customizer-disclaimer"></div> {% endcomment %}
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const productId = params.get("product"); // or "variant" or whatever param you use
+  const recipeId = params.get("recipe_id");
+  if (productId) {
+    let variant;
+    if(productId === 'fielders'){
+        variant = '{{ section.settings.proKipFieldersId }}'
+    } else if(productId === 'catchers'){
+        variant = '{{ section.settings.proKipCatchersId }}'
+    } else if(productId === 'firstBase'){
+        variant = '{{ section.settings.proKipFirstBaseId }}'
+    } else if(productId === 'japanKip'){
+        variant = '{{ section.settings.japanKipUpliftId }}'
+    } else if(productId === 'flag'){
+        variant = '{{ section.settings.flagUpliftId }}'
+    }
+    const script = document.createElement("script");
+    script.id = "customizer";
+    script.src = "https://vu-customizer.s3.amazonaws.com/production/vu_customizer.js";
+    script.setAttribute("data-variant", variant);
+    script.setAttribute("data-status", "draft");
+    script.setAttribute("data-uplift-japan-kip", '{{ section.settings.japanKipUpliftId }}');
+    script.setAttribute("data-uplift-flag", '{{ section.settings.flagUpliftId }}');
+    if(recipeId){
+        script.setAttribute("data-recipe-id", recipeId);
+    }
+    
+    script.defer = true;
+    document.body.appendChild(script);
+    document.addEventListener('DOMContentLoaded', function () {
+      const modal = document.getElementById('customizer-modal');
+        modal.classList.remove('customizer-hidden');
+        document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
+    });
+  }
+</script>
+{% comment %} <button id="open-customizer-button" class="button button--primary">Customize Product</button> {% endcomment %}
+
+{% comment %} <script id="customizer" src="https://vu-customizer.s3.amazonaws.com/production/vu_customizer.js" data-variant="{{ product.selected_or_first_available_variant.id }}" data-status="draft" defer></script> {% endcomment %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+      const openButton = document.getElementById('open-customizer-button');
+      const modal = document.getElementById('customizer-modal');
+
+      // Function to open the modal
+      function openPopUpModal() {
+          modal.classList.remove('customizer-hidden');
+          document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
+      }
+
+      // Check if the URL contains 'recipe_id'
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has('recipe_id')) {
+          openPopUpModal();
+      }
+
+      // Open modal when button is clicked
+      openButton?.addEventListener('click', function () {
+          openPopUpModal();
+      });
+
+
+      // Listen for the customizer.scene-rendered event
+      document.addEventListener('customizer.scene-rendered', function () {
+          // ...other setup...
+          const closeButton = document.getElementById('close');
+          if (closeButton) {
+              closeButton.addEventListener('click', function () {
+                  modal.classList.add('customizer-hidden');
+                  document.body.style.overflow = '';
+              });
+          }
+          closeOptions();
+          closeSummary();
+          setupViewSpecs();
+          setupSavedItems();
+          setupShareAndReset();
+          setupTabNavigation();
+      });
+
+      function setupShareAndReset() {
+          const shareLinkModal = document.querySelector('#share-link');
+          const overlayPopup = document.querySelector('#overlay-popup');
+          const startOverConfirm = document.querySelector('.start-over-confirm');
+          const resetButton = document.getElementById('customizer-reset-button');
+          const copyButton = document.getElementById('copy-button');
+
+          // Setup reset button functionality
+          if (resetButton) {
+              resetButton.addEventListener('click', function () {
+                  if (window.customizer && window.customizer.recipeChanged) {
+                      overlayPopup.style.display = 'block';
+                      startOverConfirm.style.display = 'block';
+                  } else {
+                      if (window.newSplide) {
+                          window.newSplide.go(0);
+                      }
+                      if (window.customizer) {
+                          window.customizer.reset();
+                      }
+                  }
+              });
+          }
+
+          // Setup start confirmation
+          const startConfirm = document.getElementById('start-confirm');
+          if (startConfirm) {
+              startConfirm.addEventListener('click', function () {
+                  overlayPopup.style.display = 'none';
+                  startOverConfirm.style.display = 'none';
+                  if (window.newSplide) {
+                      window.newSplide.go(0);
+                  }
+                  if (window.customizer) {
+                      window.customizer.reset();
+                  }
+              });
+          }
+
+          // Function to close overlay popup
+          function closeOverlayPopup() {
+              overlayPopup.style.display = 'none';
+              if (startOverConfirm) {
+                  startOverConfirm.style.display = 'none';
+              }
+              if (shareLinkModal) {
+                  shareLinkModal.style.display = 'none';
+              }
+          }
+
+          // Setup share event listener
+          document.addEventListener('customizer.shared', function (event) {
+              if (shareLinkModal && overlayPopup) {
+                  shareLinkModal.style.display = 'flex';
+                  overlayPopup.style.display = 'block';
+              }
+          });
+
+          // Setup click handlers for closing elements
+          if (overlayPopup) {
+              overlayPopup.addEventListener('click', closeOverlayPopup);
+          }
+
+          const shareClosed = document.getElementById('share-closed');
+          if (shareClosed) {
+              shareClosed.addEventListener('click', closeOverlayPopup);
+          }
+
+          const resetClosed = document.getElementById('reset-closed');
+          if (resetClosed) {
+              resetClosed.addEventListener('click', closeOverlayPopup);
+          }
+
+          const closeConfirm = document.getElementById('close-confirm');
+          if (closeConfirm) {
+              closeConfirm.addEventListener('click', closeOverlayPopup);
+          }
+
+          // Setup copy button functionality
+          if (copyButton) {
+              copyButton.addEventListener('click', async () => {
+                  const shareLink = document.getElementById('customizer-share-link').textContent;
+                  await navigator.clipboard.writeText(shareLink);
+                  copyButton.textContent = 'COPIED!';
+                  setTimeout(() => copyButton.textContent = 'COPY', 2000);
+              });
+          }
+      }
+
+      function setupSavedItems() {
+          // Get the elements by their class names
+          const customizerSavedItemCount = document.getElementById('customizer-saved-item-count');
+          const savedInfoClosed = document.querySelector('.saved-info-closed');
+          const wrapperSaved = document.querySelector('.wrapper-saved');
+
+          if (savedInfoClosed && wrapperSaved) {
+              savedInfoClosed.addEventListener('click', function () {
+                  // Hide the wrapper-saved element with a 0.3-second transition
+                  wrapperSaved.style.transition = 'opacity 0.3s, transform 0.3s'; // Add transition properties
+                  wrapperSaved.style.opacity = '0'; // Fade out by changing opacity to 0
+                  wrapperSaved.style.transform = 'scale(0)'; // Scale down to 0
+                  setTimeout(function () {
+                      wrapperSaved.style.display = 'none'; // Hide the element after the transition is complete
+                  }, 300); // Adjust the delay to match the transition duration
+              });
+          }
+
+          if (customizerSavedItemCount && wrapperSaved) {
+              customizerSavedItemCount.addEventListener('click', function () {
+                  // Show the wrapper-saved element with a 0.3-second transition
+                  wrapperSaved.style.transition = 'opacity 0.3s, transform 0.3s'; // Add transition properties
+                  wrapperSaved.style.display = 'block'; // Show the element
+                  setTimeout(function () {
+                      wrapperSaved.style.opacity = '1'; // Fade in by changing opacity to 1
+                      wrapperSaved.style.transform = 'scale(1)'; // Scale up to 1
+                  }, 0); // Use a minimal delay (0ms) to trigger the transition immediately
+              });
+          }
+      }
+
+      function setupViewSpecs() {
+          const viewSpecsButton = document.getElementById('viewspecs');
+          const summaryElement = document.getElementById('customizer-summary');
+          const overlayElement = document.getElementById('overlay');
+
+          if (viewSpecsButton && summaryElement) {
+              viewSpecsButton.addEventListener('click', function () {
+                  // Show the summary
+                  summaryElement.style.display = 'block';
+                  summaryElement.style.opacity = '1';
+                  setTimeout(function () {
+                      summaryElement.style.opacity = '1';
+                  }, 10);
+
+                  // Show the overlay if it exists
+                  if (overlayElement) {
+                      overlayElement.style.display = 'block';
+                      setTimeout(function () {
+                          overlayElement.style.opacity = '0.5';
+                      }, 10);
+                  }
+              });
+          }
+      }
+
+      function closeOptions() {
+          const closeButtons = document.querySelectorAll('.hide-options');
+
+          // Store initial height for main perspective
+          let initialHeight = '72dvh';
+
+          // Update initialHeight based on screen size
+          const screenWidth = window.innerWidth;
+          if (screenWidth > 1600) {
+              initialHeight = '78dvh';
+          } else if (screenWidth > 1450) {
+              initialHeight = '74dvh';
+          } else if (screenWidth > 1550) {
+              initialHeight = '76dvh';
+          }
+
+          closeButtons.forEach(function (button) {
+              button.addEventListener('click', function () {
+                  const summaries = document.querySelectorAll('#customizer-tab-body-shell');
+                  const mainPerspective = document.querySelector('#customizer-main-perspective');
+                  const svgElement = document.querySelector('.hide-options svg');
+                  const jtbModel = document.querySelector('#jtb-model');
+
+                  mainPerspective.style.transition = 'height 0.3s';
+
+                  if (mainPerspective.style.height === '90dvh') {
+                      mainPerspective.style.height = initialHeight;
+                  } else {
+                      mainPerspective.style.height = '90dvh';
+                  }
+
+                  svgElement.style.transition = 'transform 0.3s';
+
+                  if (svgElement.style.transform === 'rotate(180deg)') {
+                      svgElement.style.transform = 'rotate(0deg)';
+
+                      // Remove the class to unhide #jtb-model
+                      if (jtbModel) {
+                          jtbModel.classList.remove('option-hide');
+                      }
+                  } else {
+                      svgElement.style.transform = 'rotate(180deg)';
+
+                      // Add a class to #jtb-model to hide it
+                      if (jtbModel) {
+                          jtbModel.classList.add('option-hide');
+                      }
+                  }
+              });
+          });
+      }
+
+      function closeSummary() {
+          const closeButtons = document.querySelectorAll('.close-submodel');
+          const summaries = document.querySelectorAll('#customizer-summary');
+          const overlay = document.getElementById('overlay');
+
+          closeButtons.forEach(function (button) {
+              button.addEventListener('click', function () {
+                  summaries.forEach(function (summary) {
+                      summary.style.transition = 'opacity 0.3s'; // Add transition property
+                      summary.style.opacity = '0'; // Fade out by changing opacity to 0
+                      summary.style.display = 'none';
+                      setTimeout(function () {
+                          lockBody();
+                          summary.style.display = 'none'; // Hide elements after the transition is complete
+                      }, 300); // Adjust the delay to match the transition duration
+                  });
+
+                  // Also hide overlay
+                  if (overlay) {
+                      overlay.style.opacity = '0';
+                      setTimeout(function () {
+                          overlay.style.display = 'none';
+                      }, 300);
+                  }
+              });
+          });
+
+          if (overlay) {
+              overlay.addEventListener('click', function () {
+                  summaries.forEach(function (summary) {
+                      summary.style.transition = 'opacity 0.3s'; // Add transition property
+                      summary.style.opacity = '0'; // Fade out by changing opacity to 0
+                      setTimeout(function () {
+                          lockBody();
+                          summary.style.display = 'none'; // Hide elements after the transition is complete
+                      }, 300); // Adjust the delay to match the transition duration
+                  });
+
+                  // Also hide overlay
+                  overlay.style.opacity = '0';
+                  setTimeout(function () {
+                      overlay.style.display = 'none';
+                  }, 300);
+              });
+          }
+      }
+
+      function lockBody() {
+          document.body.style.overflow = document.body.style.overflow === 'hidden' ? '' : 'hidden';
+      }
+
+      function setupTabNavigation() {
+          const tabContainer = document.getElementById('customizer-tab-container');
+          const tabs = Array.from(tabContainer.querySelectorAll('.customizer-tab'));
+          const prevBtn = document.getElementById('customizer-tab-prev');
+          const nextBtn = document.getElementById('customizer-tab-next');
+          const counter = document.getElementById('customizer-tab-counter');
+          const currentNameContainer = document.getElementById('customizer-tab-current-name');
+
+          // Add numbered classes to tabs
+          tabs.forEach((tab, index) => {
+              tab.classList.add(`customizer-tab-${index + 1}`);
+          });
+
+          function getSelectedIndex() {
+              return tabs.findIndex(tab => tab.classList.contains('customizer-tab-selected'));
+          }
+
+          function updateCounter() {
+              const idx = getSelectedIndex();
+              // Trigger CSS animation by temporarily removing and re-adding
+              counter.style.animation = 'none';
+              counter.offsetHeight; // Trigger reflow
+              counter.style.animation = 'fadeInOut 0.6s ease-in-out';
+              counter.textContent = `${idx + 1} / ${tabs.length}`;
+          }
+
+          function updateCurrentTabName(idx) {
+              // Move the .customizer-tab-name node to the nav
+              const tabName = tabs[idx].querySelector('.customizer-tab-name');
+              if (tabName && currentNameContainer) {
+                  // Trigger CSS animation by temporarily removing and re-adding
+                  currentNameContainer.style.animation = 'none';
+                  currentNameContainer.offsetHeight; // Trigger reflow
+                  currentNameContainer.style.animation = 'fadeInOut 0.6s ease-in-out';
+
+                  currentNameContainer.innerHTML = '';
+                  currentNameContainer.appendChild(tabName.cloneNode(true));
+              }
+          }
+
+          function selectTab(idx) {
+              tabs.forEach(tab => tab.classList.remove('customizer-tab-selected'));
+              tabs[idx].classList.add('customizer-tab-selected');
+              updateCounter();
+              updateCurrentTabName(idx);
+              // Trigger click on the tab name to show content
+              const tabName = tabs[idx].querySelector('.customizer-tab-name');
+              if (tabName) tabName.click();
+          }
+
+          prevBtn.onclick = () => {
+              let idx = getSelectedIndex();
+              if (idx > 0) selectTab(idx - 1);
+          };
+
+          nextBtn.onclick = () => {
+              let idx = getSelectedIndex();
+              if (idx < tabs.length - 1) selectTab(idx + 1);
+          };
+
+          // Make tabs clickable
+          tabs.forEach((tab, idx) => {
+              tab.addEventListener('click', function (e) {
+                  if (!tab.classList.contains('customizer-tab-selected')) {
+                      selectTab(idx);
+                  }
+              });
+          });
+
+          // Initial counter and tab name
+          updateCounter();
+          updateCurrentTabName(getSelectedIndex());
+
+          // Keyboard navigation
+          document.addEventListener('keydown', (e) => {
+              const modal = document.getElementById('customizer-modal');
+              if (modal && !modal.classList.contains('customizer-hidden')) {
+                  if (e.key === 'ArrowLeft') {
+                      e.preventDefault();
+                      prevBtn.click();
+                  } else if (e.key === 'ArrowRight') {
+                      e.preventDefault();
+                      nextBtn.click();
+                  }
+              }
+          });
+      }
+
+      setupTabBodyStepper();
+      setupFontDropdownPortal();
+      setupSpinnerDrag();
+  });
+
+    function setupSpinnerDrag() {
+      let state = { dragging: false, startX: 0, item: null };
+      
+      function handleEvent(e) {
+          const item = e?.target?.closest('.list-element-spinner-item');
+          const clientX = e.type.includes('touch') ? (e.touches?.[0] || e.changedTouches?.[0])?.clientX : e.clientX;
+          
+          if (e.type.includes('down') && item?.classList.contains('customizer-selected')) {
+              Object.assign(state, { dragging: true, startX: clientX, item });
+              item.style.cssText += 'transition:none!important;cursor:grabbing';
+              e.preventDefault();
+          } else if (e.type.includes('move') && state.dragging) {
+              const offset = Math.max(-25, Math.min(25, (clientX - state.startX) * 0.5));
+              state.item.style.setProperty('--drag-offset', `${offset}px`);
+              e.preventDefault();
+          } else if ((e.type.includes('up') || e.type === 'mouseleave') && state.dragging) {
+              const deltaX = (clientX || state.startX) - state.startX;
+              state.item.style.removeProperty('transition');
+              state.item.style.cursor = '';
+              state.item.style.removeProperty('--drag-offset');
+              
+              if (Math.abs(deltaX) > 20) {
+                  const container = state.item.closest('.list-element-spinner-container');
+                  const spinner = container?.closest('.list-element-spinner');
+                  const items = container.querySelectorAll('.list-element-spinner-item');
+                  const currentIdx = [...items].findIndex(i => i.classList.contains('customizer-selected'));
+                  const newIdx = deltaX > 0 ? currentIdx + 1 : currentIdx - 1;
+                  
+                  if (newIdx >= 0 && newIdx < items.length) {
+                      const btn = spinner.querySelector(deltaX > 0 ? 
+                          '#list-element-spinner-right, .list-element-spinner-button-right' : 
+                          '#list-element-spinner-left, .list-element-spinner-button-left');
+                      btn?.click();
+                  }
+              }
+              Object.assign(state, { dragging: false, item: null });
+          }
+      }
+      
+      ['mousedown', 'touchstart', 'mousemove', 'touchmove', 'mouseup', 'touchend', 'mouseleave']
+          .forEach(type => document.addEventListener(type, handleEvent, 
+              type.includes('touch') ? { passive: false } : false));
+  }
+
+  function setupFontDropdownPortal() {
+      let activeDropdown = null, activeContainer = null;
+
+      function positionDropdown(dropdown, trigger) {
+          const rect = trigger.getBoundingClientRect();
+          let top = rect.top - dropdown.offsetHeight - 5;
+          let left = Math.max(10, Math.min(rect.left, window.innerWidth - dropdown.offsetWidth - 10));
+
+          if (top < 10) top = rect.bottom + 5;
+
+          Object.assign(dropdown.style, {
+              position: 'fixed', zIndex: '9999',
+              top: top + 'px', left: left + 'px'
+          });
+      }
+
+      function showDropdown(dropdown, trigger) {
+          if (activeDropdown !== dropdown) {
+              hideDropdown();
+              activeDropdown = dropdown;
+              activeContainer = dropdown.parentElement;
+              document.body.appendChild(dropdown);
+              positionDropdown(dropdown, trigger);
+          }
+      }
+
+      function hideDropdown() {
+          if (activeDropdown) {
+              activeContainer.appendChild(activeDropdown);
+              Object.assign(activeDropdown.style, { position: '', top: '', left: '', zIndex: '' });
+              activeDropdown = activeContainer = null;
+          }
+      }
+
+      document.addEventListener('click', function (e) {
+          const fontSelector = e.target.closest('.input-element-font-selector-container');
+          if (fontSelector) {
+              const dropdown = fontSelector.querySelector('.font-dropdown-menu');
+              if (dropdown) setTimeout(() => dropdown.offsetParent && showDropdown(dropdown, fontSelector), 10);
+          } else if (activeDropdown && !e.target.closest('.font-dropdown-menu')) {
+              hideDropdown();
+          }
+      });
+
+      ['scroll', 'resize'].forEach(event =>
+          window.addEventListener(event, () =>
+              activeDropdown && positionDropdown(activeDropdown, activeContainer), true)
+      );
+  }
+
+  function setupTabBodyStepper() {
+      function addSimpleScrollArrows() {
+          const bodyElements = document.querySelectorAll('.customizer-tab-body-elements');
+
+          bodyElements.forEach(container => {
+              const elements = container.querySelectorAll('.customizer-element');
+              if (elements.length === 0) return;
+
+              // Force layout calculation
+              container.offsetWidth;
+
+              // Wait for next frame to ensure proper rendering
+              requestAnimationFrame(() => {
+                  const needsScrolling = container.scrollWidth > container.clientWidth;
+                  console.log('Container:', container, 'ScrollWidth:', container.scrollWidth, 'ClientWidth:', container.clientWidth, 'Needs scrolling:', needsScrolling);
+
+                  let prevBtn = container.parentElement.querySelector('.customizer-body-stepper-prev');
+                  let nextBtn = container.parentElement.querySelector('.customizer-body-stepper-next');
+
+                  if (needsScrolling) {
+                      container.classList.add('has-horizontal-overflow');
+                      // Add smooth transition for separators
+                      setTimeout(() => container.classList.add('show-separators'), 10);
+
+                      // Determine scroll distance based on screen size
+                      const scrollDistance = window.innerWidth < 400 ? 200 : 400;
+
+                      if (!prevBtn) {
+                          prevBtn = document.createElement('div');
+                          prevBtn.className = 'customizer-body-stepper-btn customizer-body-stepper-prev';
+                          prevBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="20" height="20"><path d="m15.5 0.932-4.3 4.38 14.5 14.6-14.5 14.5 4.3 4.4 14.6-14.6 4.4-4.3-4.4-4.4-14.6-14.6z"></path></svg>';
+                          container.parentElement.style.position = 'relative';
+                          container.parentElement.appendChild(prevBtn);
+
+                          prevBtn.onclick = () => container.scrollBy({ left: -scrollDistance, behavior: 'smooth' });
+                          console.log('Added prev button');
+                      } else {
+                          // Update existing button's scroll distance
+                          prevBtn.onclick = () => container.scrollBy({ left: -scrollDistance, behavior: 'smooth' });
+                      }
+
+                      if (!nextBtn) {
+                          nextBtn = document.createElement('div');
+                          nextBtn.className = 'customizer-body-stepper-btn customizer-body-stepper-next';
+                          nextBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="20" height="20"><path d="m15.5 0.932-4.3 4.38 14.5 14.6-14.5 14.5 4.3 4.4 14.6-14.6 4.4-4.3-4.4-4.4-14.6-14.6z"></path></svg>';
+                          container.parentElement.appendChild(nextBtn);
+
+                          nextBtn.onclick = () => container.scrollBy({ left: scrollDistance, behavior: 'smooth' });
+                          console.log('Added next button');
+                      } else {
+                          // Update existing button's scroll distance
+                          nextBtn.onclick = () => container.scrollBy({ left: scrollDistance, behavior: 'smooth' });
+                      }
+
+                      prevBtn.style.display = 'block';
+                      nextBtn.style.display = 'block';
+                  } else {
+                      container.classList.remove('has-horizontal-overflow', 'show-separators');
+                      if (prevBtn) prevBtn.style.display = 'none';
+                      if (nextBtn) nextBtn.style.display = 'none';
+                  }
+              });
+          });
+      }
+
+      // Try multiple times and also listen for tab changes
+      setTimeout(addSimpleScrollArrows, 2000);
+      setTimeout(addSimpleScrollArrows, 4000);
+
+      // Also run when tabs change with shorter delay
+      document.addEventListener('click', function (e) {
+          if (e.target.closest('.customizer-tab-name')) {
+              setTimeout(addSimpleScrollArrows, 200);
+          }
+      });
+  }
+</script>

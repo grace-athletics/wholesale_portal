@@ -1,0 +1,119 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "paywall": {
+      "type": "wholesale-paywall",
+      "settings": {}
+    },
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "multicolumn_hxK8YV": {
+      "type": "multicolumn",
+      "blocks": {
+        "column_mN3DYC": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/DSC07835.jpg",
+            "title": "Fielders Glove",
+            "text": "",
+            "link_label": "Customize Now",
+            "link": "/pages/custom-gloves?product=fielders"
+          }
+        },
+        "column_3mnWQh": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/DSC07845.jpg",
+            "title": "Catchers Mitt",
+            "text": "",
+            "link_label": "Customize Now",
+            "link": "/pages/custom-gloves?product=catchers"
+          }
+        },
+        "column_EpaKhj": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/DSC07791.jpg",
+            "title": "First Base Mitt",
+            "text": "",
+            "link_label": "Customize Now",
+            "link": "/pages/custom-gloves?product=firstBase"
+          }
+        }
+      },
+      "block_order": [
+        "column_mN3DYC",
+        "column_3mnWQh",
+        "column_EpaKhj"
+      ],
+      "name": "t:sections.multicolumn.presets.name",
+      "settings": {
+        "title": "Customize Now",
+        "heading_size": "h1",
+        "image_width": "full",
+        "image_ratio": "adapt",
+        "button_label": "",
+        "button_link": "",
+        "columns_desktop": 3,
+        "column_alignment": "left",
+        "background_style": "primary",
+        "color_scheme": "",
+        "columns_mobile": "1",
+        "swipe_on_mobile": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "vu_custom_Vj6wph": {
+      "type": "vu-custom",
+      "name": "VU Customizer",
+      "settings": {
+        "template_choice": "template_2",
+        "background_image": "shopify://shop_images/image_2.png",
+        "logo": "shopify://shop_images/Screenshot_1-removebg-preview.png",
+        "brand_color": "#d1ba98",
+        "background_seconday_color": "#f6f6f6",
+        "font_heading_family": "sans_serif_n4",
+        "font_body_family": "sans_serif_n4",
+        "proKipFirstBaseId": "45929277784235",
+        "proKipCatchersId": "45929277718699",
+        "proKipFieldersId": "45929277522091",
+        "japanKipUpliftId": "",
+        "flagUpliftId": "",
+        "title_size": 35,
+        "buttons_radius": 0,
+        "other_radius": 0,
+        "hide_header_tabs": "1,2,3",
+        "show_saved_items": true,
+        "show_share_button": true,
+        "show_reset_button": true,
+        "image_size": 60,
+        "drag": false,
+        "zoom": false,
+        "brand_logo": "shopify://shop_images/Screenshot_1-removebg-preview.png",
+        "text_color": "#000000",
+        "secondary_text_color": "#000000"
+      }
+    }
+  },
+  "order": [
+    "paywall",
+    "main",
+    "multicolumn_hxK8YV",
+    "vu_custom_Vj6wph"
+  ]
+}

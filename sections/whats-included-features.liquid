@@ -1,0 +1,288 @@
+{%- style -%}
+  .whats-included-features {
+    background-color: {{ section.settings.background_color }};
+    padding: {{ section.settings.padding_top }}px 40px {{ section.settings.padding_bottom }}px 40px;
+  }
+
+  .whats-included-features__container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .whats-included-features__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+  }
+
+  .whats-included-features__card {
+    border-radius: 8px;
+    padding: 40px 30px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 250px;
+    transition: all 0.3s ease;
+  }
+
+  .whats-included-features__card:nth-child(odd) {
+    background-color: #ffffff;
+    border: 1px solid #f0f0f0;
+  }
+
+  .whats-included-features__card:nth-child(even) {
+    background-color: {{ section.settings.card_bg_color }};
+  }
+
+  .whats-included-features__icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: transparent;
+  }
+
+  .whats-included-features__card:nth-child(odd) .whats-included-features__icon {
+    background-color: #2a2a2a;
+    color: #ffffff;
+  }
+
+  .whats-included-features__card:nth-child(even) .whats-included-features__icon {
+    background-color: #ffffff;
+    color: #2a2a2a;
+  }
+
+  .whats-included-features__title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: {{ section.settings.title_color }};
+  }
+
+  .whats-included-features__description {
+    font-size: 14px;
+    line-height: 1.6;
+    color: {{ section.settings.description_color }};
+  }
+
+  .whats-included-features__card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  @media (max-width: 1024px) {
+    .whats-included-features__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .whats-included-features__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .whats-included-features__card {
+      min-height: auto;
+      padding: 30px 20px;
+    }
+
+    .whats-included-features__icon {
+      width: 60px;
+      height: 60px;
+      font-size: 36px;
+    }
+
+    .whats-included-features__title {
+      font-size: 16px;
+    }
+
+    .whats-included-features__description {
+      font-size: 13px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="whats-included-features">
+  <div class="whats-included-features__container">
+    <div class="whats-included-features__grid">
+      {% for i in (1..6) %}
+        {% assign icon_key = 'feature_icon_' | append: i %}
+        {% assign title_key = 'feature_title_' | append: i %}
+        {% assign desc_key = 'feature_description_' | append: i %}
+        {% if section.settings[title_key] %}
+          <div class="whats-included-features__card">
+            <div class="whats-included-features__icon">{{ section.settings[icon_key] }}</div>
+            <h3 class="whats-included-features__title">{{ section.settings[title_key] }}</h3>
+            <p class="whats-included-features__description">{{ section.settings[desc_key] }}</p>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "What's Included Features",
+  "settings": [
+    {
+      "type": "text",
+      "id": "feature_icon_1",
+      "label": "Feature 1 Icon/Emoji",
+      "default": "📢"
+    },
+    {
+      "type": "text",
+      "id": "feature_title_1",
+      "label": "Feature 1 Title",
+      "default": "Turnkey Marketing Solution"
+    },
+    {
+      "type": "textarea",
+      "id": "feature_description_1",
+      "label": "Feature 1 Description",
+      "default": "A comprehensive marketing system designed to drive your brand's success."
+    },
+    {
+      "type": "text",
+      "id": "feature_icon_2",
+      "label": "Feature 2 Icon/Emoji",
+      "default": "📞"
+    },
+    {
+      "type": "text",
+      "id": "feature_title_2",
+      "label": "Feature 2 Title",
+      "default": "1-on-1 Check-in Calls"
+    },
+    {
+      "type": "textarea",
+      "id": "feature_description_2",
+      "label": "Feature 2 Description",
+      "default": "Personalized guidance and support with zoom calls to keep you on track."
+    },
+    {
+      "type": "text",
+      "id": "feature_icon_3",
+      "label": "Feature 3 Icon/Emoji",
+      "default": "💬"
+    },
+    {
+      "type": "text",
+      "id": "feature_title_3",
+      "label": "Feature 3 Title",
+      "default": "Exclusive Client-Only Chat Community"
+    },
+    {
+      "type": "textarea",
+      "id": "feature_description_3",
+      "label": "Feature 3 Description",
+      "default": "Access 24/7 to our members-only chat for constant support and networking."
+    },
+    {
+      "type": "text",
+      "id": "feature_icon_4",
+      "label": "Feature 4 Icon/Emoji",
+      "default": "📦"
+    },
+    {
+      "type": "text",
+      "id": "feature_title_4",
+      "label": "Feature 4 Title",
+      "default": "Done-For-You Fulfillment"
+    },
+    {
+      "type": "textarea",
+      "id": "feature_description_4",
+      "label": "Feature 4 Description",
+      "default": "We handle all fulfillment, so you can focus solely on marketing your brand."
+    },
+    {
+      "type": "text",
+      "id": "feature_icon_5",
+      "label": "Feature 5 Icon/Emoji",
+      "default": "📚"
+    },
+    {
+      "type": "text",
+      "id": "feature_title_5",
+      "label": "Feature 5 Title",
+      "default": "Resources for Success & Profitability"
+    },
+    {
+      "type": "textarea",
+      "id": "feature_description_5",
+      "label": "Feature 5 Description",
+      "default": "Material and resources needed to make sure you are a PROFITABLE glove company."
+    },
+    {
+      "type": "text",
+      "id": "feature_icon_6",
+      "label": "Feature 6 Icon/Emoji",
+      "default": "⚙️"
+    },
+    {
+      "type": "text",
+      "id": "feature_title_6",
+      "label": "Feature 6 Title",
+      "default": "Free Upgrades to Your Builder"
+    },
+    {
+      "type": "textarea",
+      "id": "feature_description_6",
+      "label": "Feature 6 Description",
+      "default": "Enjoy all future enhancements to your builder at no extra cost."
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Alternate Card Background",
+      "default": "#baad8c"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Description Color",
+      "default": "#666666"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 20,
+      "max": 150,
+      "step": 10,
+      "default": 80,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 20,
+      "max": 150,
+      "step": 10,
+      "default": 80,
+      "unit": "px"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,187 @@
+{%- style -%}
+  .how-it-works {
+    background-color: {{ section.settings.background_color }};
+    color: {{ section.settings.text_color }};
+    padding: {{ section.settings.padding_top }}px 40px {{ section.settings.padding_bottom }}px 40px;
+  }
+
+  .how-it-works > * {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .how-it-works__label {
+    color: #baad8c;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .how-it-works__headline {
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 40px;
+    max-width: 600px;
+  }
+
+  .how-it-works__container {
+    display: flex;
+    gap: 60px;
+    align-items: center;
+  }
+
+  .how-it-works__content {
+    flex: 1;
+  }
+
+  .how-it-works__description {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    color: #ccc;
+  }
+
+  .how-it-works__features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .how-it-works__features li {
+    display: flex;
+    align-items: flex-start;
+    font-size: 16px;
+    margin-bottom: 20px;
+    color: #ddd;
+  }
+
+  .how-it-works__features li:before {
+    content: "✓";
+    color: #baad8c;
+    font-weight: bold;
+    margin-right: 16px;
+    font-size: 20px;
+    min-width: 24px;
+  }
+
+  .how-it-works__video {
+    flex: 1;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #000;
+  }
+
+  .how-it-works__video iframe {
+    width: 100%;
+    height: 400px;
+    border: none;
+  }
+
+  .how-it-works__cta {
+    display: inline-block;
+    margin-top: 30px;
+    padding: 14px 32px;
+    background-color: #baad8c;
+    color: #000;
+    text-decoration: none;
+    border-radius: 24px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .how-it-works__cta:hover {
+    background-color: #9d9273;
+  }
+
+  @media (max-width: 768px) {
+    .how-it-works__container {
+      flex-direction: column;
+      gap: 40px;
+    }
+
+    .how-it-works__headline {
+      font-size: 36px;
+    }
+
+    .how-it-works__video iframe {
+      height: 250px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="how-it-works">
+  <div class="how-it-works__label">How It Works</div>
+  <h2 class="how-it-works__headline">White-Label Glove Builder On Your Website</h2>
+
+  <div class="how-it-works__container">
+    <div class="how-it-works__content">
+      <p class="how-it-works__description">Whether you're an established glove brand or just starting out, My Glove Brand lets you add a 3D custom glove builder to your website, complete with your logo. We offer everything from providing you with the builder to fulfilling glove orders.</p>
+
+      <ul class="how-it-works__features">
+        <li>View their custom glove from every angle with high-definition 3D rendering.</li>
+        <li>Experiment with different colors, materials, and stitching options in real-time.</li>
+        <li>Make informed decisions with a clear understanding of the final glove's appearance</li>
+      </ul>
+
+      <a href="/pages/book-demo" class="how-it-works__cta">Learn More About The Process</a>
+    </div>
+
+    <div class="how-it-works__video">
+      {% if section.settings.video_url %}
+        <iframe src="{{ section.settings.video_url }}" allowfullscreen></iframe>
+      {% else %}
+        <div style="width: 100%; height: 400px; background: #333; display: flex; align-items: center; justify-content: center; color: #999;">
+          Add video embed URL
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "How It Works",
+  "settings": [
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "Video Embed URL (YouTube or Vimeo)"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 20,
+      "max": 150,
+      "step": 10,
+      "default": 80,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 20,
+      "max": 150,
+      "step": 10,
+      "default": 80,
+      "unit": "px"
+    }
+  ]
+}
+{% endschema %}

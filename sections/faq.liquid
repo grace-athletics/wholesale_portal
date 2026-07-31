@@ -1,0 +1,262 @@
+{%- style -%}
+  .faq {
+    padding: {{ section.settings.padding_top }}px 40px {{ section.settings.padding_bottom }}px 40px;
+    background-color: {{ section.settings.background_color }};
+  }
+
+  .faq__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .faq__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+  }
+
+  .faq__heading {
+    grid-column: 1 / -1;
+  }
+
+  .faq__heading h2 {
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #000;
+  }
+
+  .faq__heading p {
+    font-size: 18px;
+    color: #666;
+    line-height: 1.6;
+  }
+
+  .faq__items {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .faq__item {
+    background: #f5f5f5;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .faq__trigger {
+    background: #f5f5f5;
+    border: none;
+    padding: 20px;
+    width: 100%;
+    text-align: left;
+    font-size: 16px;
+    font-weight: 600;
+    color: #000;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .faq__trigger:hover {
+    background: #e8e8e8;
+  }
+
+  .faq__item[open] .faq__trigger {
+    background: {{ section.settings.accent_color }};
+    color: #fff;
+  }
+
+  .faq__content {
+    padding: 0 20px 20px 20px;
+    color: {{ section.settings.text_color }};
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 768px) {
+    .faq__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .faq__heading h2 {
+      font-size: 36px;
+    }
+
+    .faq__items {
+      grid-template-columns: 1fr;
+    }
+  }
+{%- endstyle -%}
+
+<div class="faq" id="faqs">
+  <div class="faq__container">
+    <div class="faq__heading">
+      <h2>{{ section.settings.headline }}</h2>
+    </div>
+
+    <div class="faq__items">
+      {% for i in (1..8) %}
+        {% assign question_key = 'question_' | append: i %}
+        {% assign answer_key = 'answer_' | append: i %}
+        {% if section.settings[question_key] %}
+          <details class="faq__item">
+            <summary class="faq__trigger">{{ section.settings[question_key] }}</summary>
+            <div class="faq__content">
+              {{ section.settings[answer_key] }}
+            </div>
+          </details>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "FAQ",
+  "settings": [
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "Headline",
+      "default": "Frequently Asked Questions"
+    },
+    {
+      "type": "text",
+      "id": "question_1",
+      "label": "Question 1",
+      "default": "How does it work?"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_1",
+      "label": "Answer 1",
+      "default": "Whether you're an established glove brand or just starting out, My Glove Brand lets you add a 3D custom glove builder to your website, complete with your logo. We offer everything from providing you with the builder to fulfilling glove orders."
+    },
+    {
+      "type": "text",
+      "id": "question_2",
+      "label": "Question 2",
+      "default": "Can I use my own logo on the glove?"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_2",
+      "label": "Answer 2",
+      "default": "Yes! Our 3D glove builder supports custom logo placement on the glove, allowing your brand to be showcased on every custom glove."
+    },
+    {
+      "type": "text",
+      "id": "question_3",
+      "label": "Question 3",
+      "default": "What type of leather is this glove? Is it quality?"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_3",
+      "label": "Answer 3",
+      "default": "All our gloves are made with premium quality leather and are crafted with precision. We work with top-tier suppliers to ensure the highest standards."
+    },
+    {
+      "type": "text",
+      "id": "question_4",
+      "label": "Question 4",
+      "default": "How customizable can the glove be?"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_4",
+      "label": "Answer 4",
+      "default": "Our 3D glove builder allows complete customization of colors, materials, stitching, lacing, padding, and more. Customers have full control over every aspect of their glove design."
+    },
+    {
+      "type": "text",
+      "id": "question_5",
+      "label": "Question 5",
+      "default": "Is this a one time investment or a monthly investment?"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_5",
+      "label": "Answer 5",
+      "default": "We offer flexible pricing options. You can choose between one-time investments for startup packages or monthly subscription models based on your business needs."
+    },
+    {
+      "type": "text",
+      "id": "question_6",
+      "label": "Question 6",
+      "default": "What happens when someone orders a glove off my website?"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_6",
+      "label": "Answer 6",
+      "default": "Once a customer places an order, we handle the entire fulfillment process for you. From manufacturing to quality assurance to shipping, we take care of everything so you can focus on sales."
+    },
+    {
+      "type": "text",
+      "id": "question_7",
+      "label": "Question 7",
+      "default": "What if I don't have a website?"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_7",
+      "label": "Answer 7",
+      "default": "No problem! We can help you get set up with a website through Shopify or help you integrate our glove builder into an existing site. We're here to support your growth."
+    },
+    {
+      "type": "text",
+      "id": "question_8",
+      "label": "Question 8",
+      "default": "What is My Glove Brand's turnkey marketing solution?"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_8",
+      "label": "Answer 8",
+      "default": "Our turnkey marketing solution includes pre-designed marketing materials, social media templates, email campaigns, and growth strategies to help you launch and scale your glove brand."
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color (Active Item)",
+      "default": "#baad8c"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 20,
+      "max": 150,
+      "step": 10,
+      "default": 80,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 20,
+      "max": 150,
+      "step": 10,
+      "default": 80,
+      "unit": "px"
+    }
+  ]
+}
+{% endschema %}

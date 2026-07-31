@@ -5,3 +5,5 @@ project_id = "geqsjoshoiqftdfmbbuu"
     verify_jwt = false
   [functions.stripe-webhook]
     verify_jwt = false
+  [functions.generate-order-pdf-public]
+    verify_jwt = false

@@ -1,0 +1,55 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {}
+    },
+    "how_it_works": {
+      "type": "how-it-works",
+      "settings": {}
+    },
+    "benefits": {
+      "type": "benefits",
+      "settings": {}
+    },
+    "founders": {
+      "type": "founders",
+      "settings": {}
+    },
+    "mission": {
+      "type": "mission",
+      "settings": {}
+    },
+    "impact": {
+      "type": "impact",
+      "settings": {}
+    },
+    "cta_section": {
+      "type": "cta-section",
+      "settings": {}
+    },
+    "faq": {
+      "type": "faq",
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero",
+    "how_it_works",
+    "benefits",
+    "founders",
+    "mission",
+    "impact",
+    "cta_section",
+    "faq"
+  ]
+}

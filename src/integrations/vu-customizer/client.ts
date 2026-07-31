@@ -1,142 +1,47 @@
 /**
  * VU Customizer integration
- * Handles embedding and communicating with VU's customizer
+ * Per VU documentation: customizer.initializeCustomizer(variantID)
  */
 
-const VU_STORE_KEY = "068b86c3";
-const VU_CUSTOMIZER_URL = "https://vu-customizer.s3.amazonaws.com/production/main.js";
-const VU_ENVIRONMENT = "production";
-
-export interface CustomizerConfig {
-  productId: number;
-  productName: string;
-  sku: string;
-  onRecipeGenerated?: (recipeId: string) => void;
-  onClose?: () => void;
-}
-
-export interface RecipeData {
-  recipeId: string;
-  productId: number;
-  productName: string;
-  sku: string;
-  timestamp: number;
+/**
+ * Check if the VU customizer is available
+ */
+export function isCustomizerAvailable(): boolean {
+  return typeof (window as any).customizer !== "undefined" && typeof (window as any).customizer.initializeCustomizer === "function";
 }
 
 /**
- * Initialize VU Customizer on the page
- * This loads the customizer script and sets up communication
+ * Initialize customizer with a variant ID
+ * This is a wrapper around the VU API: customizer.initializeCustomizer(variantID)
  */
-export async function initializeCustomizer(config: CustomizerConfig): Promise<void> {
-  return new Promise((resolve) => {
-    console.log("[VU] Initializing customizer for product:", config.productId);
-
-    // Wait for container to exist (with timeout)
-    let attempts = 0;
-    const maxAttempts = 20; // 2 seconds with 100ms intervals
-
-    const waitForContainer = () => {
-      const container = document.getElementById("vu-customizer-container");
-      if (container) {
-        console.log("[VU] Container found after", attempts * 100, "ms");
-        initializeScript();
-        return;
-      }
-
-      attempts++;
-      if (attempts < maxAttempts) {
-        setTimeout(waitForContainer, 100);
-      } else {
-        console.error("[VU] Container element not found after waiting");
-        resolve();
-      }
-    };
-
-    const initializeScript = () => {
-
-    console.log("[VU] Container found, loading script from:", VU_CUSTOMIZER_URL);
-
-    // Load the VU Customizer script
-    const script = document.createElement("script");
-    script.id = "vu-customizer";
-    script.src = VU_CUSTOMIZER_URL;
-    script.async = true;
-
-    // Set up data attributes for the customizer
-    script.setAttribute("data-variant", String(config.productId));
-    script.setAttribute("data-store-key", VU_STORE_KEY);
-    script.setAttribute("data-environment", VU_ENVIRONMENT);
-
-    // Listen for customizer ready
-    script.onload = () => {
-      console.log("[VU] Customizer script loaded successfully");
-
-      // Set up postMessage listener for recipe generation
-      window.addEventListener("message", (event) => {
-        if (event.data?.type === "VU_RECIPE_GENERATED") {
-          const recipeId = event.data.recipeId;
-          console.log("[VU] Recipe generated:", recipeId);
-          if (config.onRecipeGenerated && recipeId) {
-            config.onRecipeGenerated(recipeId);
-          }
-        }
-
-        if (event.data?.type === "VU_CUSTOMIZER_CLOSED") {
-          console.log("[VU] Customizer closed");
-          if (config.onClose) {
-            config.onClose();
-          }
-        }
-      });
-
-      resolve();
-    };
-
-    script.onerror = () => {
-      console.error("[VU] Failed to load VU Customizer script from:", VU_CUSTOMIZER_URL);
-      resolve();
-    };
-
-    console.log("[VU] Appending script to document body");
-    document.body.appendChild(script);
-    };
-
-    // Start waiting for container
-    waitForContainer();
-  });
+export function initCustomizer(variantID: number): void {
+  if (!isCustomizerAvailable()) {
+    console.error("[VU] Customizer not available");
+    return;
+  }
+  console.log("[VU] Initializing customizer with variantID:", variantID);
+  (window as any).customizer.initializeCustomizer(variantID);
 }
 
 /**
- * Change the variant being customized
- * Call this when switching between products
+ * Change variant (only use if users can switch between variants on the same page)
+ * Per VU docs: customizer.changeVariant(variantID, preCallback, postCallback)
  */
-export function changeVariant(productId: number): void {
-  if (window.customizer && typeof window.customizer.changeVariant === "function") {
-    window.customizer.changeVariant(productId);
+export function changeVariant(variantID: number, preCallback?: () => void, postCallback?: () => void): void {
+  if (typeof (window as any).customizer?.changeVariant !== "function") {
+    console.error("[VU] changeVariant not available");
+    return;
   }
-}
-
-/**
- * Clean up the customizer
- * Remove script and event listeners
- */
-export function destroyCustomizer(): void {
-  const script = document.getElementById("vu-customizer");
-  if (script) {
-    script.remove();
-  }
-
-  // Clear the customizer instance
-  if (window.customizer) {
-    delete (window as any).customizer;
-  }
+  console.log("[VU] Changing variant to:", variantID);
+  (window as any).customizer.changeVariant(variantID, preCallback, postCallback);
 }
 
 // Extend window type to include customizer
 declare global {
   interface Window {
     customizer?: {
-      changeVariant: (productId: number) => void;
+      initializeCustomizer: (variantID: number) => void;
+      changeVariant: (variantID: number, preCallback?: () => void, postCallback?: () => void) => void;
       addToCart?: () => void;
     };
   }

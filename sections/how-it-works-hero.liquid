@@ -1,0 +1,115 @@
+{%- style -%}
+  .how-it-works-hero {
+    background-color: {{ section.settings.background_color }};
+    padding: {{ section.settings.padding_top }}px 40px {{ section.settings.padding_bottom }}px 40px;
+  }
+
+  .how-it-works-hero > * {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .how-it-works-hero__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .how-it-works-hero__heading {
+    font-size: 48px;
+    font-weight: 700;
+    color: {{ section.settings.heading_color }};
+    margin-bottom: 16px;
+  }
+
+  .how-it-works-hero__breadcrumb {
+    font-size: 14px;
+    color: {{ section.settings.breadcrumb_color }};
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .how-it-works-hero__breadcrumb a {
+    color: {{ section.settings.breadcrumb_color }};
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .how-it-works-hero__breadcrumb a:hover {
+    opacity: 0.7;
+  }
+
+  @media (max-width: 768px) {
+    .how-it-works-hero__heading {
+      font-size: 36px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="how-it-works-hero">
+  <div class="how-it-works-hero__container">
+    <h1 class="how-it-works-hero__heading">{{ section.settings.heading }}</h1>
+    <div class="how-it-works-hero__breadcrumb">
+      <a href="/">HOME</a> > {{ section.settings.breadcrumb_text }}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "How It Works Hero",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Page Heading",
+      "default": "How It Works"
+    },
+    {
+      "type": "text",
+      "id": "breadcrumb_text",
+      "label": "Breadcrumb Text",
+      "default": "HOW IT WORKS"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "breadcrumb_color",
+      "label": "Breadcrumb Color",
+      "default": "#666666"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 20,
+      "max": 150,
+      "step": 10,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 20,
+      "max": 150,
+      "step": 10,
+      "default": 60,
+      "unit": "px"
+    }
+  ]
+}
+{% endschema %}

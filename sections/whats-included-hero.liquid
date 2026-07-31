@@ -1,0 +1,103 @@
+{%- style -%}
+  .whats-included-hero {
+    background-color: {{ section.settings.background_color }};
+    padding: {{ section.settings.padding_top }}px 40px {{ section.settings.padding_bottom }}px 40px;
+  }
+
+  .whats-included-hero__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .whats-included-hero__heading {
+    font-size: 48px;
+    font-weight: 700;
+    color: {{ section.settings.heading_color }};
+    margin-bottom: 30px;
+    line-height: 1.2;
+  }
+
+  .whats-included-hero__description {
+    font-size: 16px;
+    color: {{ section.settings.description_color }};
+    line-height: 1.6;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  @media (max-width: 768px) {
+    .whats-included-hero__heading {
+      font-size: 36px;
+    }
+
+    .whats-included-hero__description {
+      font-size: 15px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="whats-included-hero">
+  <div class="whats-included-hero__container">
+    <h1 class="whats-included-hero__heading">{{ section.settings.heading }}</h1>
+    <p class="whats-included-hero__description">{{ section.settings.description }}</p>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "What's Included Hero",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Everything You Need To Build A Successful Glove Brand"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "My Glove Brand provides the tools, support, and expertise to elevate your glove brand. From marketing to fulfillment, we've got it covered so you can focus on growing your business."
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Description Color",
+      "default": "#666666"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 20,
+      "max": 150,
+      "step": 10,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 20,
+      "max": 150,
+      "step": 10,
+      "default": 60,
+      "unit": "px"
+    }
+  ]
+}
+{% endschema %}

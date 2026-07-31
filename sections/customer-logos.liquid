@@ -1,0 +1,561 @@
+<style>
+  .customer-logos {
+    padding: 60px 40px;
+    background-color: #ffffff;
+  }
+
+  .customer-logos__container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .customer-logos__header {
+    margin-bottom: 40px;
+  }
+
+  .customer-logos__title {
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #000;
+  }
+
+  .customer-logos__subtitle {
+    font-size: 16px;
+    color: #666;
+  }
+
+  .customer-logos__info {
+    padding: 24px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    margin-bottom: 40px;
+  }
+
+  .customer-logos__info-text {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .customer-logos__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 32px;
+    margin-bottom: 40px;
+  }
+
+  .customer-logos__upload-card {
+    padding: 32px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+  }
+
+  .customer-logos__upload-card-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #000;
+  }
+
+  .customer-logos__upload-card-description {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 24px;
+  }
+
+  .customer-logos__upload-zone {
+    position: relative;
+    padding: 48px 24px;
+    border: 2px dashed #baad8c;
+    border-radius: 8px;
+    text-align: center;
+    background-color: #baad8c08;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    margin-bottom: 20px;
+  }
+
+  .customer-logos__upload-zone.has-logo {
+    border-style: solid;
+    background-color: #fff;
+    padding: 0;
+    cursor: default;
+  }
+
+  .customer-logos__upload-zone.has-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 8px;
+  }
+
+  .customer-logos__update-button {
+    display: block;
+    width: 100%;
+    margin-top: 16px;
+    padding: 12px 24px;
+    background-color: #baad8c;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .customer-logos__update-button:hover {
+    background-color: #9d9273;
+  }
+
+  .customer-logos__upload-zone:hover {
+    background-color: #baad8c15;
+    border-color: #9d9273;
+  }
+
+  .customer-logos__upload-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .customer-logos__upload-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+  }
+
+  .customer-logos__upload-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: #000;
+    margin-bottom: 8px;
+  }
+
+  .customer-logos__upload-hint {
+    font-size: 12px;
+    color: #999;
+  }
+
+  .customer-logos__preview {
+    padding: 16px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .customer-logos__preview-image {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+  }
+
+  .customer-logos__preview-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .customer-logos__preview-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #000;
+    word-break: break-all;
+  }
+
+  .customer-logos__preview-status {
+    font-size: 12px;
+    color: #999;
+    margin-top: 4px;
+  }
+
+  .customer-logos__tips {
+    padding: 24px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+  }
+
+  .customer-logos__tips h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    margin-top: 0;
+    color: #000;
+  }
+
+  .customer-logos__tips ul {
+    margin: 0;
+    padding-left: 20px;
+    color: #666;
+    font-size: 14px;
+    line-height: 1.8;
+  }
+
+  .customer-logos__message {
+    padding: 16px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    font-size: 14px;
+  }
+
+  .customer-logos__message--success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+
+  .customer-logos__message--error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+
+  .customer-logos__message--loading {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+  }
+
+  @media (max-width: 768px) {
+    .customer-logos {
+      padding: 40px 20px;
+    }
+
+    .customer-logos__title {
+      font-size: 36px;
+    }
+
+    .customer-logos__grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    .customer-logos__upload-card {
+      padding: 24px;
+    }
+
+    .customer-logos__upload-zone {
+      min-height: 150px;
+    }
+  }
+</style>
+
+<div class="customer-logos">
+  <div class="customer-logos__container">
+    <div class="customer-logos__header">
+      <h1 class="customer-logos__title">My Logos</h1>
+      <p class="customer-logos__subtitle">Upload and manage your logos</p>
+    </div>
+
+    <div class="customer-logos__info">
+      <p class="customer-logos__info-text">
+        📋 Upload your company logos to be applied to your custom glove designs. Supported formats: PNG, SVG, JPG. For best results, use high-resolution files (at least 300 DPI).
+      </p>
+    </div>
+
+    <div class="customer-logos__grid">
+      <div class="customer-logos__upload-card">
+        <h3 class="customer-logos__upload-card-title">🌐 Wrist Logo</h3>
+        <p class="customer-logos__upload-card-description">Logo displayed on the wrist of the glove</p>
+        <div class="customer-logos__upload-zone" data-zone="wrist">
+          <input type="file" class="customer-logos__upload-input logo-file-input" accept=".png,.svg,.jpg,.jpeg" data-zone="wrist">
+          <div class="customer-logos__upload-icon">📤</div>
+          <div class="customer-logos__upload-text">Click or drag to upload</div>
+          <div class="customer-logos__upload-hint">PNG, SVG, or JPG (max 10MB)</div>
+        </div>
+        <div id="wrist-preview-container"></div>
+      </div>
+
+      <div class="customer-logos__upload-card">
+        <h3 class="customer-logos__upload-card-title">👍 Thumb Logo</h3>
+        <p class="customer-logos__upload-card-description">Logo displayed on the thumb</p>
+        <div class="customer-logos__upload-zone" data-zone="thumb">
+          <input type="file" class="customer-logos__upload-input logo-file-input" accept=".png,.svg,.jpg,.jpeg" data-zone="thumb">
+          <div class="customer-logos__upload-icon">📤</div>
+          <div class="customer-logos__upload-text">Click or drag to upload</div>
+          <div class="customer-logos__upload-hint">PNG, SVG, or JPG (max 10MB)</div>
+        </div>
+        <div id="thumb-preview-container"></div>
+      </div>
+
+      <div class="customer-logos__upload-card">
+        <h3 class="customer-logos__upload-card-title">🖐️ Palm Stamp Logo</h3>
+        <p class="customer-logos__upload-card-description">Logo displayed on the palm</p>
+        <div class="customer-logos__upload-zone" data-zone="palm">
+          <input type="file" class="customer-logos__upload-input logo-file-input" accept=".png,.svg,.jpg,.jpeg" data-zone="palm">
+          <div class="customer-logos__upload-icon">📤</div>
+          <div class="customer-logos__upload-text">Click or drag to upload</div>
+          <div class="customer-logos__upload-hint">PNG, SVG, or JPG (max 10MB)</div>
+        </div>
+        <div id="palm-preview-container"></div>
+      </div>
+    </div>
+
+    <div class="customer-logos__tips">
+      <h4>💡 Tips:</h4>
+      <ul>
+        <li>Use high-resolution logos for best quality</li>
+        <li>PNG format with transparency works great</li>
+        <li>Your logos will be applied to all your custom orders</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = 'https://geqsjoshoiqftdfmbbuu.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdlcXNqb3Nob2lxZnRkZm1iYnV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNTc0ODQsImV4cCI6MjA4OTczMzQ4NH0.C5uREmtpklPCutu3hBWIoSUJwDXuXYJcGTPdRtsfVwU';
+  const VALID_TYPES = ['image/png', 'image/jpeg', 'image/svg+xml'];
+  const MAX_SIZE = 10 * 1024 * 1024;
+
+  async function initializeUpload() {
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const customerEmail = '{{ customer.email }}';
+
+    if (!customerEmail || customerEmail.includes('{')) {
+      console.error('Customer not logged in');
+      return;
+    }
+
+    // Load existing logos on page load (lazy load to avoid slowing page)
+    setTimeout(async () => {
+      try {
+        const { data: existing } = await supabase
+          .from('client_logos')
+          .select('wrist_logo_url, thumb_logo_url, palm_logo_url, wrist_logo_filename, thumb_logo_filename, palm_logo_filename')
+          .eq('user_email', customerEmail)
+          .limit(1)
+          .single();
+
+        if (existing) {
+          if (existing.wrist_logo_url) displayExistingLogo('wrist', existing.wrist_logo_url, existing.wrist_logo_filename);
+          if (existing.thumb_logo_url) displayExistingLogo('thumb', existing.thumb_logo_url, existing.thumb_logo_filename);
+          if (existing.palm_logo_url) displayExistingLogo('palm', existing.palm_logo_url, existing.palm_logo_filename);
+        }
+      } catch (err) {
+        console.error('Failed to load logos:', err);
+      }
+    }, 500);
+
+    const uploadLogo = async (slotKey, file) => {
+      if (!file || !VALID_TYPES.includes(file.type)) {
+        showMessage(slotKey, 'Only PNG, JPG, or SVG files allowed', 'error');
+        return;
+      }
+
+      if (file.size > MAX_SIZE) {
+        showMessage(slotKey, 'File must be under 10MB', 'error');
+        return;
+      }
+
+      showMessage(slotKey, 'Uploading...', 'loading');
+      showPreview(slotKey, file);
+
+      try {
+        const reader = new FileReader();
+
+        // Timeout after 30 seconds
+        const uploadTimeout = setTimeout(() => {
+          showMessage(slotKey, 'Upload timeout - file may be too large', 'error');
+        }, 30000);
+
+        reader.onload = async (e) => {
+          clearTimeout(uploadTimeout);
+          const base64Data = e.target.result;
+
+          // Get existing record
+          const { data: existing } = await supabase
+            .from('client_logos')
+            .select('id, version')
+            .eq('user_email', customerEmail)
+            .limit(1)
+            .single();
+
+          const urlField = `${slotKey}_logo_url`;
+          const fnField = `${slotKey}_logo_filename`;
+
+          if (existing) {
+            // Update existing
+            const { error: updateErr } = await supabase
+              .from('client_logos')
+              .update({
+                [urlField]: base64Data,
+                [fnField]: file.name,
+                version: existing.version + 1,
+                uploaded_at: new Date().toISOString()
+              })
+              .eq('id', existing.id);
+
+            if (updateErr) throw updateErr;
+          } else {
+            // Insert new
+            const { error: insertErr } = await supabase
+              .from('client_logos')
+              .insert({
+                user_email: customerEmail,
+                [urlField]: base64Data,
+                [fnField]: file.name,
+                version: 1,
+                uploaded_at: new Date().toISOString()
+              });
+
+            if (insertErr) throw insertErr;
+          }
+
+          showMessage(slotKey, 'Logo uploaded!', 'success');
+        };
+
+        reader.onerror = () => {
+          clearTimeout(uploadTimeout);
+          showMessage(slotKey, 'Failed to read file', 'error');
+        };
+
+        reader.readAsDataURL(file);
+      } catch (error) {
+        console.error('Upload error:', error);
+        showMessage(slotKey, error.message || 'Upload failed', 'error');
+      }
+    };
+
+    // File input handlers
+    document.querySelectorAll('.logo-file-input').forEach(input => {
+      input.addEventListener('change', (e) => {
+        const file = e.target.files?.[0];
+        const zone = e.target.dataset.zone;
+        if (file) uploadLogo(zone, file);
+      });
+    });
+
+    // Drag & drop
+    document.querySelectorAll('.customer-logos__upload-zone').forEach(zone => {
+      zone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        zone.style.borderColor = '#9d9273';
+        zone.style.backgroundColor = 'rgba(186, 173, 140, 0.15)';
+      });
+
+      zone.addEventListener('dragleave', () => {
+        zone.style.borderColor = '#baad8c';
+        zone.style.backgroundColor = 'rgba(186, 173, 140, 0.08)';
+      });
+
+      zone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        zone.style.borderColor = '#baad8c';
+        zone.style.backgroundColor = 'rgba(186, 173, 140, 0.08)';
+        const file = e.dataTransfer.files?.[0];
+        const input = zone.querySelector('.logo-file-input');
+        if (file && input) {
+          const zoneKey = input.dataset.zone;
+          uploadLogo(zoneKey, file);
+        }
+      });
+    });
+  }
+
+  function showMessage(zone, message, type) {
+    const container = document.getElementById(`${zone}-preview-container`);
+    const messageEl = document.createElement('div');
+    messageEl.className = `customer-logos__message customer-logos__message--${type}`;
+    messageEl.textContent = message;
+
+    const oldMessage = container.querySelector('.customer-logos__message');
+    if (oldMessage) oldMessage.remove();
+
+    container.insertBefore(messageEl, container.firstChild);
+  }
+
+  function showPreview(zone, file) {
+    const container = document.getElementById(`${zone}-preview-container`);
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      const preview = document.createElement('div');
+      preview.className = 'customer-logos__preview';
+
+      const img = document.createElement('img');
+      img.className = 'customer-logos__preview-image';
+      img.src = e.target.result;
+
+      const info = document.createElement('div');
+      info.className = 'customer-logos__preview-info';
+
+      const name = document.createElement('div');
+      name.className = 'customer-logos__preview-name';
+      name.textContent = file.name;
+
+      const status = document.createElement('div');
+      status.className = 'customer-logos__preview-status';
+      status.textContent = `${(file.size / 1024).toFixed(2)} KB`;
+
+      info.appendChild(name);
+      info.appendChild(status);
+
+      preview.appendChild(img);
+      preview.appendChild(info);
+
+      const oldPreview = container.querySelector('.customer-logos__preview');
+      if (oldPreview) oldPreview.remove();
+
+      container.appendChild(preview);
+    };
+
+    reader.readAsDataURL(file);
+  }
+
+  function displayExistingLogo(zone, logoUrl, filename) {
+    const zone_elem = document.querySelector(`[data-zone="${zone}"]`);
+    const container = document.getElementById(`${zone}-preview-container`);
+    const input = document.querySelector(`[data-zone="${zone}"].logo-file-input`);
+
+    if (zone_elem) {
+      zone_elem.innerHTML = '';
+      zone_elem.classList.add('has-logo');
+      const img = document.createElement('img');
+      img.src = logoUrl;
+      zone_elem.appendChild(img);
+
+      // Add update button
+      const button = document.createElement('button');
+      button.className = 'customer-logos__update-button';
+      button.textContent = 'Upload New';
+      button.type = 'button';
+      button.onclick = (e) => {
+        e.preventDefault();
+        if (input) input.click();
+      };
+      zone_elem.appendChild(button);
+    }
+
+    if (container) {
+      container.innerHTML = '';
+    }
+  }
+
+  if (window.supabase) {
+    initializeUpload();
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Customer Logos",
+  "settings": []
+}
+{% endschema %}

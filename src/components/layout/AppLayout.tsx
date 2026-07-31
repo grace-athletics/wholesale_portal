@@ -42,6 +42,30 @@ export function AppLayout({ variant = "client" }: AppLayoutProps) {
   const location = useLocation();
   const [onboardingStep, setOnboardingStep] = useState<OnboardingStep>(null);
 
+  // Load VU Customizer script once for client portal
+  useEffect(() => {
+    if (isAdminLayout) return;
+
+    // Check if script already exists
+    if (document.getElementById("customizer")) return;
+
+    // Load VU Customizer script per their documentation
+    // NOTE: We set an initial variant so the script can initialize
+    const script = document.createElement("script");
+    script.id = "customizer";
+    script.src = "https://vu-customizer.s3.amazonaws.com/production/main.js";
+    script.async = true;
+    // Set initial variant so customizer initializes (will be changed via changeVariant())
+    script.setAttribute("data-variant", "2939");
+
+    script.onload = () => {
+      console.log("[VU] Customizer script onload fired - customizer should now be available");
+    };
+
+    document.body.appendChild(script);
+    console.log("[VU] Appended customizer script with data-variant=2939");
+  }, [isAdminLayout]);
+
   // Load onboarding state once user is known (client portal only)
   useEffect(() => {
     if (isAdminLayout || !user?.id) return;

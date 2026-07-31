@@ -1,0 +1,220 @@
+<style>
+  .customer-subscriptions {
+    padding: 60px 40px;
+    background-color: #ffffff;
+  }
+
+  .customer-subscriptions__container {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .customer-subscriptions__header {
+    margin-bottom: 60px;
+    text-align: center;
+  }
+
+  .customer-subscriptions__title {
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #000;
+  }
+
+  .customer-subscriptions__subtitle {
+    font-size: 16px;
+    color: #666;
+  }
+
+  .customer-subscriptions__plan-card {
+    padding: 40px;
+    border: 2px solid #baad8c;
+    border-radius: 8px;
+    background: #fff;
+    margin-bottom: 40px;
+  }
+
+  .customer-subscriptions__plan-header {
+    margin-bottom: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #eee;
+  }
+
+  .customer-subscriptions__plan-name {
+    font-size: 28px;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 8px;
+  }
+
+  .customer-subscriptions__plan-price {
+    font-size: 24px;
+    font-weight: 600;
+    color: #baad8c;
+  }
+
+  .customer-subscriptions__plan-price-detail {
+    font-size: 14px;
+    color: #666;
+    margin-top: 4px;
+  }
+
+  .customer-subscriptions__plan-status {
+    display: inline-block;
+    padding: 6px 16px;
+    background-color: #4caf5030;
+    color: #2e7d32;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 12px;
+    margin-top: 12px;
+  }
+
+  .customer-subscriptions__plan-features {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 24px;
+  }
+
+  .customer-subscriptions__plan-features li {
+    padding: 12px 0;
+    color: #666;
+    font-size: 14px;
+    border-bottom: 1px solid #eee;
+  }
+
+  .customer-subscriptions__plan-features li:last-child {
+    border-bottom: none;
+  }
+
+  .customer-subscriptions__plan-features li:before {
+    content: "✓ ";
+    color: #baad8c;
+    font-weight: 600;
+    margin-right: 8px;
+  }
+
+  .customer-subscriptions__button {
+    display: inline-block;
+    padding: 12px 32px;
+    background-color: #baad8c;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-decoration: none;
+    margin-right: 12px;
+  }
+
+  .customer-subscriptions__button:hover {
+    background-color: #9d9273;
+  }
+
+  .customer-subscriptions__button--secondary {
+    background-color: #f5f5f5;
+    color: #000;
+    border: 1px solid #ddd;
+  }
+
+  .customer-subscriptions__button--secondary:hover {
+    background-color: #eee;
+  }
+
+  .customer-subscriptions__billing-info {
+    padding: 24px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    margin-top: 24px;
+  }
+
+  .customer-subscriptions__billing-info h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #000;
+  }
+
+  .customer-subscriptions__billing-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    font-size: 14px;
+    color: #666;
+  }
+
+  @media (max-width: 768px) {
+    .customer-subscriptions {
+      padding: 40px 20px;
+    }
+
+    .customer-subscriptions__title {
+      font-size: 36px;
+    }
+
+    .customer-subscriptions__plan-card {
+      padding: 24px;
+    }
+  }
+</style>
+
+<div class="customer-subscriptions">
+  <div class="customer-subscriptions__container">
+    <div class="customer-subscriptions__header">
+      <h1 class="customer-subscriptions__title">Your Subscription</h1>
+      <p class="customer-subscriptions__subtitle">View and manage your membership plan</p>
+    </div>
+
+    <div class="customer-subscriptions__plan-card">
+      <div class="customer-subscriptions__plan-header">
+        <div class="customer-subscriptions__plan-name">Wholesale Member</div>
+        <div class="customer-subscriptions__plan-price">$49 <span class="customer-subscriptions__plan-price-detail">/ month</span></div>
+        <div class="customer-subscriptions__plan-status">Active</div>
+      </div>
+
+      <ul class="customer-subscriptions__plan-features">
+        <li>Access to custom glove builder</li>
+        <li>Logo management and uploads</li>
+        <li>Order management dashboard</li>
+        <li>Bulk order capabilities</li>
+        <li>Quick order templates</li>
+        <li>Priority customer support</li>
+      </ul>
+
+      <button class="customer-subscriptions__button">Manage Subscription</button>
+      <button class="customer-subscriptions__button customer-subscriptions__button--secondary">View Invoice History</button>
+
+      <div class="customer-subscriptions__billing-info">
+        <h3>Billing Details</h3>
+        <div class="customer-subscriptions__billing-item">
+          <span>Next Billing Date:</span>
+          <strong>{{ "now" | date: "%B %d, %Y" }}</strong>
+        </div>
+        <div class="customer-subscriptions__billing-item">
+          <span>Billing Method:</span>
+          <strong>Credit Card ending in 4242</strong>
+        </div>
+        <div class="customer-subscriptions__billing-item">
+          <span>Auto-renew:</span>
+          <strong>Enabled</strong>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align: center; padding: 40px 0;">
+      <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 16px;">Want to cancel?</h3>
+      <p style="color: #666; margin-bottom: 24px; font-size: 14px;">We'd hate to see you go. If you have any feedback, please let us know.</p>
+      <button class="customer-subscriptions__button customer-subscriptions__button--secondary">Cancel Subscription</button>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Customer Subscriptions",
+  "settings": []
+}
+{% endschema %}

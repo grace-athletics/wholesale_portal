@@ -4,12 +4,17 @@ import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { ExternalLink, Loader2 } from "lucide-react";
 
 export default function Account() {
   const { profile, isSubscribed } = useAuth();
   const [portalLoading, setPortalLoading] = useState(false);
+  const [passwordLoading, setPasswordLoading] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleManageBilling = async () => {
     setPortalLoading(true);
@@ -25,6 +30,39 @@ export default function Account() {
       toast.error(err instanceof Error ? err.message : "Failed to open billing portal");
     } finally {
       setPortalLoading(false);
+    }
+  };
+
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!newPassword || !confirmPassword) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return;
+    }
+
+    setPasswordLoading(true);
+    try {
+      const { error } = await supabase.auth.updateUser({ password: newPassword });
+      if (error) throw error;
+
+      toast.success("Password changed successfully!");
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to change password");
+    } finally {
+      setPasswordLoading(false);
     }
   };
 
@@ -68,6 +106,46 @@ export default function Account() {
             Manage Billing
           </Button>
         )}
+      </div>
+
+      <div className="rounded-lg border bg-card p-6 space-y-4">
+        <h2 className="font-semibold">Change Password</h2>
+        <form onSubmit={handleChangePassword} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="new-password">New Password</Label>
+            <Input
+              id="new-password"
+              type="password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              placeholder="Enter new password"
+              disabled={passwordLoading}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="confirm-password">Confirm Password</Label>
+            <Input
+              id="confirm-password"
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Confirm new password"
+              disabled={passwordLoading}
+            />
+          </div>
+
+          <Button type="submit" size="sm" disabled={passwordLoading}>
+            {passwordLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Updating...
+              </>
+            ) : (
+              "Change Password"
+            )}
+          </Button>
+        </form>
       </div>
 
       <div className="rounded-lg border bg-card p-6 space-y-3">

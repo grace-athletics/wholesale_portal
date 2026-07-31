@@ -1,0 +1,30 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "whats_included_hero": {
+      "type": "whats-included-hero",
+      "settings": {}
+    },
+    "whats_included_features": {
+      "type": "whats-included-features",
+      "settings": {}
+    },
+    "cta_section": {
+      "type": "cta-section",
+      "settings": {}
+    }
+  },
+  "order": [
+    "whats_included_hero",
+    "whats_included_features",
+    "cta_section"
+  ]
+}

@@ -1,0 +1,263 @@
+{%- style -%}
+  .impact {
+    padding: {{ section.settings.padding_top }}px 40px {{ section.settings.padding_bottom }}px 40px;
+    background-color: {{ section.settings.background_color }};
+  }
+
+  .impact__label {
+    color: {{ section.settings.accent_color }} !important;
+  }
+
+  .impact__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .impact__label {
+    color: #baad8c;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .impact__headline {
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 60px;
+    max-width: 600px;
+  }
+
+  .impact__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .impact__image {
+    position: relative;
+  }
+
+  .impact__image img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .impact__flags {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+    font-size: 32px;
+  }
+
+  .impact__content {
+    padding: 40px;
+    background: #f9f9f9;
+    border-radius: 8px;
+  }
+
+  .impact__content h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #000;
+  }
+
+  .impact__benefits {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .impact__benefits li {
+    display: flex;
+    align-items: flex-start;
+    font-size: 15px;
+    margin-bottom: 16px;
+    color: #333;
+    line-height: 1.5;
+  }
+
+  .impact__benefits li:before {
+    content: "✓";
+    color: #baad8c;
+    font-weight: bold;
+    margin-right: 12px;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .impact__cta {
+    display: inline-block;
+    margin-top: 30px;
+    padding: 14px 32px;
+    background-color: #000;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 24px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .impact__cta:hover {
+    background-color: #333;
+  }
+
+  @media (max-width: 768px) {
+    .impact__grid {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    .impact__headline {
+      font-size: 36px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="impact">
+  <div class="impact__container">
+    <div class="impact__label">{{ section.settings.label }}</div>
+    <h2 class="impact__headline">{{ section.settings.headline }}</h2>
+
+    <div class="impact__grid">
+      <div class="impact__image">
+        {% if section.settings.main_image %}
+          <img src="{{ section.settings.main_image | image_url: width: 500 }}" alt="Glove Builder">
+        {% endif %}
+        <div class="impact__flags">
+          {{ section.settings.flags }}
+        </div>
+      </div>
+
+      <div class="impact__content">
+        <h3>{{ section.settings.content_headline }}</h3>
+        <p>{{ section.settings.content_description }}</p>
+
+        <ul class="impact__benefits">
+          <li>{{ section.settings.benefit1 }}</li>
+          <li>{{ section.settings.benefit2 }}</li>
+          <li>{{ section.settings.benefit3 }}</li>
+          <li>{{ section.settings.benefit4 }}</li>
+        </ul>
+
+        <a href="{{ section.settings.cta_link }}" class="impact__cta">{{ section.settings.cta_text }}</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Impact",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Section Label",
+      "default": "The Impact"
+    },
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "Headline",
+      "default": "Increase Sales With Our 3D Glove Builder"
+    },
+    {
+      "type": "image_picker",
+      "id": "main_image",
+      "label": "Main Image"
+    },
+    {
+      "type": "text",
+      "id": "flags",
+      "label": "Flag Emojis",
+      "default": "🇺🇸 🇬🇧 🇳🇱"
+    },
+    {
+      "type": "text",
+      "id": "content_headline",
+      "label": "Content Headline",
+      "default": "Enhanced Customer Experience"
+    },
+    {
+      "type": "textarea",
+      "id": "content_description",
+      "label": "Content Description",
+      "default": "The introduction of the My Glove Brand's 3D Glove Builder will bring a significant impact to your sales. Here's how:"
+    },
+    {
+      "type": "text",
+      "id": "benefit1",
+      "label": "Benefit 1",
+      "default": "Enhanced Customer Experience: Customers will now see a highly accurate representation of their custom gloves, leading to increased confidence in their purchases."
+    },
+    {
+      "type": "text",
+      "id": "benefit2",
+      "label": "Benefit 2",
+      "default": "Customization Empowerment: Customers will have the ability to fully customize their gloves without relying on design assistance, streamlining the customization process."
+    },
+    {
+      "type": "text",
+      "id": "benefit3",
+      "label": "Benefit 3",
+      "default": "Sales Increase: The user-friendly and engaging configurator will contribute to at least a 30% increase in sales."
+    },
+    {
+      "type": "text",
+      "id": "benefit4",
+      "label": "Benefit 4",
+      "default": "Customer Satisfaction: Feedback from customers highlighting their appreciation for the detailed visualization and ease of use will be priceless."
+    },
+    {
+      "type": "text",
+      "id": "cta_link",
+      "label": "CTA Link",
+      "default": "/pages/whats-included"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA Text",
+      "default": "What's Included"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color (Label)",
+      "default": "#baad8c"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 20,
+      "max": 150,
+      "step": 10,
+      "default": 80,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 20,
+      "max": 150,
+      "step": 10,
+      "default": 80,
+      "unit": "px"
+    }
+  ]
+}
+{% endschema %}

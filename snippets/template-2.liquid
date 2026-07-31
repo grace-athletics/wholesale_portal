@@ -1,0 +1,2939 @@
+<style>
+    /*
+    This is the main CSS file for the customizer.
+    It is used to style the customizer modal.
+    It is also used to style the loading modal.
+    It is also used to style the failed loading modal.
+  */
+  .customizer-tab-summary-items {
+    display: flex;
+    gap: 20px;
+}
+
+
+  .vu-main-hidden {
+      display: none !important;
+  }
+
+  .customizer-tab,
+  #customizer-perspectives {
+      display: none;
+  }
+
+  .customizer-add-to-cart-button {
+      display: none;
+  }
+
+  .customizer-add-to-cart-button-duplicate {
+      display: none;
+  }
+
+  .customizer-input-font-selector-container {
+      display: none;
+  }
+
+  #overlay-popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 100111;
+  }
+
+  .image-upload-uploaded-images-container {
+      display: none;
+  }
+
+  #image-upload-modal {
+      display: none;
+  }
+
+  .customizer-modal-content {
+      height: 100%;
+  }
+
+  #image-upload-placement-modal,
+  #image-upload-modal {
+      height: 100%;
+      position: fixed;
+      height: 100%;
+      max-height: 500px;
+      width: 100%;
+      max-width: 800px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      overflow: auto;
+      border: solid 1px lightgrey;
+      border-radius: 10px;
+      z-index: 1;
+      padding: 30px;
+  }
+
+  button.customizer-close-button {
+      z-index: 1000;
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      text-decoration: underline;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+  }
+
+  .customizer-image-upload-element-button {
+      border: solid 1px;
+      border-radius: var(--font-heading-family);
+      padding: 5px 20px;
+      text-transform: uppercase;
+      cursor: pointer;
+      line-height: 1;
+      border-radius: var(--buttons-radius);
+      height: 40px;
+      align-items: center;
+      display: flex;
+  }
+
+  .customizer-image-clear-element-button {
+      text-decoration: underline;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: var(--brand-color);
+      font-size: 14px;
+      font-weight: 400;
+  }
+
+  .customizer-modal-content hr {
+      margin: 15px 0;
+  }
+
+  .customizer-image-upload-modal-body>div:last-child {
+      margin: 0 !important;
+  }
+
+
+  .customizer-list-element-html-item.customizer-list-element-item-selected {
+      font-weight: bold;
+  }
+
+  .customizer-image-manipulation-tools button {
+      padding: 10px 20px;
+      border-radius: 50px;
+      border: solid 1px;
+      background: transparent;
+      cursor: pointer;
+      border-radius: var(--buttons-radius);
+  }
+
+  .customizer-tab-body .customizer-tab-body-summary,
+  .customizer-tab-summary,
+  .customizer-tab-summary-item-quantity,
+  .customizer-tab-summary-item-element-name,
+  .customizer-tab-icon,
+  .customizer-tab.customizer-tab-selected .customizer-tab-summary {
+      display: none;
+  }
+
+  .customizer-tab.customizer-tab-selected .customizer-tab-summary,
+  .customizer-tab.customizer-tab-selected .customizer-tab-name {
+      display: flex;
+      justify-content: center;
+  }
+
+  .customizer-list-element-html-item-name {
+      cursor: pointer;
+      color: rgba(0, 0, 0, 0.75);
+  }
+
+  .customizer-list-element-html-item-name:hover {
+      color: rgba(0, 0, 0, 1);
+  }
+
+  .customizer-list-element-html.customizer-element {
+      display: flex;
+      gap: 10px;
+  }
+
+
+  .customizer-image-clear-element-button,
+  .customizer-element-title {
+      font-weight: bold;
+      width: max-content;
+      min-width: fit-content;
+      font-weight: bold;
+      font-family: var(--font-heading-family);
+  }
+  .customizer-element-title{
+      font-size: 16px;
+      color: black;
+      margin-bottom: 5px;
+  }
+
+  .wrapper-div {
+      padding: 32px;
+      padding-left: 25px;
+      padding-right: 25px;
+      padding-bottom: 120px;
+      padding-top: 70px;
+      overflow-y: auto;
+      position: relative;
+      height: calc(100dvh - 40px);
+      background-color: #fff;
+  }
+
+  .splide__track,
+  .customizer-tab-body-elements {
+      padding-left: 5px;
+      padding-right: 5px;
+  }
+
+  .customizer-list-element-select {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      padding: 5px 10px;
+      border: 1px solid #808080;
+      border-radius: 2px;
+      background-color: #fff;
+      width: 100%;
+      cursor: pointer;
+      font-family: din-2014;
+      font-size: 20px;
+      color: #b3b3b3;
+      height: 40px;
+      position: relative;
+  }
+  #list-element-select-select_multiple:after{
+      display: none;
+  }
+
+  .customizer-list-element-select:after {
+      content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 17 16' height='16' width='17'%3E%3Cpath stroke-linecap='round' stroke='black' d='M0.5 4.5L8.5 12.5L16.5 4.5'/%3E%3C/svg%3E");
+      position: absolute;
+      top: 50%;
+      right: 20px;
+      transform: translateY(-50%);
+      height: 15px;
+      width: 17px;
+      pointer-events: none;
+      display: block;
+  }
+
+  .customizer-tab.customizer-tab-selected {
+      font-weight: bold;
+      font-size: 20px;
+      text-transform: uppercase;
+  }
+
+  .customizer-tab-summary-item {
+      font-weight: 400;
+      font-size: 16px;
+      text-transform: uppercase;
+  }
+
+  /* }
+      #customizer-main-perspective {
+          background-color: #a36666;
+          height: 100%;
+          top: 0;
+          width: 100%;
+          left: 0;
+          position: relative;
+      } */
+  #customizer-main-perspective {
+      background-position: center;
+      background-size: cover;
+      width: 100%;
+      position: relative;
+      margin: 0;
+  }
+
+  canvas {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      height: 100% !important;
+      width: 100% !important;
+  }
+
+  #customizer-main-perspective {
+      transition: height 0.3s;
+      height: calc(100dvh - 40px);
+  }
+
+  .customizer-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+
+  .customizer-hidden {
+      display: none;
+  }
+
+  .option-hide {
+      display: none !important;
+  }
+
+  .customizer-modal-wrapper {
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      max-height: 100%;
+      position: relative;
+      padding: 20px;
+  }
+
+  .customizer-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      border-bottom: 1px solid #e5e5e5;
+  }
+
+  .customizer-modal-title {
+      font-weight: bold;
+      font-size: 1.2rem;
+  }
+
+  .customizer-modal-close {
+      cursor: pointer;
+  }
+
+  .wrapper-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 300px;
+  }
+
+
+  #customizer-save-button:after,
+  #customizer-share-button:after {
+      content: '';
+      background-size: 50px 50px;
+      width: 50px;
+      height: 50px;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 6px;
+  }
+
+  #customizer-save-button:after {
+      background-image: url(https://cdn.shopify.com/s/files/1/0713/3957/3557/files/Icon_Star_2.png?v=1694126418);
+  }
+
+  #customizer-share-button:after {
+      background-image: url(https://cdn.shopify.com/s/files/1/0713/3957/3557/files/Icon_Share.png?v=1691697117);
+  }
+
+  #customizer-reset-button:after {
+      background-image: url(https://bauer-ca-dev.myshopify.com/cdn/shop/files/vu-restart.svg?v=1707853380);
+  }
+
+  #customizer-reset-button:after {
+      content: "";
+      display: block;
+      width: 24px;
+      height: 24px;
+      background-size: contain;
+      background-repeat: no-repeat;
+  }
+
+  #customizer-reset-button {
+      display: flex;
+      gap: 10px;
+      background: transparent;
+      border: none;
+      text-transform: uppercase;
+      align-items: center;
+      font-weight: 700;
+      font-size: 16px;
+  }
+
+  #customizer-save-button,
+  #customizer-share-button {
+      background: transparent;
+      border: none;
+      color: transparent;
+      cursor: pointer;
+      position: relative;
+      height: 55px;
+      width: 40px;
+  }
+
+  .top-right-buttons {
+      display: flex;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      gap: 20px;
+      z-index: 1;
+      align-items: center;
+      z-index: 111;
+  }
+
+  div#customizer-saved-item-count:before {
+      content: ' ';
+      background-color: var(--brand-color);
+      width: 20px;
+      height: 20px;
+      border-radius: 50px;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: -1;
+      cursor: pointer;
+  }
+
+  div#customizer-saved-item-count {
+      position: absolute;
+      left: 36px;
+      z-index: 1;
+      font-size: 12px;
+      color: white;
+      top: -6px;
+      cursor: pointer;
+  }
+
+  #share-link {
+      text-align: center;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100%;
+      height: 100%;
+      max-width: 580px;
+      max-height: 270px;
+      background: white;
+      padding: 30px;
+      color: #1A4560;
+      text-transform: uppercase;
+      transform: translate(-50%, -50%);
+      z-index: 111111;
+      justify-content: center;
+      flex-direction: column;
+      display: none;
+  }
+  .start-over-confirm{
+      z-index: 111111 !important;
+  }
+  #share-link h2{
+      font-family: var(--font-heading-family);
+  }
+
+  p#customizer-share-link {
+      color: grey;
+      border: solid 1px lightgrey;
+      padding: 5px;
+      overflow: auto;
+      border-radius: var(--other-radius);
+      text-transform: lowercase;
+      height: 41px;
+      margin:0;
+  }
+
+  .shareable-link {
+      max-width: 70%;
+      overflow: auto;
+      white-space: nowrap;
+  }
+
+  #copy-button {
+      background-color: var(--brand-color);
+      font-family: var(--font-body-family);
+      font-weight: bold;
+      border:none;
+      padding: 10px 15px;
+      color: #ffffff;
+  }
+  #copy-button::before,
+  #copy-button::after{
+      box-shadow: none;
+  }
+  #copy-button:hover{
+      background-color: black;
+  }
+  .top-left-buttons {
+      display: flex;
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 1;
+      align-items: center;
+      gap: 30px;
+      color: var(--customizer-text-color);
+  }
+
+  .top-left-buttons .customizer-product-name {
+      color: var(--customizer-text-color);
+  }
+
+  .wrapper-for-mob {
+      display: flex;
+      max-width: 220px;
+      flex-direction: column;
+  }
+
+  .customizer-price {
+      font-size: 25px;
+      font-weight: 700;
+      letter-spacing: 1px;
+  }
+
+  #customizer-add-to-cart-button-duplicate,
+  .customizer-add-to-cart-button {
+      background-color: var(--brand-color);
+      color: var(--customizer-text-color);
+      font-size: 20px;
+      cursor: pointer;
+      z-index: 1;
+      border-radius: var(--buttons-radius);
+      padding: 5px 20px;
+      font-weight: 100;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border: none;
+      line-height: 1.9;
+      font-family: var(--font-body-family);
+      font-weight: bold;
+  }
+  button.customizer-add-to-cart-button:after {
+      content: url(https://bauer-ca-dev.myshopify.com/cdn/shop/files/bag-16px.svg?v=1709305630);
+  }
+
+  #customizer-add-to-cart-button-duplicate:hover,
+  .customizer-add-to-cart-button:hover {
+      color: black;
+  }
+
+
+  .bottom-right {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+  }
+
+  .hide-options {
+      cursor: pointer;
+      position: absolute;
+      bottom: -60px;
+      left: 40px;
+  }
+
+  .hide-options svg {
+      transition: transform 0.3s ease;
+  }
+
+  .hide-options.rotated svg {
+      transform: rotate(180deg);
+  }
+
+  .viewspecs {
+      font-family: var(--font-body-family);
+      color: var(--customizer-text-color);
+      position: absolute;
+      bottom: 60px;
+      right: 40px;
+      font-size: 14px;
+      font-weight: bold;
+      padding: 10px 20px;
+      cursor: pointer;
+      z-index: 1;
+      border: solid 1px var(--customizer-text-color);
+      border-radius: var(--buttons-radius);
+      font-weight: 400;
+      letter-spacing: 1px;
+  }
+
+  #close {
+      color: var(--text-secondary-color);
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 1;
+      border: solid 1px white;
+      border-radius: var(--buttons-radius);
+      padding: 5px 20px;
+      font-weight: 100;
+      letter-spacing: 1px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 48px;
+  }
+
+
+
+  .atc-div .customizer-add-to-cart-button {
+      align-items: center;
+      display: flex;
+      justify-content: center;
+  }
+
+  .atc-div .customizer-price {
+      font-size: 24px;
+      color: #191919;
+      font-weight: bold;
+  }
+
+  .customizer-price {
+      color: var(--customizer-text-color);
+  }
+
+  div#customizer-summary h3 {
+      grid-column: 1 / 5;
+      text-align: center;
+      margin-bottom: 0;
+      font-size: 25px;
+  }
+
+  #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+      opacity: 0;
+      display: none;
+      background-color: white;
+      z-index: -1;
+  }
+
+  .atc-div {
+      display: flex;
+      align-items: center;
+      justify-content: end;
+      padding: 15px 0;
+      max-width: fit-content;
+      gap: 15px;
+      margin-left: auto;
+      padding-right: 30px;
+  }
+
+  .atc-div p {
+      font-weight: bold;
+      margin: 0;
+  }
+
+
+  .wrapper-saved {
+      display: none;
+      position: absolute;
+      top: 70px;
+      right: 280px;
+      width: 300px;
+      overflow: visible;
+      z-index: 111;
+      background-color: white;
+  }
+
+  .headers-items {
+      display: flex;
+      padding: 10px 20px;
+      justify-content: space-between;
+  }
+
+  div#customizer-saved-items {
+      display: block;
+      width: 100%;
+      max-width: 350px;
+      background: white;
+      z-index: 1;
+      top: 0;
+      max-height: 300px;
+      overflow: auto;
+  }
+
+  .wrapper-saved:after {
+      content: "";
+      position: absolute;
+      top: -28px;
+      left: 32px;
+      margin-left: -15px;
+      border-width: 15px;
+      border-style: solid;
+      border-color: transparent transparent white transparent;
+  }
+
+  div.customizer-saved-item {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      padding: 8px 15px;
+      align-items: center;
+  }
+
+  .customizer-saved-item-date {
+      font-weight: bold;
+      position: relative;
+  }
+
+  a.customizer-saved-item-remove {
+      grid-column: 2 / 3;
+      margin-top: -10px;
+      cursor: pointer;
+      text-decoration: underline;
+      color: var(--brand-color);
+      font-size: 14px;
+      text-transform: uppercase;
+      font-weight: 600;
+      width: fit-content;
+      font-family: var(--font-body-family);
+  }
+  .start-over-confirm * {
+    font-family: var(--font-body-family);
+}
+
+  .customizer-saved-item-image {
+      object-fit: cover;
+      grid-row: 1 / 4;
+      width: 85px;
+      height: 85px;
+      padding-left: 0;
+      margin-right: 30px;
+  }
+
+  svg.customizer-saved-item-loader {
+      display: none;
+  }
+
+  #share-closed {
+      padding: 2px 3px;
+  }
+
+  .share-items {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      justify-content: center;
+      margin: auto;
+      margin-top: 30px;
+      width: 100%;
+  }
+
+  #share-closed,
+  #reset-closed {
+      font-size: 10px;
+      padding: 5px;
+      width: 20px;
+      height: 20px;
+      border-radius: var(--buttons-radius);
+      cursor: pointer;
+      line-height: 1;
+      border: solid 1px;
+      margin-left: auto;
+      color: black;
+  }
+
+
+  div#customizer-loader-bodies svg {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+  }
+
+  div#customizer-loader-bodies {
+      height: 72dvh;
+      top: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+  }
+
+  #customizer-tab-container #customizer-loader-tabs {
+      display: none !important;
+  }
+
+  .customizer-product-name {
+      font-size: var(--font-title-size);
+      line-height: 1;
+      margin: 0;
+      letter-spacing: 0;
+      text-transform: uppercase;
+  }
+
+  #customizer-root {
+      position: relative;
+  }
+
+  div#customizer-disclaimer {
+      text-align: center;
+      margin-top: 5px;
+  }
+
+  input.customizer-input-element-input,
+  .selected-font-display {
+      font-size: 16px;
+      font-family: var(--font-body-family);
+      color: black;
+      border-radius: var(--other-radius);
+  }
+
+  .wrapper-nav {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 10px;
+      position: relative;
+      color: black;
+      font-weight: bold;
+  }
+
+  .wrapper-bottom-nav {
+      display: flex;
+      justify-content: space-between;
+      position: fixed;
+      bottom: 20px;
+      right: 25px;
+      width: 100%;
+      background-color: rgba(255, 255, 255, 0.794);
+      padding: 10px;
+      padding-bottom: 20px;
+      z-index: 1000;
+      max-width: 395px;
+      align-items: center;
+  }
+
+  div#customizer-tab-prev {
+  }
+
+  div#customizer-tab-prev {
+      cursor: pointer;
+      height: 40px;
+      width: 40px;
+  }
+
+  div#customizer-tab-next {
+      border-radius: 50px;
+      cursor: pointer;
+      letter-spacing: 2px;
+      display: flex;
+      align-items: center;
+      padding-right: 20px;
+      padding-left: 20px;
+      background-color: var(--brand-color);
+      color: #fff;
+      gap: 5px;
+      height: 44px;
+  }
+  .customizer-element-value-container {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+  }
+  div#customizer-tab-next:hover{
+      background: black;
+  }
+
+  div#customizer-tab-next:hover {
+      color: white;
+      background: black;
+  }
+
+  .wrapper-bottom-nav .customizer-add-to-cart-button {
+      border-radius: 50px;
+      cursor: pointer;
+      letter-spacing: 2px;
+      align-items: center;
+      padding-right: 10px;
+      padding-left: 10px;
+      background-color: var(--brand-color);
+      color: #fff;
+      gap: 10px;
+      height: 44px;
+      border: none;
+      text-transform: uppercase;
+      font-size: 15px;
+      letter-spacing: 0;
+      justify-content: center;
+      padding-left: 30px;
+      padding-right: 30px;
+  }
+
+  .wrapper-bottom-nav .customizer-add-to-cart-button:hover {
+      background: black
+  }
+
+  div#customizer-tab-next svg {
+      fill: #fff;
+      width: 20px;
+      height: 20px;
+  }
+
+
+  div#customizer-tab-next svg {
+      width: 20px;
+      height: 20px;
+  }
+  div#customizer-tab-prev svg{
+      width: 40px;
+      height: 40px;
+  }
+  .input-element-color-picker-button{
+      width: 100%;
+      height: 100%;
+  }
+  button.input-element-color-picker-button.customizer-selected {
+      outline: solid 2px grey;
+  }
+
+  .input-element-color-picker-button:hover {
+      cursor: pointer;
+  }
+
+  .input-element-font-selector-container {
+      padding: 0 10px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      position: relative;
+      width: 100%;
+      text-align: start;
+      border: solid 1px var(--text-color);
+      border-radius: var(--other-radius);
+  }
+
+  .customizer-input-element-input.selected-font-display {
+      font-family: var(--font-body-family);
+      font-size: 15px;
+  }
+
+  .selected-font-display:after {
+      content: '';
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+      z-index: 111;
+      cursor: pointer;
+  }
+
+
+  .input-element-font-selector-container:after {
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40"><path d="m15.5 0.932-4.3 4.38 14.5 14.6-14.5 14.5 4.3 4.4 14.6-14.6 4.4-4.3-4.4-4.4-14.6-14.6z"></path></svg>');
+      position: absolute;
+      top: 12px;
+      right: 10px;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      fill: #66d9ff;
+      content: '';
+      background-repeat: no-repeat;
+      background-size: 14px 14px;
+      transform: rotate(90deg);
+      border-radius: var(--other-radius);
+  }
+
+  input.customizer-input-element-input {
+      height: 38px;
+      border-radius: 0;
+      border: solid 1px;
+      padding-left: 5px;
+      border-radius: var(--other-radius);
+  }
+
+  div#customizer-tab-next:hover svg {
+      fill: #66d9ff;
+  }
+
+  .customizer-input-element-container {
+      display: flex;
+      gap: 0;
+      padding: 0;
+      width: 100%;
+      flex-direction: column;
+      
+  }
+  .customizer-input-element-container,
+  .input-element-font-selector-container{
+      margin-bottom: 30px;
+  }
+
+  .customizer-tab-body {
+      max-width: 1440px;
+      margin: auto;
+  }
+
+  .customizer-tab.customizer-tab-selected .customizer-tab-name {
+      display: none;
+  }
+
+  .customizer-body-stepper-btn {
+      cursor: pointer;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+      width: 30px;
+      height: 30px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s ease;
+  }
+
+  .customizer-body-stepper-btn:hover {
+      background: rgba(255, 255, 255, 1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  .customizer-body-stepper-btn svg {
+      width: 16px;
+      height: 16px;
+      fill: #333;
+  }
+
+  .customizer-body-stepper-prev {
+      left: 10px;
+      z-index: 1000;
+      transform: translateY(-50%) scaleX(-1);
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      top: 40%;
+  }
+
+  .customizer-body-stepper-next {
+      right: 10px;
+      z-index: 1000;
+      top: 40%;
+      transform: translateY(-50%);
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+  }
+
+  .customizer-body-stepper-next:after {
+      position: absolute;
+      content: '';
+      background: transparent;
+      width: 60px;
+      height: 63px;
+      top: -16px;
+      right: -20px;
+      z-index: -1;
+  }
+
+
+
+  .customizer-tab-body-elements .customizer-element {
+      position: relative;
+      font-family: var(--font-body-family);
+  }
+
+  .customizer-tab-body-elements.show-separators .customizer-element:after {
+      content: '';
+      background: lightgrey;
+      height: 100%;
+      width: 1px;
+      position: absolute;
+      right: -50px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+  }
+
+  .customizer-tab-body-elements.show-separators .customizer-element:after {
+      opacity: 1;
+  }
+
+  .customizer-tab-body-elements.has-horizontal-overflow .customizer-element:last-child:after {
+      display: none;
+  }
+
+  .customizer-body-stepper-prev:after {
+      position: absolute;
+      content: '';
+      background: transparent;
+      width: 60px;
+      height: 63px;
+      top: -16px;
+      left: 0px;
+      z-index: -1;
+  }
+
+  #customizer-tab-current-name .customizer-tab-name {
+      font-size: 30px;
+      letter-spacing: 0;
+      font-family: var(--font-heading-family);
+      font-weight: bold;
+      transition: opacity 0.3s ease-in-out;
+      animation: fadeInOut 0.6s ease-in-out;
+      font-weight: 600;
+      color: black;
+      align-items: center;
+      display: flex;
+  }
+
+  .wrapper-nav p {
+      margin: 0;
+  }
+
+  @keyframes fadeInOut {
+      0% {
+          opacity: 0;
+      }
+
+      50% {
+          opacity: 1;
+      }
+
+      100% {
+          opacity: 1;
+      }
+  }
+
+  div#customizer-tab-counter {
+      color: black;
+      letter-spacing: -1px;
+      font-size: 16px;
+      transition: opacity 0.3s ease-in-out;
+  }
+
+
+
+  .swatches-container button {
+      width: 70px;
+      height: 70px;
+      border-radius: 50px;
+      border: none;
+  }
+
+  .swatches-container {
+      display: flex;
+      gap: 5px;
+  }
+
+  .swatches-container button[data-color="#ffffff"] {
+      border: solid .5px grey;
+  }
+  li.font-dropdown-item{
+    color: var(--text-color);
+  }
+  li.font-dropdown-item img {
+      max-width: 100%;
+      background: white;
+      list-style: none;
+      padding-left: 15px;
+      padding-right: 15px;
+  }
+  .customizer-validation-message{
+    color: var(--text-color);
+  }
+
+  ul.font-dropdown-menu {
+      position: absolute;
+      bottom: 100%;
+      left: 0;
+      max-width: 300px;
+      background: white;
+      list-style: none;
+      padding: 0;
+      z-index: 9999;
+      border: solid 1px #ccc;
+      border-radius: 4px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      max-height: none;
+      overflow-y: auto;
+      height: auto;
+      max-height: 200px;
+      min-width: 100%;
+  }
+
+  li.font-dropdown-item {
+      padding: 10px;
+      border-bottom: solid 1px #eee;
+      cursor: pointer;
+  }
+
+  li.font-dropdown-item:last-child {
+      border-bottom: none;
+  }
+
+  li.font-dropdown-item:hover {
+      background-color: #f5f5f5;
+  }
+
+  .customizer-image-upload-modal-body-container {
+      width: 100% !important;
+      height: 100% !important;
+      overflow: auto;
+      position: relative;
+  }
+
+  .customizer-upload-element-image {
+      transform-origin: unset !important;
+      width: 100%;
+  }
+
+  .customizer-image-manipulation-buttons {
+      margin-top: 15px;
+      gap: 10px;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+  }
+
+  .customizer-image-upload-modal-body-container-overlay {
+      height: unset !important;
+  }
+
+  .customizer-summary-item-element-name {
+      text-transform: capitalize;
+      font-weight: normal;
+      font-size: 14px;
+  }
+  .customizer-summary-item{
+      border-top: solid 1px #CCCCCC;
+      padding-top: 13px;
+      padding-bottom: 13px;
+  }
+  .customizer-summary-item-name{
+      font-weight: bold;
+      font-size: 16px;
+  }
+
+  .progress-bar,
+  .progress-bar-container {
+      display: block !important;
+  }
+
+  @media screen and (max-width: 749px) {
+          .wrapper-saved{
+        right: 20px;
+        }
+      .customizer-product-name {
+          font-size: calc(var(--font-title-size) * 0.67);
+      }
+
+      .progress-bar-container {
+          width: 80px;
+          height: 10px;
+          margin: 0 8px;
+      }
+
+      div#customizer-tab-next {
+          right: -10px
+      }
+
+      .wrapper-nav div#customizer-tab-prev {
+          left: -10px
+      }
+
+      #customizer-add-to-cart-button-duplicate,
+      .customizer-add-to-cart-button {
+          font-size: 17px;
+          width: 100%;
+          max-width: 200px;
+      }
+
+      .atc-div {
+          margin-left: unset;
+          margin: auto;
+          padding-right: 0
+      }
+
+      #customizer-summary-items {
+          overflow: auto;
+          grid-template-columns:  1fr;
+          padding: 15px 30px;
+      }
+
+    #customizer-summary-items {
+        padding-bottom: 200px;
+    }
+      .wrapper-div {
+          width: 100%;
+      }
+
+      .customizer-body-stepper-prev {
+          left: -10px;
+      }
+
+      .customizer-body-stepper-next {
+          right: -10px;
+      }
+    
+
+      .bottom-left-items {
+          display: none;
+      }
+
+      #hide-options {
+          display: none;
+      }
+
+      .wrapper-nav {
+          margin-top: 30px;
+      }
+
+      .viewspecs {
+          bottom: 35px;
+          left: 50%;
+          transform: translateX(-50%);
+          border: none;
+          color: transparent;
+          border-top: solid 4px grey;
+          border-radius: 0;
+          opacity: 0.5;
+          max-width: 30px;
+          margin: auto;
+          height: 5px;
+          right: unset;
+          z-index: 1000;
+      }
+
+      #customizer-main-perspective {
+          height: 57vh;
+      }
+  }
+
+  div#customizer-element-select_images {
+      display: flex;
+      gap: 10px;
+  }
+
+  #customizer-element-select_images {
+      display: flex;
+      gap: 10px;
+  }
+
+  div#customizer-element-select_images img {
+      width: var(--image-size);
+      height: var(--image-size);
+      border: solid 1px #E2E1E1;
+      border-radius: var(--other-radius);
+  }
+
+  .list-element-spinner-container{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+  }
+  #customizer-element-select_images .customizer-element-value-container{
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+  }
+
+
+
+  .list-element-spinner-container {
+      gap: 100px;
+      margin-bottom: -40px;
+  }
+
+  .customizer-element-value-container img.customizer-list-element-images-item.customizer-selected {
+      border: solid 2px var(--brand-color) !important;
+  }
+
+  select#list-element-select-select_single {
+      min-width: 100px;
+      border-radius: var(--other-radius);
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 17 16' height='16' width='17'%3E%3Cpath stroke-linecap='round' stroke='black' d='M0.5 4.5L8.5 12.5L16.5 4.5'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      padding-right: 30px;
+      cursor: pointer;
+  }
+
+  .customizer-list-element {
+      font-family: var(--font-body-family);
+  }
+
+  .customizer-list-element-radio-item {
+      display: flex;
+      align-items: center;
+      line-height: 1;
+      gap: 5px;
+      flex-direction: column;
+  }
+
+  .list-element-spinner-item {
+      position: relative;
+  }
+
+  .list-element-spinner-item:after {
+      content: "";
+      width: 140px;
+      height: 2px;
+      position: absolute;
+      left: 2px;
+      background: #000;
+      top: -5px;
+      transition: all .3s ease-in-out;
+  }
+
+  .list-element-spinner-container {
+      transform: unset !important;
+  }
+
+  .list-element-spinner-item.customizer-selected {
+      font-weight: bold;
+  }
+
+  .list-element-spinner-item.customizer-selected:before {
+      content: "";
+      width: 15px;
+      height: 15px;
+      border-radius: 50px;
+      position: absolute;
+      top: -12px;
+      background: #000;
+      left: 2px;
+      transition: all 0.3s ease-in-out;
+      animation: pulse 0.6s ease-in-out;
+  }
+
+  .list-element-spinner-item:last-child:after {
+      display: none;
+  }
+
+  #list-element-spinner-right,
+  #list-element-spinner-left {
+      cursor: pointer;
+      font-size: 30px;
+      color: black;
+  }
+
+  div#customizer-root {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      height: 100%;
+  }
+
+  @keyframes pulse {
+      0% {
+          transform: scale(0.8);
+          opacity: 0.7;
+      }
+
+      50% {
+          transform: scale(1.1);
+          opacity: 1;
+      }
+
+      100% {
+          transform: scale(1);
+          opacity: 1;
+      }
+  }
+
+  input[type="radio"]:checked,
+  .list-element-spinner-item.customizer-selected,
+  .customizer-list-element-item-selected .customizer-list-element-html-item-name {
+      font-weight: bold;
+      color: var(--brand-color);
+  }
+
+  .customizer-list-element-images-item {
+      cursor: pointer;
+  }
+
+  #list-element-select-select_multiple {
+      padding: 0 10px;
+      height: 55px;
+      display: flex;
+      align-items: center;
+      position: relative;
+      width: 100%;
+      text-align: start;
+      border: solid 1px;
+      border-radius: var(--other-radius);
+  }
+
+  .close.mobile-hidden {
+      display: flex;
+      justify-content: space-between;
+      flex-direction: row-reverse;
+      background: #ffffffe6;
+      position: absolute;
+      max-width: 400px;
+      width: 100%;
+      top: 0;
+      right: 0;
+      z-index: 1;
+      padding: 25px 10px 15px 25px;
+      color: black;
+      align-items: center;
+  }
+
+  .brand-logo img {
+      max-width: 46px;
+  }
+
+  .brand-logo {
+      order: 0;
+  }
+  .wrapper-div .close {
+      display: flex
+  ;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      top: 20px;
+      width: 400px;
+      right: 20px;
+      padding-top: 10px;
+      padding-left: 20px;
+      background: #ffffffdb;
+      padding-bottom: 10px;
+      z-index: 1111;
+  }
+
+  .customizer-list-element-radio {
+      display: flex;
+  }
+
+  .customizer-list-element-radio {
+      gap: 10px;
+  }
+
+  .customizer-tab-body-elements {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+  }
+
+  .list-element-spinner {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+  }
+
+  .customizer-list-element-buttons-item {
+      font-family: var(--font-body-family);
+      background-color: var(--background-seconday-color);
+      border-radius: var(--buttons-radius);
+      font-weight: 400;
+      letter-spacing: 1px;
+      color: #191919;
+      box-shadow: 0 0 0 2px gray;
+      border: solid 3px white;
+      height: 45px;
+      width: 104px;
+      background: transparent;
+      color: black;
+  }
+
+  button.customizer-list-element-buttons-item.customizer-list-element-item-selected{
+      background: black;
+      color: white;
+  }
+
+  div#customizer-element-select_images {
+      display: flex;
+      gap: 10px;
+      flex-direction: column;
+  }
+
+  div#customizer-element-select_images img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+  }
+
+  #customizer-reset.button:after {
+      content: "";
+      display: block;
+      width: 24px;
+      height: 24px;
+      background-image: url(/cdn/shop/files/vu-restart.svg?v=1707853380);
+      background-size: contain;
+      background-repeat: no-repeat;
+  }
+
+  .reset:before {
+      content: "";
+      display: block;
+      background-image: url(https://bauer-ca-dev.myshopify.com/cdn/shop/files/Reset_View_Icon_2909849d-cf87-4a2c-80d4-7cc31df0ad3d.svg?v=1708718741);
+      background-size: contain;
+      background-repeat: no-repeat;
+      width: 40px;
+      height: 30px;
+  }
+
+  .bottom-left-items button {
+      background-color: #e6e6e6e5;
+      border: none;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 16px;
+      text-transform: uppercase;
+      font-weight: 700;
+      padding: 30px;
+      border-top-right-radius: 30px;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      border-top-left-radius: 0;
+  }
+  button{
+      cursor: pointer;
+      border-radius: var(--buttons-radius);
+  }
+
+  .bottom-left-items {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      z-index: 11;
+  }
+  #customizer-reset-view{
+      cursor: pointer;
+  }
+
+  .progress-bar-container {
+      width: 400px;
+      height: 8px;
+      background-color: #e0e0e0;
+      margin: 0 12px;
+      overflow: hidden;
+      align-self: center;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+      transition: opacity 0.5s ease;
+      position: fixed;
+      bottom: 20px;
+      right: 8px;
+      z-index: 11108;
+  }
+
+  .progress-hidden {
+      opacity: 0;
+  }
+
+  .progress-bar {
+      height: 100%;
+      background-color: var(--brand-color);
+      width: 0%;
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      will-change: width, opacity;
+      opacity: 1;
+  }
+
+
+
+
+  /* Loading Modal Styles */
+  .loading-vu-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #fff;
+      z-index: 1002;
+      display: none;
+  }
+
+  .loading-vu-modal.active {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+  }
+
+  .loading-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+  }
+
+  .position-absolute-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      width: 100%;
+  }
+
+  .flex-column-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+  }
+
+  .loading-gif {
+      margin: 30px 0;
+      width: 80px;
+      height: 80px;
+  }
+
+  .loading-gif svg {
+      width: 100%;
+      height: 100%;
+      animation: spin 2s linear infinite;
+  }
+
+  @keyframes spin {
+      0% {
+          transform: rotate(0deg);
+      }
+
+      100% {
+          transform: rotate(360deg);
+      }
+  }
+
+  .vu-failed-loading {
+      display: none;
+      color: #C8102E;
+      margin: 20px 0;
+  }
+
+  .vu-failed-loading.active {
+      display: block;
+  }
+
+  .loading-assets {
+      font-size: 18px;
+      margin-top: 15px;
+      font-family: var(--font-body-family);
+  }
+
+  .loading-assets span {
+      animation: dots 1.5s infinite;
+  }
+
+  @keyframes dots {
+
+      0%,
+      20% {
+          content: '.';
+      }
+
+      40% {
+          content: '..';
+      }
+
+      60%,
+      100% {
+          content: '...';
+      }
+  }
+
+  .loading-bottom-text {
+      position: absolute;
+      bottom: 30px;
+      font-size: 14px;
+      color: #666;
+      text-align: center;
+      width: 100%;
+      padding: 0 20px;
+  }
+
+  .position-absolute-bottom {
+      position: absolute;
+      bottom: 30px;
+  }
+
+  .close-loading {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      z-index: 10;
+  }
+
+  .no-bg {
+      background: transparent;
+      border: none;
+  }
+  .bottom-resizer{
+      display: none;
+  }
+  @media screen and (max-width: 991px) {
+      .top-left-buttons {
+          display: flex;
+          position: absolute;
+          top: 20px;
+          left: 20px;
+          z-index: 1;
+          align-items: start;
+          gap: 30px;
+          color: var(--customizer-text-color);
+          flex-direction: column;
+          gap: 0;
+          text-align: start;
+      }
+      .customizer-tab-body-elements{
+          padding-bottom: 500px;
+      }
+      .bottom-resizer{
+          display: block;
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 24px;
+          background-color: #E6E6E6;
+          z-index: 11111;
+      }
+      .bottom-resizer svg {
+          width: 100%;
+      }
+      .wrapper-div .close {
+          position: unset;
+          height: 0;
+          background: unset;
+          width: 0;
+          height: 0;
+      }
+      #customizer-main-perspective {
+          height: calc(60dvh - 40px);
+      }
+      div#customizer-root{
+          grid-template-columns: 1fr;
+      }
+      .close.mobile-hidden{
+          max-width: 100%;
+      }
+      .wrapper-bottom-nav {
+          max-width: 100%;
+          bottom: 35px;
+          left: 0;
+      }
+      .progress-bar-container {
+          width: calc(100% - 40px);
+          bottom: 0;
+      }
+      .brand-logo{
+          display: none;
+      }
+      .close.mobile-hidden{
+          justify-content: center;
+      }
+      .mobile-hidden{
+          display: none;
+      }
+      .wrapper-div{
+          padding-top:0;
+      }
+      div#close {
+          position: fixed;
+          bottom: -8px;
+          z-index: 11111;
+          width: 100%;
+          left: 0;
+          border:none;
+          padding: 0;
+      }
+      div#close svg{
+          background-color: white;
+          width: 100%;
+      }
+      .progress-bar-container {
+          width: 100%;
+          left: 0;
+          margin: 0;
+          bottom: 32px;
+      }
+      .customizer-modal-wrapper{
+          padding:0;
+      }
+      #customizer-summary-items{
+          padding-left: 0;
+          padding-right: 0;
+      }
+  }
+
+  @media screen and (min-width: 992px) {
+      #customizer-main-perspective{
+          height: 100%!important;
+      }
+      .desktop-hidden{
+          display: none;
+      }
+      .wrapper-div{
+      height: calc(100dvh - 40px)!important
+      }
+  }
+  .swatches-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+
+  .all-tabs-container{
+      position: relative;
+  }
+  .customizer-tab-name {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 30px;
+  }
+  button#customizer-share-button-cloned {
+      background: none;
+      height: 44px;
+      border-radius: var(--buttons-radius);
+      padding: 10px 30px;
+      border: solid 1px grey;
+      text-transform: uppercase;
+      font-size: 15px;
+  }
+  #customizer-summary{
+padding-bottom: 100px;
+}
+  button#customizer-share-button-cloned:after {
+      content: '';
+      display: inline-block;
+      width: 17px;
+      height: 17px;
+      background: url('data:image/svg+xml;utf8,<svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="13.5" cy="3.5" r="3" stroke="black"/><circle cx="13.5" cy="13.5" r="3" stroke="black"/><circle cx="3.5" cy="8.5" r="3" stroke="black"/><path d="M11 12.25L6 9.75M11 4.75L6 7.25" stroke="black"/></svg>') no-repeat center center;
+      background-size: contain;
+      vertical-align: middle;
+      margin-left: 8px;
+  }
+  #list-element-radio-select_radio label,
+  #customizer-list-element-radio-item label,
+  .customizer-input-element-counter,
+  .list-element-spinner-item,
+  .color-selector-label,
+  .customizer-element-title,
+  #customizer-modal p,
+  #customizer-modal h1,
+  #customizer-modal h2,
+  #customizer-modal h3,
+  #customizer-modal h4,
+  #customizer-modal h5,
+  #customizer-modal h6{
+  color: var(--text-color);
+  }
+  #customizer-modal  .div#customizer-saved-item-count,
+  #customizer-modal  .customizer-add-to-cart-button,
+  #customizer-modal  .customizer-price,
+  #customizer-modal .top-left-buttons .customizer-product-name{
+    color: var(--text-secondary-color);
+  }
+  .customizer-tab-body-elements .customizer-hidden {
+    display: none !important;
+}
+#customizer-reset-button {
+color: white;
+}
+ .wrapper-nav p{
+    color: black !important;
+}
+#customizer-summary-items .customizer-summary-item-quantity{
+    display: none;
+}
+
+.customizer-element-value-container img {
+    height: 50px;
+}
+.customizer-list-element-html.customizer-element{
+    display: flex
+;
+    flex-wrap: wrap;
+}
+.customizer-list-element-html.customizer-element .customizer-element-title{
+color: black;
+}
+.customizer-list-element.customizer-element .customizer-element-title {
+    color: black;
+}
+.customizer-element-group-container .customizer-element-title {
+    color: black;
+}
+.customizer-tab-body-elements .customizer-list-element {
+    border-top: solid 1px;
+    padding-top: 15px;
+}
+#customizer-share-link,
+#share-link h2,
+  .start-over-confirm h3, .start-over-confirm p{
+    color: black!important;
+    letter-spacing:0;
+  }
+  #customizer-share-link {
+  overflow: auto; /* or overflow-y: scroll; */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+#customizer-reset-view,
+#customizer-share-link::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+  #customizer-reset-button:after {
+    {%if section.settings.secondary_text_color == '#ffffff'%}
+      filter: invert(1);
+    {%endif%}
+  }
+</style>
+
+<style>
+  #customizer-modal {
+    --text-color: {{section.settings.text_color}};
+    --text-secondary-color: {{section.settings.secondary_text_color}};
+    font-family: var(--font-body-family);
+    --image-size:{{ section.settings.image_size | default: 'var(--image-size)' }}px;
+    --buttons-radius: {{ section.settings.buttons_radius | default: 'var(--buttons-radius)' }}px;
+    --other-radius: {{ section.settings.other_radius | default: 'var(--other-radius)' }}px;
+    --background-seconday-color: {{ section.settings.background_seconday_color | default: 'var(--background-seconday-color)' }};
+    {% if section.settings.font_heading_family %}
+    --font-heading-family: {{ section.settings.font_heading_family.family }}, {{ section.settings.font_heading_family.fallback_families }};
+    {% endif %}
+    {% if section.settings.font_body_family %}
+    --font-body-family: {{ section.settings.font_body_family.family }}, {{ section.settings.font_body_family.fallback_families }};
+    {% endif %}
+    {% if section.settings.brand_color %}
+        --brand-color: {{ section.settings.brand_color }};
+    {% endif %}
+    {% if section.settings.title_size %}
+    --font-title-size: {{ section.settings.title_size }}px;
+    {%endif%}
+    {% if section.settings.text_color %}
+    --customizer-text-color: {{ section.settings.text_color }};
+    {% endif %}
+    
+  }
+  #customizer-main-perspective {
+    {% if section.settings.background_image %}
+      background-image: url({{ section.settings.background_image | image_url }});
+    {% else %}
+      box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    {% endif %}
+  }
+  {% if section.settings.font_heading_family %}
+    {{ section.settings.font_heading_family | font_face }}
+  {% endif %}
+  {% if section.settings.font_body_family %}
+    {{ section.settings.font_body_family | font_face }}
+  {% endif %}
+  {% if section.settings.hide_header_tabs %}
+    {% assign hide_tabs = section.settings.hide_header_tabs | split: ',' %}
+    {% for tab_num in hide_tabs %}
+      {% assign clean_tab_num = tab_num | strip %}
+      .customizer-tab-{{ clean_tab_num }} {
+        display: none !important;
+        visibility: hidden;
+      }
+      @media screen and (max-width: 375px){
+        .customizer-tab-header{
+          display: none;
+        }
+      }
+    {% endfor %}
+  {% endif %}
+</style>
+{%assign main_source = 'https://vu-customizer.s3.amazonaws.com/production/vu_customizer.js' %}
+
+<div class="loading-vu-modal">
+  <div class="loading-container">
+    <!-- close button for Modal -->
+    <button class="close-loading no-bg mobile-hidden" role="button" aria-label="Close">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1.5 1.5L22.5 22.5M22.5 1.5L1.5 22.5" stroke="black" stroke-width="2" stroke-linecap="round"></path>
+      </svg>
+    </button>
+    <div class="position-absolute-center flex-column-center">
+      <!-- Brand logo -->
+      <div class="brand-logo-loading">
+        <img src="{{section.settings.brand_logo | img_url: 'medium'}}" alt="brand logo" width="120" height="auto">
+      </div>
+      <div class="loading-gif">
+        <svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="25" cy="25" r="20" stroke="#000" stroke-width="5" fill="none" stroke-dasharray="94.2477796077" stroke-dashoffset="47.1238898038" />
+        </svg>
+      </div>
+      <div class="vu-failed-loading">
+        <p>Loading failed. Please refresh the page or try again later.</p>
+      </div>
+      <strong class="loading-assets">
+        Loading assets
+        <span>...</span>
+      </strong>
+    </div>
+    <div class="loading-bottom-text position-absolute-bottom">
+      This may take a moment depending on your internet connection
+    </div>
+  </div>
+</div>
+<div id="customizer-modal" class="customizer-modal customizer-hidden {{ request.params.product }}">
+  <div class="customizer-modal-wrapper">
+    <div class="customizer-modal-body">
+      <div id="customizer-root">
+        <div id="overlay-popup">
+        </div>
+        <div id="customizer-main-perspective">
+          <div class="top-right-buttons">
+            
+            {% if section.settings.show_saved_items %}
+            <button title="Save Wishlist" id="customizer-save-button"></button>
+            <div title="Saved Items" class="customizer-saved-item-count cursor" id="customizer-saved-item-count"></div>
+            {% endif %}
+            {% if section.settings.show_share_button %}
+            <button title="Share Link" id="customizer-share-button"></button>
+            {% endif %}
+            {% if section.settings.show_reset_button %}
+            <button title="Reset" id="customizer-reset-button">RESTART</button>
+            {% endif %}
+          </div>
+          <div class="top-left-buttons">
+            <div class="top-logos">
+              {% if section.settings.logo != blank %}
+              <img src="{{ section.settings.logo | image_url: width: 119 }}"
+                alt="{{ section.settings.logo.alt | default: 'Logo' }}" width="119" height="11"
+                style="max-width: 119px; height: auto;">
+              {% endif %}
+            </div>
+            <h2 class="customizer-product-name"></h2>
+          </div>
+          <div class="bottom-left-items">
+            <div class="bottom-left">
+            <button class="reset" id="customizer-reset-view" tabindex="0">RESET VIEW</button>
+          </div>
+          </div>
+          <div class="bottom-right">
+            <div class="wrapper-for-mob">
+              <div class="customizer-price"></div>
+            </div>
+          </div>
+          <div class="bottom-resizer">
+            <svg width="400" height="24" viewBox="0 0 400 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="400" height="24" fill="#E6E6E6" fill-opacity="0.9"/>
+                <path d="M188 10H212" stroke="black" stroke-width="2"/>
+                <path d="M188 14H212" stroke="black" stroke-width="2"/>
+            </svg>
+          </div>
+            
+        
+        </div>
+        <div class="wrapper-div">
+         <div class="close">
+            <div class="brand-logo">
+                <img src="{{section.settings.brand_logo |  img_url: 'large'}}" alt="brand logo" width="120" height="auto"> 
+            </div>
+            <div id="close" class="customizer-modal-close">
+                <svg class="mobile-hidden" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1.5 1.5L22.5 22.5M22.5 1.5L1.5 22.5" stroke="black" stroke-width="2" stroke-linecap="round"></path>
+                </svg>
+                <svg class="desktop-hidden" width="400" height="32" viewBox="0 0 400 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="400" height="32" fill="white"/>
+                <rect x="130.84" y="21" width="139" height="5" rx="2.5" fill="black"/>
+                </svg>
+
+
+            </div>
+         </div>
+          <div class="wrapper-bottom-nav">
+            <div id="customizer-tab-prev">
+              <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="0.5" y="0.5" width="39" height="39" rx="19.5" stroke="#808080"></rect>
+              <path d="M28.5 20.5L12.5 20.5" stroke="black" stroke-linecap="round"></path>
+              <path d="M20.5 28.5L12.5 20.5L20.5 12.5" stroke="black" stroke-linecap="round"></path>
+              </svg>
+            </div>
+            <div id="customizer-tab-next">
+                <span>NEXT</span>    
+                <svg class="icon-button-arrow icon-button-arrow--right" viewBox="0 0 27 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1 12C0.447715 12 0 12.4477 0 13C0 13.5523 0.447715 14 1 14V12ZM25 14C25.5523 14 26 13.5523 26 13C26 12.4477 25.5523 12 25 12V14ZM1 14H25V12H1V14Z" fill="currentColor"></path>
+                    <path d="M12.2929 24.2929C11.9024 24.6834 11.9024 25.3166 12.2929 25.7071C12.6834 26.0976 13.3166 26.0976 13.7071 25.7071L12.2929 24.2929ZM25 13L25.7071 13.7071L26.4142 13L25.7071 12.2929L25 13ZM13.7071 0.292893C13.3166 -0.0976311 12.6834 -0.0976311 12.2929 0.292893C11.9024 0.683417 11.9024 1.31658 12.2929 1.70711L13.7071 0.292893ZM13.7071 25.7071L25.7071 13.7071L24.2929 12.2929L12.2929 24.2929L13.7071 25.7071ZM25.7071 12.2929L13.7071 0.292893L12.2929 1.70711L24.2929 13.7071L25.7071 12.2929Z" fill="currentColor"></path>
+                </svg>
+            </div>
+            <button class="customizer-add-to-cart-button" style="display: none;"></button>
+          </div>
+          <div class="customizer-tab-tip-body"></div>
+          <div class="all-tabs-container">
+              <div id="customizer-tab-container" class="all_tabs">
+                <div class="wrapper-nav">
+                  <span><p><b>Steps</b></p></span>
+                  <div class="progress-bar-container progress-hidden">
+                    <div class="progress-bar" id="customizer-progress-bar"></div>
+                  </div>
+                  <b>
+                  <div id="customizer-tab-counter"></div>
+                  </b>
+                </div>
+                <div class="tab-name">
+                    <div id="customizer-tab-current-name"></div>
+                </div>   
+              </div>
+          </div>
+          <div id="customizer-perspectives"></div>
+          <div id="customizer-tab-body-container">
+            <div id="customizer-tab-body-preview" class="customizer-tab-body">
+              <div id="customizer-summary">
+                <div id="customizer-summary-items"></div>
+                <hr style="background-color: lightgrey;margin:0;">
+              </div>
+            </div>
+          </div>
+
+          <div id="customizer-disclaimer"></div>
+
+        </div>        
+        <div class="start-over-confirm"
+          style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border-radius: 10px; z-index: 1001; width: 300px; text-align: center;">
+          <div id="reset-closed" style="position: absolute; top: 10px; right: 10px; cursor: pointer;">✕</div>
+          <h3>Start Over?</h3>
+          <p>Are you sure you want to reset your customization?</p>
+          <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+            <button id="close-confirm"
+              style="padding: 10px 20px; background-color: #e0e0e0; border: none; border-radius: 5px; cursor: pointer;">
+              Cancel
+            </button>
+            <button id="start-confirm"
+              style="padding: 10px 20px; background-color: #C8102E; color: white; border: none; border-radius: 5px; cursor: pointer;">
+              Reset
+            </button>
+          </div>
+        </div>
+
+        <div id="share-link" style="display: none;">
+          <div id="share-closed">✕</div>
+          <h2>share your customization</h2>
+
+          <div class="share-items">
+            <div class="shareable-link">
+              <p id="customizer-share-link"></p>
+            </div>
+            <div id="copy-button" class="button">COPY</div>
+          </div>
+        </div>
+
+        <div class="wrapper-saved">
+          <div class="headers-items">
+            <h3>YOUR SAVED DESIGNS</h3>
+            <div class="saved-info-closed">✕</div>
+          </div>
+          <div id="customizer-saved-items"></div>
+        </div>
+
+        <div id="customizer-tab-container"></div>
+        <div id="customizer-tab-body-container"></div>
+        {% comment %} <div id="customizer-disclaimer"></div> {% endcomment %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% comment %} <button id="open-customizer-button" class="button button--primary">Customize Product</button> {% endcomment %}
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const productId = params.get("product"); // or "variant" or whatever param you use
+  const recipeId = params.get("recipe_id");
+  if (productId) {
+    let variant;
+    if(productId === 'fielders'){
+        variant = '{{ section.settings.proKipFieldersId }}'
+    } else if(productId === 'catchers'){
+        variant = '{{ section.settings.proKipCatchersId }}'
+    } else if(productId === 'firstBase'){
+        variant = '{{ section.settings.proKipFirstBaseId }}'
+    } else if(productId === 'japanKip'){
+        variant = '{{ section.settings.japanKipUpliftId }}'
+    } else if(productId === 'flag'){
+        variant = '{{ section.settings.flagUpliftId }}'
+    }
+    const script = document.createElement("script");
+    script.id = "customizer";
+    script.src = "https://vu-customizer.s3.amazonaws.com/production/vu_customizer.js";
+    script.setAttribute("data-variant", variant);
+    script.setAttribute("data-status", "draft");
+    script.setAttribute("data-uplift-japan-kip", '{{ section.settings.japanKipUpliftId }}');
+    script.setAttribute("data-uplift-flag", '{{ section.settings.flagUpliftId }}');
+    if(recipeId){
+        script.setAttribute("data-recipe-id", recipeId);
+    }
+    
+    script.defer = true;
+    document.body.appendChild(script);
+    document.addEventListener('DOMContentLoaded', function () {
+      const modal = document.getElementById('customizer-modal');
+        modal.classList.remove('customizer-hidden');
+        document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
+    });
+  }
+</script>
+{% comment %} <script id="customizer" src="https://vu-customizer.s3.amazonaws.com/production/vu_customizer.js" data-variant="{{ customizer_id }}" data-status="draft" defer></script> {% endcomment %}
+
+<script>
+
+
+  document.addEventListener('DOMContentLoaded', function () {
+      let sceneRenderedFlag = false;
+
+      // Listen for the scene rendered event and update the flag.
+      document.addEventListener('customizer.scene-rendered', function () {
+          sceneRenderedFlag = true;
+      }, { once: true });
+
+      const vuCustomizerBtn = document.getElementById('vu-customizer-btn');
+      if (vuCustomizerBtn) {
+          vuCustomizerBtn.addEventListener('click', function () {
+              openPopUpModal();
+          });
+      }
+
+      const openButton = document.getElementById('open-customizer-button');
+      const modal = document.getElementById('customizer-modal');
+      const loadingModal = document.querySelector('.loading-vu-modal');
+
+      // Shows loading screen when customizer is initializing
+      function openLoadingModal() {
+          loadingModal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+      }
+
+      // Hides loading screen when initialization completes
+      function closeLoadingModal() {
+          loadingModal.classList.remove('active');
+      }
+
+      // Displays error message when loading fails after timeout
+      function ErrorModal() {
+          document.querySelector('.loading-gif').style.display = 'none';
+          document.querySelector('.loading-assets').style.display = 'none';
+          document.querySelector('.vu-failed-loading').classList.add('active');
+      }
+
+      // Shows main customizer interface after loading completes
+      function openModal() {
+          closeLoadingModal();
+          modal.classList.remove('customizer-hidden');
+          document.body.style.overflow = 'hidden';
+      }
+
+      // Handles keyboard focus trapping within the active tab
+      function callTrapOnSelectedTab() {
+          // Implementation can be added if needed
+      }
+
+      // Main entry point for opening customizer with loading state management
+      function openPopUpModal() {
+          if (sceneRenderedFlag) {
+              openModal();
+              callTrapOnSelectedTab();
+          } else {
+              openLoadingModal();
+              // The scene hasn't rendered yet, so let's listen for the event.
+              document.addEventListener('customizer.scene-rendered', function () {
+                  openModal();
+              }, { once: true });
+
+
+              setTimeout(function () {
+                  if (!sceneRenderedFlag) {
+                      ErrorModal();
+                  }
+              }, 40000);
+          }
+      }
+
+      // Open modal when button is clicked
+      openButton?.addEventListener('click', function () {
+          openPopUpModal();
+      });
+
+      // Close loading modal when close button is clicked
+      document.querySelector('.close-loading').addEventListener('click', function () {
+          closeLoadingModal();
+          document.body.style.overflow = '';
+      });
+
+      // Listen for the customizer.scene-rendered event
+      document.addEventListener('customizer.scene-rendered', function () {
+          // Create and append the Preview tab to be the last one
+          const tabContainer = document.getElementById('customizer-tab-container');
+          if (tabContainer) {
+              const previewTab = document.createElement('div');
+              previewTab.className = 'customizer-tab';
+              previewTab.id = 'customizer-preview-tab';
+              
+              const tabNameDiv = document.createElement('div');
+              tabNameDiv.className = 'customizer-tab-name';
+              tabNameDiv.textContent = 'Your Specs';
+
+              const shareButton = document.getElementById('customizer-share-button');
+              if (shareButton) {
+                  tabNameDiv.appendChild(shareButton);
+              }
+              
+              previewTab.appendChild(tabNameDiv);
+              tabContainer.appendChild(previewTab);
+
+              // Move the preview tab body to the end of the container
+              const tabBodyContainer = document.getElementById('customizer-tab-body-container');
+              const previewTabBody = document.getElementById('customizer-tab-body-preview');
+              if (tabBodyContainer && previewTabBody) {
+                  tabBodyContainer.appendChild(previewTabBody);
+                  previewTabBody.classList.add('vu-main-hidden');
+              }
+          }
+          // ...other setup...
+          const closeButton = document.getElementById('close');
+          if (closeButton) {
+              closeButton.addEventListener('click', function () {
+                  modal.classList.add('customizer-hidden');
+                  document.body.style.overflow = '';
+              });
+          }
+
+          // Initialize progress bar
+          const progressBar = document.getElementById('customizer-progress-bar');
+          const progressContainer = document.querySelector('.progress-bar-container');
+
+          if (progressBar && progressContainer) {
+              // Wait for tabs to be fully loaded before showing progress bar
+              setTimeout(() => {
+                  const selectedTab = document.querySelector('.customizer-tab-selected');
+                  if (selectedTab) {
+                      const tabs = Array.from(document.querySelectorAll('.customizer-tab'));
+                      const idx = tabs.indexOf(selectedTab);
+                      if (idx !== -1) {
+                          // Set width first while still hidden
+                          progressBar.style.transition = 'none';
+                          const progress = ((idx + 1) / tabs.length) * 100;
+                          progressBar.style.width = progress + '%';
+
+                          // Show progress bar after width is set and tab counter is visible
+                          setTimeout(() => {
+                              progressBar.style.transition = 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease';
+                              progressContainer.classList.remove('progress-hidden');
+                          }, 300);
+                      }
+                  }
+              }, 600); // Increased delay to ensure tabs and counter are fully loaded
+          }
+
+          setupSavedItems();
+          setupShareAndReset();
+          setupTabNavigation();
+          setupMobileResize();
+          setupResetView();
+          setupSpinnerDrag();
+      });
+
+      // Configures share functionality and reset button behavior
+      function setupShareAndReset() {
+          const shareLinkModal = document.querySelector('#share-link');
+          const overlayPopup = document.querySelector('#overlay-popup');
+          const startOverConfirm = document.querySelector('.start-over-confirm');
+          const resetButton = document.getElementById('customizer-reset-button');
+          const copyButton = document.getElementById('copy-button');
+
+          // Setup reset button functionality
+          if (resetButton) {
+              resetButton.addEventListener('click', function () {
+                  if (window.customizer && window.customizer.recipeChanged) {
+                      overlayPopup.style.display = 'block';
+                      startOverConfirm.style.display = 'block';
+                  } else {
+                      if (window.newSplide) {
+                          window.newSplide.go(0);
+                      }
+                      if (window.customizer) {
+                          window.customizer.reset();
+                          document.dispatchEvent(new CustomEvent('vu-reset-tabs'));
+                      }
+                  }
+              });
+          }
+
+          // Setup start confirmation
+          const startConfirm = document.getElementById('start-confirm');
+          if (startConfirm) {
+              startConfirm.addEventListener('click', function () {
+                  overlayPopup.style.display = 'none';
+                  startOverConfirm.style.display = 'none';
+                  if (window.newSplide) {
+                      window.newSplide.go(0);
+                  }
+                  if (window.customizer) {
+                      window.customizer.reset();
+                  
+                      document.dispatchEvent(new CustomEvent('vu-reset-tabs', { detail: { animateProgressBar: false } }));
+                  }
+
+                  // Reset progress bar to first step
+                  const progressBar = document.getElementById('customizer-progress-bar');
+                  const progressContainer = document.querySelector('.progress-bar-container');
+
+                  if (progressBar && progressContainer) {
+                      // Hide progress container
+                      progressContainer.classList.add('progress-hidden');
+
+                      // Reset width after a short delay
+                      setTimeout(() => {
+                          progressBar.style.transition = 'none';
+                          progressBar.style.width = (100 / document.querySelectorAll('.customizer-tab').length) + '%';
+
+                          // Show progress bar again with transition
+                          setTimeout(() => {
+                              progressBar.style.transition = 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease';
+                              progressContainer.classList.remove('progress-hidden');
+                          }, 50);
+                      }, 300);
+                  }
+              });
+          }
+
+          // Closes overlay popup and resets UI state
+          function closeOverlayPopup() {
+              overlayPopup.style.display = 'none';
+              if (startOverConfirm) {
+                  startOverConfirm.style.display = 'none';
+              }
+              if (shareLinkModal) {
+                  shareLinkModal.style.display = 'none';
+              }
+          }
+
+          // Setup share event listener
+          document.addEventListener('customizer.shared', function (event) {
+              if (shareLinkModal && overlayPopup) {
+                  shareLinkModal.style.display = 'flex';
+                  overlayPopup.style.display = 'block';
+              }
+          });
+
+          // Setup click handlers for closing elements
+          if (overlayPopup) {
+              overlayPopup.addEventListener('click', closeOverlayPopup);
+          }
+
+          const shareClosed = document.getElementById('share-closed');
+          if (shareClosed) {
+              shareClosed.addEventListener('click', closeOverlayPopup);
+          }
+
+          const resetClosed = document.getElementById('reset-closed');
+          if (resetClosed) {
+              resetClosed.addEventListener('click', closeOverlayPopup);
+          }
+
+          const closeConfirm = document.getElementById('close-confirm');
+          if (closeConfirm) {
+              closeConfirm.addEventListener('click', closeOverlayPopup);
+          }
+
+          // Setup copy button functionality
+          if (copyButton) {
+              copyButton.addEventListener('click', async () => {
+                  const shareLink = document.getElementById('customizer-share-link').textContent;
+                  await navigator.clipboard.writeText(shareLink);
+                  copyButton.textContent = 'COPIED!';
+                  setTimeout(() => copyButton.textContent = 'COPY', 2000);
+              });
+          }
+      }
+
+      // Manages saved customizations display and interactions
+      function setupSavedItems() {
+          // Get the elements by their class names
+          const customizerSavedItemCount = document.getElementById('customizer-saved-item-count');
+          const savedInfoClosed = document.querySelector('.saved-info-closed');
+          const wrapperSaved = document.querySelector('.wrapper-saved');
+
+          if (savedInfoClosed && wrapperSaved) {
+              savedInfoClosed.addEventListener('click', function () {
+                  // Hide the wrapper-saved element with a 0.3-second transition
+                  wrapperSaved.style.transition = 'opacity 0.3s, transform 0.3s'; // Add transition properties
+                  wrapperSaved.style.opacity = '0'; // Fade out by changing opacity to 0
+                  wrapperSaved.style.transform = 'scale(0)'; // Scale down to 0
+                  setTimeout(function () {
+                      wrapperSaved.style.display = 'none'; // Hide the element after the transition is complete
+                  }, 300); // Adjust the delay to match the transition duration
+              });
+          }
+
+          if (customizerSavedItemCount && wrapperSaved) {
+              customizerSavedItemCount.addEventListener('click', function () {
+                  // Show the wrapper-saved element with a 0.3-second transition
+                  wrapperSaved.style.transition = 'opacity 0.3s, transform 0.3s'; // Add transition properties
+                  wrapperSaved.style.display = 'block'; // Show the element
+                  setTimeout(function () {
+                      wrapperSaved.style.opacity = '1'; // Fade in by changing opacity to 1
+                      wrapperSaved.style.transform = 'scale(1)'; // Scale up to 1
+                  }, 0); // Use a minimal delay (0ms) to trigger the transition immediately
+              });
+          }
+      }
+
+      // Toggles body scroll lock for modal interactions
+      function lockBody() {
+          document.body.style.overflow = document.body.style.overflow === 'hidden' ? '' : 'hidden';
+      }
+
+      // Handles tab switching, progress display, and navigation
+      function setupTabNavigation() {
+          const tabContainer = document.getElementById('customizer-tab-container');
+          const tabs = Array.from(tabContainer.querySelectorAll('.customizer-tab'));
+          const prevBtn = document.getElementById('customizer-tab-prev');
+          const nextBtn = document.getElementById('customizer-tab-next');
+          const counter = document.getElementById('customizer-tab-counter');
+          const currentNameContainer = document.getElementById('customizer-tab-current-name');
+          const atcButton = document.querySelector('.wrapper-bottom-nav .customizer-add-to-cart-button');
+          const progressBar = document.getElementById('customizer-progress-bar');
+
+          if (atcButton) {
+              atcButton.addEventListener('click', function () {
+                  var cartUrl = (typeof window.routes !== 'undefined' && window.routes.cart_url) ? window.routes.cart_url : '/cart';
+                  fetch('/cart.js').then(function (r) { return r.json(); }).then(function (initial) {
+                      var initialCount = initial.item_count || 0;
+                      var pollStart = Date.now();
+                      var maxWait = 15000;
+                      var poll = function () {
+                          if (Date.now() - pollStart > maxWait) return;
+                          fetch('/cart.js').then(function (r) { return r.json(); }).then(function (cart) {
+                              var count = cart.item_count || 0;
+                              if (count > initialCount) {
+                                  window.location.href = cartUrl;
+                                  return;
+                              }
+                              setTimeout(poll, 500);
+                          }).catch(function () { setTimeout(poll, 500); });
+                      };
+                      setTimeout(poll, 800);
+                  });
+              });
+          }
+
+          // Initialize progress bar to 0% to prevent flashing to 100%
+          if (progressBar) {
+              progressBar.style.width = '0%';
+          }
+
+          // Add numbered classes to tabs
+          tabs.forEach((tab, index) => {
+              tab.classList.add(`customizer-tab-${index + 1}`);
+          });
+
+          // Returns the index of the currently selected tab
+          function getSelectedIndex() {
+              return tabs.findIndex(tab => tab.classList.contains('customizer-tab-selected'));
+          }
+
+          // Updates the step counter display with animation
+          function updateCounter() {
+              const idx = getSelectedIndex();
+              // Trigger CSS animation by temporarily removing and re-adding
+              counter.style.animation = 'none';
+              counter.offsetHeight; // Trigger reflow
+              counter.style.animation = 'fadeInOut 0.6s ease-in-out';
+              counter.textContent = `${idx + 1} / ${tabs.length}`;
+          }
+
+          // Updates the current tab name display in navigation
+          function updateCurrentTabName(idx) {
+              if (idx < 0 || idx >= tabs.length) return;
+              // Move the .customizer-tab-name node to the nav
+              const tabName = tabs[idx].querySelector('.customizer-tab-name');
+              if (tabName && currentNameContainer) {
+                  // Trigger CSS animation by temporarily removing and re-adding
+                  currentNameContainer.style.animation = 'none';
+                  currentNameContainer.offsetHeight; // Trigger reflow
+                  currentNameContainer.style.animation = 'fadeInOut 0.6s ease-in-out';
+
+                  currentNameContainer.innerHTML = '';
+                  const newTabName = tabName.cloneNode(true);
+                  currentNameContainer.appendChild(newTabName);
+
+                  const clonedShareButton = newTabName.querySelector('#customizer-share-button');
+                  if (clonedShareButton) {
+                      clonedShareButton.id = 'customizer-share-button-cloned'; // Avoid duplicate IDs
+                      clonedShareButton.addEventListener('click', () => {
+                          const originalShareButton = document.getElementById('customizer-share-button');
+                          if(originalShareButton) originalShareButton.click();
+                      });
+                  }
+              }
+          }
+
+          // Shows/hides navigation buttons based on current tab position
+          function updateNavigationButtons(idx) {
+              const isLastTab = idx === tabs.length - 1;
+
+              if (isLastTab) {
+                  // Hide next button and show add to cart button on last tab
+                  nextBtn.style.display = 'none';
+                  if (atcButton) {
+                      atcButton.style.display = 'flex';
+                  }
+              } else {
+                  // Show next button and hide add to cart button on other tabs
+                  nextBtn.style.display = 'flex';
+                  if (atcButton) {
+                      atcButton.style.display = 'none';
+                  }
+              }
+          }
+
+          // Updates the progress bar based on current tab position
+          function updateProgressBar(idx) {
+              const progressBar = document.getElementById('customizer-progress-bar');
+              if (progressBar) {
+                  // Ensure opacity is set to 1
+                  progressBar.style.opacity = '1';
+
+                  // Reset to 0 first to ensure animation works correctly
+                  progressBar.style.transition = 'none';
+                  progressBar.offsetHeight; // Force reflow
+
+                  // Calculate progress based on current tab index
+                  const progress = ((idx + 1) / tabs.length) * 100;
+
+                  // Re-enable transition and set the width
+                  progressBar.style.transition = 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease';
+                  progressBar.style.width = progress + '%';
+              }
+          }
+
+          // Selects a tab and updates all UI elements accordingly
+          function selectTab(idx, options = {}) {
+              tabs.forEach(tab => tab.classList.remove('customizer-tab-selected'));
+              tabs[idx].classList.add('customizer-tab-selected');
+              updateCounter();
+              updateCurrentTabName(idx);
+              updateNavigationButtons(idx);
+              if (!options.isReset) {
+                  updateProgressBar(idx);
+              }
+
+              const isPreviewTab = tabs[idx].id === 'customizer-preview-tab';
+              const tabBodyContainer = document.getElementById('customizer-tab-body-container');
+              const allOriginalTabBodies = tabBodyContainer.querySelectorAll('.customizer-tab-body:not(#customizer-tab-body-preview)');
+              const previewBody = document.getElementById('customizer-tab-body-preview');
+
+              if (isPreviewTab) {
+                  // When switching to the preview tab, hide all original tab bodies
+                  // and show the preview body.
+                  allOriginalTabBodies.forEach(body => body.classList.add('vu-main-hidden'));
+                  if (previewBody) {
+                      previewBody.classList.remove('vu-main-hidden');
+                      previewBody.classList.remove('customizer-hidden');
+                  }
+              } else {
+                  // When switching back to an original tab, hide the preview body.
+                  if (previewBody) {
+                      previewBody.classList.add('vu-main-hidden');
+                  }
+                  
+                  // Remove our custom hidden class from all original bodies so the
+                  // original script can take over.
+                  allOriginalTabBodies.forEach(body => body.classList.remove('vu-main-hidden'));
+
+                  
+                  const tabName = tabs[idx].querySelector('.customizer-tab-name');
+                  if (tabName) tabName.click();
+              }
+          }
+
+          prevBtn.onclick = () => {
+              let idx = getSelectedIndex();
+              if (idx > 0) selectTab(idx - 1);
+          };
+
+          nextBtn.onclick = () => {
+              let idx = getSelectedIndex();
+              if (idx < tabs.length - 1) selectTab(idx + 1);
+          };
+
+          // Make tabs clickable
+          tabs.forEach((tab, idx) => {
+              tab.addEventListener('click', function (e) {
+                  if (!tab.classList.contains('customizer-tab-selected')) {
+                      selectTab(idx);
+                  }
+              });
+          });
+
+          // Listen for reset event to select the first tab
+          document.addEventListener('vu-reset-tabs', (e) => {
+              const animateProgressBar = e.detail?.animateProgressBar ?? true;
+              // isReset being true will *prevent* the progress bar from animating in selectTab
+              selectTab(0, { isReset: !animateProgressBar });
+          });
+
+          // Initial counter, tab name, and navigation buttons
+          let initialIndex = getSelectedIndex();
+          if (initialIndex === -1 && tabs.length > 0) {
+              initialIndex = 0;
+              tabs[initialIndex].classList.add('customizer-tab-selected');
+          }
+
+          if (initialIndex !== -1) {
+              updateCounter();
+              updateCurrentTabName(initialIndex);
+              updateNavigationButtons(initialIndex);
+              updateProgressBar(initialIndex);
+          }
+
+          // Keyboard navigation
+          document.addEventListener('keydown', (e) => {
+              const modal = document.getElementById('customizer-modal');
+              if (modal && !modal.classList.contains('customizer-hidden')) {
+                  if (e.key === 'ArrowLeft') {
+                      e.preventDefault();
+                      prevBtn.click();
+                  } else if (e.key === 'ArrowRight') {
+                      e.preventDefault();
+                      nextBtn.click();
+                  }
+              }
+          });
+      }
+
+      // Sets up the mobile resize functionality
+      function setupMobileResize() {
+          let isResizing = false;
+          let lastDownY = 0;
+
+          const topDiv = document.getElementById('customizer-main-perspective');
+          const bottomDiv = document.querySelector('.wrapper-div');
+          const handle = document.querySelector('.bottom-resizer');
+
+          if (!topDiv || !bottomDiv || !handle) {
+              return;
+          }
+
+          handle.addEventListener('mousedown', startResize);
+          handle.addEventListener('touchstart', startResize, { passive: false });
+
+          function startResize(e) {
+              isResizing = true;
+              lastDownY = e.clientY || e.touches[0].clientY;
+              e.preventDefault();
+
+              // Disable transitions for smooth resizing
+              topDiv.style.transition = 'none';
+              bottomDiv.style.transition = 'none';
+          }
+
+          document.addEventListener('mousemove', resize);
+          document.addEventListener('touchmove', resize, { passive: false });
+
+          function resize(e) {
+              if (!isResizing) return;
+
+              const clientY = e.clientY || e.touches[0].clientY;
+              const deltaY = clientY - lastDownY;
+              const newHeightTop = topDiv.offsetHeight + deltaY;
+
+              if (newHeightTop > 500 || newHeightTop < 210) {
+                  return;
+              }
+
+              const newHeightBottom = bottomDiv.offsetHeight - deltaY;
+              topDiv.style.height = newHeightTop + 'px';
+              bottomDiv.style.height = newHeightBottom + 'px';
+
+              lastDownY = clientY;
+              e.preventDefault();
+          }
+
+          document.addEventListener('mouseup', stopResize);
+          document.addEventListener('touchend', stopResize);
+
+          function stopResize() {
+              if (!isResizing) return;
+              isResizing = false;
+
+              // Re-enable transitions after resizing
+              topDiv.style.transition = '';
+              bottomDiv.style.transition = '';
+          }
+      }
+
+      function setupResetView() {
+          const modal = document.getElementById('customizer-modal');
+          if (modal) {
+              modal.addEventListener('click', function(event) {
+                  if (event.target.closest('#customizer-reset-view')) {
+                      resetView();
+                  }
+              });
+          }
+      }
+
+      function resetView() {
+          console.log("resetView");
+          customizer.resetPerspective(); //not working at the moment
+      }
+
+      function setupSpinnerDrag() {
+        let state = { dragging: false, startX: 0, item: null };
+        
+        function handleEvent(e) {
+            const item = e.target.closest ? e.target.closest('.list-element-spinner-item') : null;
+            const clientX = e.type.includes('touch') ? (e.touches?.[0] || e.changedTouches?.[0])?.clientX : e.clientX;
+            
+            if (e.type.includes('down') && item?.classList.contains('customizer-selected')) {
+                Object.assign(state, { dragging: true, startX: clientX, item });
+                item.style.cssText += 'transition:none!important;cursor:grabbing';
+                e.preventDefault();
+            } else if (e.type.includes('move') && state.dragging) {
+                const offset = Math.max(-25, Math.min(25, (clientX - state.startX) * 0.5));
+                state.item.style.setProperty('--drag-offset', `${offset}px`);
+                e.preventDefault();
+            } else if ((e.type.includes('up') || e.type === 'mouseleave') && state.dragging) {
+                const deltaX = (clientX || state.startX) - state.startX;
+                state.item.style.removeProperty('transition');
+                state.item.style.cursor = '';
+                state.item.style.removeProperty('--drag-offset');
+                
+                if (Math.abs(deltaX) > 20) {
+                    const container = state.item.closest('.list-element-spinner-container');
+                    const spinner = container?.closest('.list-element-spinner');
+                    const items = container.querySelectorAll('.list-element-spinner-item');
+                    const currentIdx = [...items].findIndex(i => i.classList.contains('customizer-selected'));
+                    const newIdx = deltaX > 0 ? currentIdx + 1 : currentIdx - 1;
+                    
+                    if (newIdx >= 0 && newIdx < items.length) {
+                        const btn = spinner.querySelector(deltaX > 0 ? 
+                            '#list-element-spinner-right, .list-element-spinner-button-right' : 
+                            '#list-element-spinner-left, .list-element-spinner-button-left');
+                        btn?.click();
+                    }
+                }
+                Object.assign(state, { dragging: false, item: null });
+            }
+        }
+        
+        ['mousedown', 'touchstart', 'mousemove', 'touchmove', 'mouseup', 'touchend', 'mouseleave']
+            .forEach(type => document.addEventListener(type, handleEvent, 
+                type.includes('touch') ? { passive: false } : false));
+      }
+  });
+
+</script>

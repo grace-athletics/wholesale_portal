@@ -1,0 +1,146 @@
+<style>
+  .customer-builder {
+    padding: 60px 40px;
+    background-color: #ffffff;
+  }
+
+  .customer-builder__container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .customer-builder__header {
+    margin-bottom: 60px;
+    text-align: center;
+  }
+
+  .customer-builder__title {
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #000;
+  }
+
+  .customer-builder__subtitle {
+    font-size: 16px;
+    color: #666;
+  }
+
+  .customer-builder__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 32px;
+    margin-bottom: 40px;
+  }
+
+  .customer-builder__option {
+    padding: 40px 32px;
+    border: 2px solid #baad8c;
+    border-radius: 8px;
+    text-align: center;
+    transition: all 0.3s ease;
+    background: #fff;
+  }
+
+  .customer-builder__option:hover {
+    box-shadow: 0 12px 24px rgba(186, 173, 140, 0.2);
+    transform: translateY(-8px);
+  }
+
+  .customer-builder__icon {
+    font-size: 56px;
+    margin-bottom: 20px;
+  }
+
+  .customer-builder__option-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #baad8c;
+  }
+
+  .customer-builder__option-description {
+    font-size: 15px;
+    color: #666;
+    margin-bottom: 24px;
+    line-height: 1.6;
+  }
+
+  .customer-builder__option-link {
+    display: inline-block;
+    padding: 12px 32px;
+    background-color: #baad8c;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background-color 0.3s;
+  }
+
+  .customer-builder__option-link:hover {
+    background-color: #9d9273;
+  }
+
+  @media (max-width: 768px) {
+    .customer-builder {
+      padding: 40px 20px;
+    }
+
+    .customer-builder__title {
+      font-size: 36px;
+    }
+
+    .customer-builder__grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+  }
+</style>
+<div class="customer-builder">
+  <div class="customer-builder__container">
+    <div class="customer-builder__header">
+      <h1 class="customer-builder__title">Glove Builder</h1>
+      <p class="customer-builder__subtitle">Choose your builder type to create custom gloves</p>
+    </div>
+
+    <div class="customer-builder__grid">
+      <div class="customer-builder__option">
+        <div class="customer-builder__icon">🎨</div>
+        <h3 class="customer-builder__option-title">Custom Gloves</h3>
+        <p class="customer-builder__option-description">Design your own custom gloves with our 3D configurator. Full control over every aspect of your glove design.</p>
+        <a href="/pages/custom-gloves" class="customer-builder__option-link">Launch Builder →</a>
+      </div>
+
+      <div class="customer-builder__option">
+        <div class="customer-builder__icon">⚡</div>
+        <h3 class="customer-builder__option-title">Quick Order</h3>
+        <p class="customer-builder__option-description">Place orders quickly with pre-designed options. Fast ordering for common glove types and configurations.</p>
+        <a href="/pages/quick-order" class="customer-builder__option-link">Quick Order →</a>
+      </div>
+
+      <div class="customer-builder__option">
+        <div class="customer-builder__icon">📦</div>
+        <h3 class="customer-builder__option-title">Bulk Order</h3>
+        <p class="customer-builder__option-description">Create bulk orders for multiple gloves. Efficiently order multiple gloves with similar specifications.</p>
+        <a href="/pages/bulk-order" class="customer-builder__option-link">Bulk Order →</a>
+      </div>
+    </div>
+
+    <div style="padding: 24px; background-color: #f5f5f5; border-radius: 8px;">
+      <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 12px;">💡 Tips:</h3>
+      <ul style="color: #666; line-height: 1.8; margin-left: 20px;">
+        <li><strong>Custom Gloves:</strong> Full control over every aspect of your glove design</li>
+        <li><strong>Quick Order:</strong> Fast ordering with preset options for common glove types</li>
+        <li><strong>Bulk Order:</strong> Efficiently order multiple gloves with similar specifications</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Customer Builder",
+  "settings": []
+}
+{% endschema %}

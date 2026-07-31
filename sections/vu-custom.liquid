@@ -1,0 +1,208 @@
+{% if section.settings.template_choice == 'template_1' %}
+  {% render 'template-1' %}
+{% else %}
+  {% render 'template-2' %}
+{% endif %}
+
+{% schema %}
+  {
+    "name": "VU Customizer",
+    "settings": [
+      {
+        "type": "select",
+        "id": "template_choice",
+        "label": "Choose your template",
+        "options": [
+          {
+            "value": "template_1",
+            "label": "Template 1"
+          }, {
+            "value": "template_2",
+            "label": "Template 2"
+          }
+        ],
+        "default": "template_1"
+      },
+      {
+        "type": "header",
+        "content": "Common Settings"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image",
+        "label": "Background Image"
+      },
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Logo"
+      }, 
+      {
+        "type": "color",
+        "id": "brand_color",
+        "label": "Brand Color",
+        "default": "#C8102E",
+        "info": "This is the color for ATC button and selected items"
+      },
+      {
+        "type": "color",
+        "id": "background_seconday_color",
+        "label": "Secondary Background Color",
+        "default": "#F6F6F6",
+        "info": "This is the color for the background of the selectors and the background of the summary items"
+      }, {
+        "type": "font_picker",
+        "id": "font_heading_family",
+        "label": "Heading Font",
+        "default": "helvetica_n4"
+      }, {
+        "type": "font_picker",
+        "id": "font_body_family",
+        "label": "Body Font",
+        "default": "helvetica_n4"
+      }, 
+      {
+      "type": "header",
+      "content": "Functionality"
+    },
+    {
+      "type": "text",
+      "label": "Custom Pro Kip Leather First Base Glove",
+      "id": "proKipFirstBaseId",
+      "info": "Enter ID for Custom Pro Kip Leather First Base Glove"
+    },
+    {
+      "type": "text",
+      "label": "Custom Pro Kip Leather Catchers Glove",
+      "id": "proKipCatchersId",
+      "info": "Enter ID for Custom Pro Kip Leather Catchers Glove"
+    },
+    {
+      "type": "text",
+      "label": "Custom Pro Kip Leather Fielders Glove",
+      "id": "proKipFieldersId",
+      "info": "Enter ID for Custom Pro Kip Leather Fielders Glove"
+    },
+    {
+      "type": "text",
+      "label": "Japan Kip (uplifted option)",
+      "id": "japanKipUpliftId",
+      "info": "Enter ID for Japan Kip uplift option"
+    },
+    {
+      "type": "text",
+      "label": "Flag - (uplifted option)",
+      "id": "flagUpliftId",
+      "info": "Enter ID for Flag uplift option"
+    },
+    {
+        "type": "range",
+        "id": "title_size",
+        "label": "Title Size",
+        "min": 10,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "default": 35
+      }, {
+        "type": "range",
+        "id": "buttons_radius",
+        "label": "Buttons border radius",
+        "min": 0,
+        "max": 50,
+        "step": 1,
+        "unit": "px",
+        "default": 0
+      }, {
+        "type": "range",
+        "id": "other_radius",
+        "label": "Radius for dropdowns and background of the selectors",
+        "min": 0,
+        "max": 50,
+        "step": 1,
+        "unit": "px",
+        "default": 0
+      }, {
+        "type": "text",
+        "id": "hide_header_tabs",
+        "label": "Hide Tabs",
+        "info": "Enter tab numbers separated by commas (e.g., 1,2,3) to hide specific tabs summary items"
+      }, {
+        "type": "checkbox",
+        "id": "show_saved_items",
+        "label": "Show Saved Items",
+        "info": "Enable to show the save button and saved items counter",
+        "default": true
+      }, {
+        "type": "checkbox",
+        "id": "show_share_button",
+        "label": "Show Share Button",
+        "info": "Enable to show the share link button and modal",
+        "default": true
+      }, {
+        "type": "checkbox",
+        "id": "show_reset_button",
+        "label": "Show Reset Button",
+        "info": "Enable to show the reset/start over button",
+        "default": true
+      }, {
+        "type": "header",
+        "content": "Template 1 Specific Settings",
+        "visible_if": "{{ section.settings.template_choice == 'template_1' }}"
+      }, {
+        "type": "range",
+        "id": "image_size",
+        "label": "Image size",
+        "min": 20,
+        "max": 110,
+        "step": 1,
+        "unit": "px",
+        "default": 60,
+        "visible_if": "{{ section.settings.template_choice == 'template_1' }}"
+      }, {
+        "type": "checkbox",
+        "id": "drag",
+        "label": "Drag Icon",
+        "info": "Enable to show the Drag Icon.",
+        "default": false,
+        "visible_if": "{{ section.settings.template_choice == 'template_1' }}"
+      }, {
+        "type": "checkbox",
+        "id": "zoom",
+        "label": "Zoom Icon",
+        "info": "Enable to show the Zoom Icon.",
+        "default": false,
+        "visible_if": "{{ section.settings.template_choice == 'template_1' }}"
+      }, {
+        "type": "header",
+        "content": "Template 2 Specific Settings",
+        "visible_if": "{{ section.settings.template_choice == 'template_2' }}"
+      }, {
+        "type": "image_picker",
+        "id": "brand_logo",
+        "label": "Brand Logo",
+        "visible_if": "{{ section.settings.template_choice == 'template_2' }}",
+        "info": "This is the logo for the brand. It will be displayed in the top left corner of the customizer"
+      }, {
+        "type": "color",
+        "id": "text_color",
+        "label": "Text Color",
+        "default": "#000000",
+        "info": "This is the color for the text in the customizer"
+      },
+      {
+        "type": "color",
+        "id": "secondary_text_color",
+        "label": "Secondary Text Color",
+        "default": "#000000",
+        "info": "This is the Secondary color for the text in the customizer such as text with darker background"
+      }
+    ],
+    "presets": [
+      {
+        "name": "VU Customizer",
+        "category": "custom"
+      }
+    ]
+  }
+{% endschema %}

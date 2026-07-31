@@ -1,0 +1,240 @@
+<style>
+  .customer-dashboard {
+    padding: 60px 40px;
+    background-color: #ffffff;
+  }
+
+  .customer-dashboard__container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .customer-dashboard__header {
+    margin-bottom: 60px;
+    text-align: center;
+  }
+
+  .customer-dashboard__title {
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #000;
+  }
+
+  .customer-dashboard__subtitle {
+    font-size: 16px;
+    color: #666;
+  }
+
+  .customer-dashboard__stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    margin-bottom: 80px;
+  }
+
+  .customer-dashboard__stat-card {
+    padding: 40px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    text-align: center;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .customer-dashboard__stat-icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+  }
+
+  .customer-dashboard__stat-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+
+  .customer-dashboard__stat-value {
+    font-size: 48px;
+    font-weight: 700;
+    color: #baad8c;
+    margin-bottom: 16px;
+  }
+
+  .customer-dashboard__stat-description {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+
+  .customer-dashboard__stat-details {
+    font-size: 13px;
+    color: #999;
+    margin-bottom: 20px;
+  }
+
+  .customer-dashboard__stat-button {
+    padding: 10px 28px;
+    background-color: #baad8c;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 24px;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: background-color 0.3s;
+    border: none;
+    cursor: pointer;
+  }
+
+  .customer-dashboard__stat-button:hover {
+    background-color: #9d9273;
+  }
+
+  .customer-dashboard__quick-actions-header {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 40px;
+    color: #000;
+  }
+
+  .customer-dashboard__actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+  }
+
+  .customer-dashboard__action-card {
+    padding: 40px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    text-align: center;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .customer-dashboard__action-icon {
+    font-size: 56px;
+    margin-bottom: 24px;
+  }
+
+  .customer-dashboard__action-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #baad8c;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+  }
+
+  .customer-dashboard__action-description {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 32px;
+    line-height: 1.6;
+  }
+
+  .customer-dashboard__action-button {
+    padding: 10px 28px;
+    background-color: #baad8c;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 24px;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: background-color 0.3s;
+    border: none;
+    cursor: pointer;
+    align-self: center;
+  }
+
+  .customer-dashboard__action-button:hover {
+    background-color: #9d9273;
+  }
+
+  @media (max-width: 768px) {
+    .customer-dashboard {
+      padding: 40px 20px;
+    }
+
+    .customer-dashboard__title {
+      font-size: 36px;
+    }
+
+    .customer-dashboard__stat-value {
+      font-size: 36px;
+    }
+
+    .customer-dashboard__stats {
+      grid-template-columns: 1fr;
+      margin-bottom: 60px;
+    }
+
+    .customer-dashboard__actions {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<div class="customer-dashboard">
+  <div class="customer-dashboard__container">
+    <div class="customer-dashboard__header">
+      <h1 class="customer-dashboard__title">Welcome, {{ customer.first_name }}</h1>
+      <p class="customer-dashboard__subtitle">Manage your wholesale account</p>
+    </div>
+
+    <div class="customer-dashboard__stats">
+      <div class="customer-dashboard__stat-card">
+        <div class="customer-dashboard__stat-icon">📋</div>
+        <div class="customer-dashboard__stat-label">Subscription Status</div>
+        <div class="customer-dashboard__stat-value">Active</div>
+        <div class="customer-dashboard__stat-details">$49/month • Renews on {{ "now" | date: "%B %d, %Y" }}</div>
+        <a href="/pages/member-subscriptions" class="customer-dashboard__stat-button">Manage Subscription</a>
+      </div>
+
+      <div class="customer-dashboard__stat-card">
+        <div class="customer-dashboard__stat-icon">📦</div>
+        <div class="customer-dashboard__stat-label">Total Orders</div>
+        <div class="customer-dashboard__stat-value">{{ customer.orders | size }}</div>
+        <div class="customer-dashboard__stat-description">View your order history</div>
+        <a href="/pages/member-orders" class="customer-dashboard__stat-button">View Orders</a>
+      </div>
+
+      <div class="customer-dashboard__stat-card">
+        <div class="customer-dashboard__stat-icon">🎨</div>
+        <div class="customer-dashboard__stat-label">Your Logos</div>
+        <div class="customer-dashboard__stat-description">Manage your brand logos</div>
+        <a href="/pages/member-logos" class="customer-dashboard__stat-button">Manage Logos</a>
+      </div>
+    </div>
+
+    <div class="customer-dashboard__quick-actions-header">Quick Actions</div>
+
+    <div class="customer-dashboard__actions">
+      <div class="customer-dashboard__action-card">
+        <div class="customer-dashboard__action-icon">🏗️</div>
+        <div class="customer-dashboard__action-title">Design Gloves</div>
+        <div class="customer-dashboard__action-description">Use our 3D builder to design your custom gloves</div>
+        <a href="/pages/custom-gloves" class="customer-dashboard__action-button">Launch Builder</a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Customer Dashboard",
+  "settings": []
+}
+{% endschema %}

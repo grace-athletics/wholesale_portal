@@ -1,0 +1,208 @@
+{%- style -%}
+  .hero {
+    background-color: {{ section.settings.background_color }};
+    padding: {{ section.settings.padding_top }}px 40px {{ section.settings.padding_bottom }}px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 60px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .hero__content {
+    flex: 1;
+    max-width: 600px;
+  }
+
+  .hero__label {
+    color: {{ section.settings.accent_color }};
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+
+  .hero__headline {
+    font-size: 56px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    color: {{ section.settings.text_color }};
+  }
+
+  .hero__description {
+    font-size: 16px;
+    line-height: 1.6;
+    color: {{ section.settings.description_color }};
+    margin-bottom: 30px;
+  }
+
+  .hero__features {
+    list-style: none;
+    margin-bottom: 40px;
+    padding: 0;
+  }
+
+  .hero__features li {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    margin-bottom: 12px;
+    color: #333;
+  }
+
+  .hero__features li:before {
+    content: "✓";
+    color: #baad8c;
+    font-weight: bold;
+    margin-right: 12px;
+    font-size: 18px;
+  }
+
+  .hero__buttons {
+    display: flex;
+    gap: 16px;
+  }
+
+  .hero__button {
+    padding: 14px 32px;
+    border: none;
+    border-radius: 24px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+  }
+
+  .hero__button--primary {
+    background-color: #baad8c;
+    color: #fff;
+  }
+
+  .hero__button--primary:hover {
+    background-color: #9d9273;
+  }
+
+  .hero__button--secondary {
+    background-color: #000;
+    color: #fff;
+  }
+
+  .hero__button--secondary:hover {
+    background-color: #333;
+  }
+
+  .hero__image {
+    flex: 1;
+    text-align: center;
+  }
+
+  .hero__image img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  @media (max-width: 768px) {
+    .hero {
+      flex-direction: column;
+      padding: 40px 20px;
+    }
+
+    .hero__headline {
+      font-size: 36px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="hero">
+  <div class="hero__content">
+    <div class="hero__label">Welcome to My Glove Brand</div>
+    <h1 class="hero__headline">Launch Your Very Own Custom Glove Brand.</h1>
+    <p class="hero__description">Launch your glove brand with ease by adding My Glove Brand's innovative 3D glove builder to your site and using our turnkey marketing solution.</p>
+
+    <ul class="hero__features">
+      <li>100% hands off fulfillment process</li>
+      <li>1-on-1 support to ensure success</li>
+    </ul>
+
+    <div class="hero__buttons">
+      <a href="/pages/how-it-works" class="hero__button hero__button--primary">
+        How It Works
+      </a>
+      <a href="/pages/whats-included" class="hero__button hero__button--secondary">
+        What's Included
+      </a>
+    </div>
+  </div>
+
+  <div class="hero__image">
+    {% if section.settings.hero_image %}
+      <img src="{{ section.settings.hero_image | image_url: width: 600 }}" alt="Glove Builder">
+    {% else %}
+      <div style="background: #f0f0f0; width: 100%; aspect-ratio: 1; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #999;">
+        Add Hero Image
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Hero",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero Image"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Headline Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Description Color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color (Label)",
+      "default": "#baad8c"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 20,
+      "max": 150,
+      "step": 10,
+      "default": 80,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 20,
+      "max": 150,
+      "step": 10,
+      "default": 80,
+      "unit": "px"
+    }
+  ]
+}
+{% endschema %}

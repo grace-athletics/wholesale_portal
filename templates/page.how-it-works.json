@@ -1,0 +1,71 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "how_it_works_hero": {
+      "type": "how-it-works-hero",
+      "settings": {
+        "heading": "How It Works",
+        "breadcrumb_text": "HOW IT WORKS",
+        "background_color": "#f5f5f5",
+        "heading_color": "#000000",
+        "breadcrumb_color": "#666666",
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
+    },
+    "how_it_works_timeline": {
+      "type": "how-it-works-timeline",
+      "settings": {
+        "subtitle": "It's Really This Simple",
+        "title": "Launching A Glove Brand Has Never Been Easier",
+        "step_title_1": "Submit Form",
+        "step_description_1": "Fill out our form under the \"Get Started\" tab, then we will reach out to you directly to discuss your business. We'll assess where you are and determine the best path forward, including strategy and investment options.",
+        "step_title_2": "Onboarding",
+        "step_description_2": "Once you decide to work with us, our development team will start building your custom glove builder on your site. You'll also have a detailed marketing strategy session with our team to set you up for success.",
+        "step_title_3": "Fulfillment",
+        "step_description_3": "We'll guide you through the fulfillment process, making it easy for you. Your main focus will be on marketing and selling—fulfillment is completely hands-off for you.",
+        "step_title_4": "Launch",
+        "step_description_4": "Once everything is in place and our marketing team approves your strategy, it's time to go live! We'll be there every step of the way to ensure your launch is successful.",
+        "step_title_5": "Scale",
+        "step_description_5": "To help you grow, we'll meet with you one-on-one every month to review your performance and provide support where needed. We're invested in your success.",
+        "background_color": "#ffffff",
+        "subtitle_color": "#baad8c",
+        "title_color": "#000000",
+        "accent_color": "#baad8c",
+        "badge_background": "#baad8c",
+        "badge_text_color": "#ffffff",
+        "step_title_color": "#000000",
+        "step_description_color": "#666666",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
+    },
+    "cta_section": {
+      "type": "cta-section",
+      "settings": {
+        "icon": "",
+        "headline": "The Game's #1 Glove Building Experience",
+        "description": "Click \"Get Started\" now to connect with us and learn how our innovative configurator and turnkey marketing solution can elevate your glove brand",
+        "button_link": "/pages/book-demo",
+        "button_text": "Get Started",
+        "background_color": "#828282",
+        "text_color": "#ffffff",
+        "padding_top": 100,
+        "padding_bottom": 100
+      }
+    }
+  },
+  "order": [
+    "how_it_works_hero",
+    "how_it_works_timeline",
+    "cta_section"
+  ]
+}

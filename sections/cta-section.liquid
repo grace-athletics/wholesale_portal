@@ -1,0 +1,160 @@
+{%- style -%}
+  .cta-section {
+    padding: {{ section.settings.padding_top }}px 40px {{ section.settings.padding_bottom }}px 40px;
+    background-color: transparent;
+  }
+
+  .cta-section__wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: {{ section.settings.background_color }};
+    color: {{ section.settings.text_color }};
+    padding: 80px 60px;
+    border-radius: 16px;
+    text-align: center;
+  }
+
+  .cta-section__icon {
+    font-size: 80px;
+    margin-bottom: 40px;
+    display: block;
+  }
+
+  .cta-section__headline {
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 30px;
+  }
+
+  .cta-section__description {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #ccc;
+    margin-bottom: 50px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .cta-section__button {
+    display: inline-block;
+    padding: 14px 36px;
+    background-color: #baad8c;
+    color: #000;
+    text-decoration: none;
+    border-radius: 28px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+  }
+
+  .cta-section__button:hover {
+    background-color: #9d9273;
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 768px) {
+    .cta-section {
+      padding: {{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px 20px;
+    }
+
+    .cta-section__wrapper {
+      padding: 60px 30px;
+    }
+
+    .cta-section__headline {
+      font-size: 36px;
+    }
+
+    .cta-section__description {
+      font-size: 15px;
+    }
+
+    .cta-section__icon {
+      font-size: 60px;
+      margin-bottom: 30px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="cta-section">
+  <div class="cta-section__wrapper">
+    <div class="cta-section__icon">{{ section.settings.icon }}</div>
+    <h2 class="cta-section__headline">{{ section.settings.headline }}</h2>
+    <p class="cta-section__description">{{ section.settings.description }}</p>
+    <a href="{{ section.settings.button_link }}" class="cta-section__button">{{ section.settings.button_text }}</a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "CTA Section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "icon",
+      "label": "Icon/Emoji",
+      "default": "🎯"
+    },
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "Headline",
+      "default": "The Game's #1 Glove Building Experience"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Click \"Get Started\" now to connect with us and learn how our innovative configurator and turnkey marketing solution can elevate your glove brand"
+    },
+    {
+      "type": "text",
+      "id": "button_link",
+      "label": "Button Link",
+      "default": "/pages/book-demo"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Get Started"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 20,
+      "max": 150,
+      "step": 10,
+      "default": 100,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 20,
+      "max": 150,
+      "step": 10,
+      "default": 100,
+      "unit": "px"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,120 @@
+{%- style -%}
+  .benefits {
+    padding: {{ section.settings.padding_top }}px 40px {{ section.settings.padding_bottom }}px 40px;
+    background-color: {{ section.settings.background_color }};
+  }
+
+  .benefits__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .benefits__card {
+    text-align: center;
+    padding: 40px 20px;
+  }
+
+  .benefits__icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .benefits__title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #000;
+  }
+
+  .benefits__description {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #666;
+  }
+
+  .benefits__card:nth-child(2) {
+    background: #baad8c;
+    color: #fff;
+    border-radius: 8px;
+    padding: 40px;
+  }
+
+  .benefits__card:nth-child(2) .benefits__title {
+    color: #fff;
+  }
+
+  .benefits__card:nth-child(2) .benefits__description {
+    color: #fff;
+  }
+
+  @media (max-width: 768px) {
+    .benefits__grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="benefits">
+  <div class="benefits__grid">
+    <div class="benefits__card">
+      <div class="benefits__icon">📈</div>
+      <h3 class="benefits__title">Sales Increase</h3>
+      <p class="benefits__description">The configurator increased sales by 30% through usability and better product information – Grace Glove Company</p>
+    </div>
+
+    <div class="benefits__card">
+      <div class="benefits__icon">⭐</div>
+      <h3 class="benefits__title">Improved Customer Satisfaction</h3>
+      <p class="benefits__description">Customers know exactly what they configure and are converting quicker and more.</p>
+    </div>
+
+    <div class="benefits__card">
+      <div class="benefits__icon">⚙️</div>
+      <h3 class="benefits__title">Customization Empowerment</h3>
+      <p class="benefits__description">Customers enjoyed the ability to fully customize their gloves without relying on Grace Glove's team for design assistance.</p>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Benefits",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 20,
+      "max": 150,
+      "step": 10,
+      "default": 80,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 20,
+      "max": 150,
+      "step": 10,
+      "default": 80,
+      "unit": "px"
+    }
+  ]
+}
+{% endschema %}

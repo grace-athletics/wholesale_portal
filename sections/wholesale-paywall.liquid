@@ -1,0 +1,114 @@
+<style>
+  .wholesale-paywall {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #baad8c 0%, #9d9273 100%);
+    padding: 40px 20px;
+  }
+
+  .wholesale-paywall__container {
+    text-align: center;
+    background: white;
+    padding: 60px 40px;
+    border-radius: 12px;
+    max-width: 600px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  }
+
+  .wholesale-paywall__icon {
+    font-size: 64px;
+    margin-bottom: 24px;
+  }
+
+  .wholesale-paywall__title {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #000;
+  }
+
+  .wholesale-paywall__subtitle {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 32px;
+    line-height: 1.6;
+  }
+
+  .wholesale-paywall__button {
+    display: inline-block;
+    padding: 12px 40px;
+    background-color: #baad8c;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 24px;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: background-color 0.3s;
+    border: none;
+    cursor: pointer;
+  }
+
+  .wholesale-paywall__button:hover {
+    background-color: #9d9273;
+  }
+
+  .wholesale-paywall__features {
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid #ddd;
+    text-align: left;
+  }
+
+  .wholesale-paywall__feature {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    font-size: 14px;
+  }
+
+  .wholesale-paywall__feature::before {
+    content: '✓';
+    color: #baad8c;
+    font-weight: bold;
+    font-size: 20px;
+    margin-right: 12px;
+  }
+</style>
+
+{%- if customer and customer.tags contains 'wholesale-member' -%}
+  {%- comment -%}Wholesale member - show page content{%- endcomment -%}
+{%- else -%}
+  <div class="wholesale-paywall">
+    <div class="wholesale-paywall__container">
+      <div class="wholesale-paywall__icon">🔐</div>
+      <h1 class="wholesale-paywall__title">Exclusive Access</h1>
+      <p class="wholesale-paywall__subtitle">
+        The custom glove builder is exclusively available for our wholesale members. Subscribe to get started today.
+      </p>
+
+      <a href="{{ routes.account_login_url }}" class="wholesale-paywall__button">Log In to Your Account</a>
+
+      <div class="wholesale-paywall__features">
+        <p style="font-weight: 600; margin-bottom: 16px;">What you get with a subscription:</p>
+        <div class="wholesale-paywall__feature">Access to the custom glove 3D builder</div>
+        <div class="wholesale-paywall__feature">Volume-based wholesale pricing</div>
+        <div class="wholesale-paywall__feature">Download custom order sheets with your logo</div>
+        <div class="wholesale-paywall__feature">Manage your account and orders</div>
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%}Stop rendering rest of page{%- endcomment -%}
+  {% section 'dummy' %}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Wholesale Paywall",
+  "settings": []
+}
+{% endschema %}
