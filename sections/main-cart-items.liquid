@@ -201,6 +201,17 @@
 
                           {%- assign property_size = item.properties | size -%}
                           {%- if property_size > 0 -%}
+                            {%- comment -%} Display Recipe ID once at the top {%- endcomment -%}
+                            {%- for p in item.properties -%}
+                              {%- if p.first == 'RecipeId' and p.last != blank -%}
+                                <div class="product-option">
+                                  <dt>Recipe ID:</dt>
+                                  <dd>{{ p.last }}</dd>
+                                </div>
+                                {%- break -%}
+                              {%- endif -%}
+                            {%- endfor -%}
+
                             {%- comment -%} Define the order of properties (normalized - spaces, no underscores) {%- endcomment -%}
                             {%- assign property_order = 'Personalization 1,Personalization 2,Player Age,what sport do you play,Throwing Hand,Web Style,Add a Finger Pad or Finger Hood,Lining,Pinky 1,Pinky 2,Pinky 3,Ring 1,Ring 2,Middle 1,Middle 2,Middle 3,Index,Finger Shell,Thumb 1,Thumb 2,Web,Wrist,Bindings,Palm,Laces,Welting,Stitching,Wrist Logo Base,Wrist Logo Outline,Thumb Logo Base,Thumb Logo Outline,Thumb Logo,Thumb Number,Thumb Number Font,Thumb Number Color Fill,Number,Number Font,Number Outline,Number Fill,Add Thumb Name,Thumb Name,Thumb Name Font,Thumb Name Color Fill,Add Flag,Flag Location,Flags' | split: ',' -%}
                             
@@ -214,9 +225,9 @@
                                 {%- if p.last != blank and first_character_in_key != '_' -%}
                                   {%- assign normalized_key = p.first | replace: '_', ' ' -%}
                                   {%- assign normalized_key_lower = normalized_key | downcase -%}
-                                  {%- comment -%} Skip CUSTOMF, Recipeid, and duplicate leather type properties {%- endcomment -%}
+                                  {%- comment -%} Skip CUSTOMF, RecipeId, and duplicate leather type properties {%- endcomment -%}
                                   {%- assign skip_property = false -%}
-                                  {%- if normalized_key_lower == 'customf' or normalized_key_lower == 'recipeid' -%}
+                                  {%- if normalized_key_lower == 'customf' or p.first == 'RecipeId' -%}
                                     {%- assign skip_property = true -%}
                                   {%- elsif normalized_key_lower == 'leather type' or normalized_key_lower == 'leather_type' -%}
                                     {%- comment -%} Only show Personalization 1 as Leather Type, skip other leather type properties {%- endcomment -%}
@@ -275,6 +286,8 @@
                                                 <a href="https://{{p.last}}" style="text-decoration: underline">Change chosen options</a>
                                               {%- else -%}
                                                 {%- assign property_value = p.last | replace: '_', ' ' -%}
+                                                {%- comment -%} Update Japan Kip price from $70 to $35 {%- endcomment -%}
+                                                {%- assign property_value = property_value | replace: '(+$70)', '(+$35)' -%}
                                                 {%- if property_value contains ' ' -%}
                                                   {%- assign property_parts = property_value | split: ' ' -%}
                                                   {%- assign first_part = property_parts[0] -%}

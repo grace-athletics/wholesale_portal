@@ -32,6 +32,14 @@ if (!customElements.get('product-form')) {
         delete config.headers['Content-Type'];
 
         const formData = new FormData(this.form);
+
+        // Add recipe_id as a line item property if it exists
+        const customizerScript = document.getElementById('customizer');
+        if (customizerScript && customizerScript.getAttribute('data-recipe-id')) {
+          const recipeId = customizerScript.getAttribute('data-recipe-id');
+          formData.append('properties[recipe_id]', recipeId);
+        }
+
         if (this.cart) {
           formData.append(
             'sections',

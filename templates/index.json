@@ -11,35 +11,115 @@
   "sections": {
     "hero": {
       "type": "hero",
-      "settings": {}
+      "settings": {
+        "hero_image": "shopify://shop_images/MGBBrandBook.png",
+        "background_color": "#f5f5f5",
+        "text_color": "#000000",
+        "description_color": "#666666",
+        "accent_color": "#baad8c",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
     },
     "how_it_works": {
       "type": "how-it-works",
-      "settings": {}
+      "settings": {
+        "video_url": "",
+        "background_color": "#1a1a1a",
+        "text_color": "#ffffff",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
     },
     "benefits": {
       "type": "benefits",
-      "settings": {}
+      "settings": {
+        "background_color": "#ffffff",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
     },
     "founders": {
       "type": "founders",
-      "settings": {}
+      "settings": {
+        "founder1_image": "shopify://shop_images/Michael.jpg",
+        "founder2_image": "shopify://shop_images/Kevin.jpg",
+        "background_color": "#2A2A2A",
+        "text_color": "#ffffff",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
     },
     "mission": {
       "type": "mission",
-      "settings": {}
+      "settings": {
+        "background_color": "#baad8c",
+        "text_color": "#000000",
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
     },
     "impact": {
       "type": "impact",
-      "settings": {}
+      "settings": {
+        "label": "The Impact",
+        "headline": "Increase Sales With Our 3D Glove Builder",
+        "main_image": "shopify://shop_images/MGBBrandBook.png",
+        "flags": "🇺🇸 🇬🇧 🇳🇱",
+        "content_headline": "Enhanced Customer Experience",
+        "content_description": "The introduction of the My Glove Brand's 3D Glove Builder will bring a significant impact to your sales. Here's how:",
+        "benefit1": "Enhanced Customer Experience: Customers will now see a highly accurate representation of their custom gloves, leading to increased confidence in their purchases.",
+        "benefit2": "Customization Empowerment: Customers will have the ability to fully customize their gloves without relying on design assistance, streamlining the customization process.",
+        "benefit3": "Sales Increase: The user-friendly and engaging configurator will contribute to at least a 30% increase in sales.",
+        "benefit4": "Customer Satisfaction: Feedback from customers highlighting their appreciation for the detailed visualization and ease of use will be priceless.",
+        "cta_link": "/pages/whats-included",
+        "cta_text": "What's Included",
+        "background_color": "#ffffff",
+        "accent_color": "#baad8c",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
     },
     "cta_section": {
       "type": "cta-section",
-      "settings": {}
+      "settings": {
+        "icon": "🎯",
+        "headline": "The Game's #1 Glove Building Experience",
+        "description": "Click \"Get Started\" now to connect with us and learn how our innovative configurator and turnkey marketing solution can elevate your glove brand",
+        "button_link": "/pages/book-demo",
+        "button_text": "Get Started",
+        "background_color": "#000000",
+        "text_color": "#ffffff",
+        "padding_top": 100,
+        "padding_bottom": 100
+      }
     },
     "faq": {
       "type": "faq",
-      "settings": {}
+      "settings": {
+        "headline": "Frequently Asked Questions",
+        "question_1": "How does it work?",
+        "answer_1": "Whether you're an established glove brand or just starting out, My Glove Brand lets you add a 3D custom glove builder to your website, complete with your logo. We offer everything from providing you with the builder to fulfilling glove orders.",
+        "question_2": "Can I use my own logo on the glove?",
+        "answer_2": "Yes! Our 3D glove builder supports custom logo placement on the glove, allowing your brand to be showcased on every custom glove.",
+        "question_3": "What type of leather is this glove? Is it quality?",
+        "answer_3": "All our gloves are made with premium quality leather and are crafted with precision. We work with top-tier suppliers to ensure the highest standards.",
+        "question_4": "How customizable can the glove be?",
+        "answer_4": "Our 3D glove builder allows complete customization of colors, materials, stitching, lacing, padding, and more. Customers have full control over every aspect of their glove design.",
+        "question_5": "Is this a one time investment or a monthly investment?",
+        "answer_5": "We offer flexible pricing options. You can choose between one-time investments for startup packages or monthly subscription models based on your business needs.",
+        "question_6": "What happens when someone orders a glove off my website?",
+        "answer_6": "Once a customer places an order, we handle the entire fulfillment process for you. From manufacturing to quality assurance to shipping, we take care of everything so you can focus on sales.",
+        "question_7": "What if I don't have a website?",
+        "answer_7": "No problem! We can help you get set up with a website through Shopify or help you integrate our glove builder into an existing site. We're here to support your growth.",
+        "question_8": "What is My Glove Brand's turnkey marketing solution?",
+        "answer_8": "Our turnkey marketing solution includes pre-designed marketing materials, social media templates, email campaigns, and growth strategies to help you launch and scale your glove brand.",
+        "background_color": "#ffffff",
+        "text_color": "#666666",
+        "accent_color": "#baad8c",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
     }
   },
   "order": [

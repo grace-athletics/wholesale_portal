@@ -11,6 +11,7 @@
   "sections": {
     "how_it_works_hero": {
       "type": "how-it-works-hero",
+      "disabled": true,
       "settings": {
         "heading": "How It Works",
         "breadcrumb_text": "HOW IT WORKS",
@@ -36,7 +37,7 @@
         "step_description_4": "Once everything is in place and our marketing team approves your strategy, it's time to go live! We'll be there every step of the way to ensure your launch is successful.",
         "step_title_5": "Scale",
         "step_description_5": "To help you grow, we'll meet with you one-on-one every month to review your performance and provide support where needed. We're invested in your success.",
-        "background_color": "#ffffff",
+        "background_color": "#F1ECEC",
         "subtitle_color": "#baad8c",
         "title_color": "#000000",
         "accent_color": "#baad8c",
