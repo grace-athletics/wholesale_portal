@@ -319,6 +319,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+  alert('Script loaded! Customer email: {{ customer.email }}');
+
   const SUPABASE_URL = 'https://geqsjoshoiqftdfmbbuu.supabase.co';
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdlcXNqb3Nob2lxZnRkZm1iYnV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNTc0ODQsImV4cCI6MjA4OTczMzQ4NH0.C5uREmtpklPCutu3hBWIoSUJwDXuXYJcGTPdRtsfVwU';
   const VALID_TYPES = ['image/png', 'image/jpeg', 'image/svg+xml'];
