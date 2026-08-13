@@ -377,48 +377,77 @@
 
         reader.onload = async (e) => {
           clearTimeout(uploadTimeout);
-          const base64Data = e.target.result;
 
-          // Get existing record
-          const { data: existing } = await supabase
-            .from('client_logos')
-            .select('id, version')
-            .eq('user_email', customerEmail)
-            .limit(1)
-            .single();
+          try {
+            // Upload file to storage bucket
+            const fileName = `${customerEmail}-${slotKey}-${Date.now()}-${file.name}`;
+            const { error: uploadErr } = await supabase.storage
+              .from('client-logos')
+              .upload(fileName, file, { upsert: true });
 
-          const urlField = `${slotKey}_logo_url`;
-          const fnField = `${slotKey}_logo_filename`;
+            if (uploadErr) throw uploadErr;
 
-          if (existing) {
-            // Update existing
-            const { error: updateErr } = await supabase
+            // Get public URL
+            const { data: { publicUrl } } = supabase.storage
+              .from('client-logos')
+              .getPublicUrl(fileName);
+
+            // Get existing record
+            const { data: existing } = await supabase
               .from('client_logos')
-              .update({
-                [urlField]: base64Data,
-                [fnField]: file.name,
-                version: existing.version + 1,
-                uploaded_at: new Date().toISOString()
-              })
-              .eq('id', existing.id);
+              .select('id, version')
+              .eq('user_email', customerEmail)
+              .limit(1)
+              .single();
 
-            if (updateErr) throw updateErr;
-          } else {
-            // Insert new
-            const { error: insertErr } = await supabase
-              .from('client_logos')
-              .insert({
-                user_email: customerEmail,
-                [urlField]: base64Data,
-                [fnField]: file.name,
-                version: 1,
-                uploaded_at: new Date().toISOString()
-              });
+            const urlField = `${slotKey}_logo_url`;
+            const fnField = `${slotKey}_logo_filename`;
 
-            if (insertErr) throw insertErr;
+            if (existing) {
+              // Update existing
+              const { error: updateErr } = await supabase
+                .from('client_logos')
+                .update({
+                  [urlField]: publicUrl,
+                  [fnField]: file.name,
+                  version: existing.version + 1,
+                  uploaded_at: new Date().toISOString()
+                })
+                .eq('id', existing.id);
+
+              if (updateErr) throw updateErr;
+            } else {
+              // Insert new
+              const { error: insertErr } = await supabase
+                .from('client_logos')
+                .insert({
+                  user_email: customerEmail,
+                  [urlField]: publicUrl,
+                  [fnField]: file.name,
+                  version: 1,
+                  uploaded_at: new Date().toISOString()
+                });
+
+              if (insertErr) throw insertErr;
+            }
+
+            // Also add to logos table for admin portal
+            await supabase
+              .from('logos')
+              .upsert({
+                customer_email: customerEmail,
+                storage_path: fileName,
+                file_name: file.name
+              }, { onConflict: 'customer_email,file_name' })
+              .then(() => {})
+              .catch(() => {}); // Don't fail if logos table insert fails
+
+            showMessage(slotKey, 'Logo uploaded!', 'success');
+          } catch (error) {
+            clearTimeout(uploadTimeout);
+            console.error('Upload error:', error);
+            showMessage(slotKey, error.message || 'Upload failed', 'error');
           }
-
-          showMessage(slotKey, 'Logo uploaded!', 'success');
         };
 
         reader.onerror = () => {
