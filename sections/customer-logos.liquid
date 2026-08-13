@@ -400,12 +400,19 @@
               .upload(fileName, file, { upsert: true });
 
             console.log('Storage upload result:', uploadErr ? `ERROR: ${uploadErr.message}` : 'Success');
-            if (uploadErr) throw uploadErr;
+            if (uploadErr) {
+              alert(`Storage upload error: ${uploadErr.message}`);
+              throw uploadErr;
+            }
+
+            alert(`File uploaded to storage: ${fileName}`);
 
             // Get public URL
             const { data: { publicUrl } } = supabase.storage
               .from('client-logos')
               .getPublicUrl(fileName);
+
+            alert(`Public URL: ${publicUrl}`);
 
             // Get existing record
             const { data: existing } = await supabase
