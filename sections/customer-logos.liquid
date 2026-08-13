@@ -328,10 +328,17 @@
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     const customerEmail = '{{ customer.email }}';
 
+    console.log('Customer email:', customerEmail);
+    console.log('Supabase initialized:', !!supabase);
+
     if (!customerEmail || customerEmail.includes('{')) {
-      console.error('Customer not logged in');
+      console.error('Customer not logged in or email not captured');
+      console.log('Raw email value:', customerEmail);
+      alert('Please log in first to upload logos');
       return;
     }
+
+    console.log('Upload initialized for:', customerEmail);
 
     // Load existing logos on page load (lazy load to avoid slowing page)
     setTimeout(async () => {
@@ -354,12 +361,16 @@
     }, 500);
 
     const uploadLogo = async (slotKey, file) => {
+      console.log('Upload started for slot:', slotKey, 'File:', file?.name);
+
       if (!file || !VALID_TYPES.includes(file.type)) {
+        console.error('Invalid file type:', file?.type);
         showMessage(slotKey, 'Only PNG, JPG, or SVG files allowed', 'error');
         return;
       }
 
       if (file.size > MAX_SIZE) {
+        console.error('File too large:', file.size);
         showMessage(slotKey, 'File must be under 10MB', 'error');
         return;
       }
@@ -368,6 +379,7 @@
       showPreview(slotKey, file);
 
       try {
+        console.log('Starting file upload to storage bucket...');
         const reader = new FileReader();
 
         // Timeout after 30 seconds
@@ -381,10 +393,13 @@
           try {
             // Upload file to storage bucket
             const fileName = `${customerEmail}-${slotKey}-${Date.now()}-${file.name}`;
+            console.log('Uploading to storage:', fileName);
+
             const { error: uploadErr } = await supabase.storage
               .from('client-logos')
               .upload(fileName, file, { upsert: true });
 
+            console.log('Storage upload result:', uploadErr ? `ERROR: ${uploadErr.message}` : 'Success');
             if (uploadErr) throw uploadErr;
 
             // Get public URL
